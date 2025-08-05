@@ -11,6 +11,10 @@ public enum LLMProvider: String, Codable, CaseIterable, Identifiable {
     case grok = "grok"
     case openRouter = "openrouter"
     case portkey = "portkey"
+    case abacusAI = "abacusai"
+    case novita = "novita"
+    case huggingFace = "huggingface"
+    case moonshot = "moonshot"
     
     public var id: String { rawValue }
     
@@ -34,6 +38,14 @@ public enum LLMProvider: String, Codable, CaseIterable, Identifiable {
             return "OpenRouter"
         case .portkey:
             return "Portkey"
+        case .abacusAI:
+            return "Abacus.AI"
+        case .novita:
+            return "Novita AI"
+        case .huggingFace:
+            return "Hugging Face"
+        case .moonshot:
+            return "Moonshot AI"
         }
     }
     
@@ -55,6 +67,14 @@ public enum LLMProvider: String, Codable, CaseIterable, Identifiable {
             return "OpenRouter's unified API for multiple AI providers"
         case .portkey:
             return "Portkey's AI gateway with advanced features and analytics"
+        case .abacusAI:
+            return "Abacus.AI's predictive modeling and forecasting platform"
+        case .novita:
+            return "Novita AI's cloud-based GPU inference platform"
+        case .huggingFace:
+            return "Hugging Face's open-source transformer models and inference API"
+        case .moonshot:
+            return "Moonshot AI's large language models with Chinese language support"
         }
     }
     
@@ -78,6 +98,14 @@ public enum LLMProvider: String, Codable, CaseIterable, Identifiable {
             return "https://openrouter.ai/api/v1"
         case .portkey:
             return "https://api.portkey.ai/v1"
+        case .abacusAI:
+            return "https://cloud.abacus.ai/api/v1"
+        case .novita:
+            return "https://api.novita.ai/v3"
+        case .huggingFace:
+            return "https://api-inference.huggingface.co"
+        case .moonshot:
+            return "https://api.moonshot.cn/v1"
         }
     }
     
@@ -99,6 +127,14 @@ public enum LLMProvider: String, Codable, CaseIterable, Identifiable {
             return ["openai/gpt-4-turbo", "anthropic/claude-3-sonnet", "google/gemini-pro-1.5"]
         case .portkey:
             return ["gpt-4-turbo", "claude-3-sonnet", "gemini-pro"]
+        case .abacusAI:
+            return ["chat-gpt", "llama-2-70b", "claude-v1"]
+        case .novita:
+            return ["meta-llama/Llama-2-7b-chat-hf", "microsoft/DialoGPT-medium", "EleutherAI/gpt-j-6B"]
+        case .huggingFace:
+            return ["microsoft/DialoGPT-medium", "facebook/blenderbot-400M-distill", "google/flan-t5-base"]
+        case .moonshot:
+            return ["moonshot-v1-8k", "moonshot-v1-32k", "moonshot-v1-128k"]
         }
     }
     
@@ -108,10 +144,10 @@ public enum LLMProvider: String, Codable, CaseIterable, Identifiable {
     
     public var supportsStreaming: Bool {
         switch self {
-        case .openAI, .anthropic, .mistral, .togetherAI, .grok, .openRouter, .portkey:
+        case .openAI, .anthropic, .mistral, .togetherAI, .grok, .openRouter, .portkey, .moonshot:
             return true
-        case .gemini:
-            return false // Gemini API doesn't support streaming in the same way
+        case .gemini, .abacusAI, .novita, .huggingFace:
+            return false // These APIs don't support streaming in the same way
         }
     }
     
@@ -119,19 +155,17 @@ public enum LLMProvider: String, Codable, CaseIterable, Identifiable {
         switch self {
         case .openAI, .mistral, .togetherAI, .openRouter, .portkey:
             return true
-        case .anthropic, .gemini, .grok:
+        case .anthropic, .gemini, .grok, .abacusAI, .novita, .huggingFace, .moonshot:
             return false
         }
     }
     
     public var supportsSystemPrompt: Bool {
         switch self {
-        case .openAI, .mistral, .togetherAI, .grok, .openRouter, .portkey:
+        case .openAI, .mistral, .togetherAI, .grok, .openRouter, .portkey, .gemini, .abacusAI, .novita, .huggingFace, .moonshot:
             return true
         case .anthropic:
             return false // Anthropic uses system parameter differently
-        case .gemini:
-            return true
         }
     }
     
@@ -153,6 +187,14 @@ public enum LLMProvider: String, Codable, CaseIterable, Identifiable {
             return nil // Varies by underlying model
         case .portkey:
             return nil // Varies by underlying model
+        case .abacusAI:
+            return 8192 // Typical limit for predictive models
+        case .novita:
+            return 4096 // Typical limit for hosted models
+        case .huggingFace:
+            return 1024 // Conservative limit for free inference API
+        case .moonshot:
+            return 128000 // Moonshot v1-128k
         }
     }
     
@@ -180,6 +222,14 @@ public enum LLMProvider: String, Codable, CaseIterable, Identifiable {
             return "OPENROUTER_API_KEY"
         case .portkey:
             return "PORTKEY_API_KEY"
+        case .abacusAI:
+            return "ABACUSAI_API_KEY"
+        case .novita:
+            return "NOVITA_API_KEY"
+        case .huggingFace:
+            return "HUGGINGFACE_API_KEY"
+        case .moonshot:
+            return "MOONSHOT_API_KEY"
         }
     }
     
@@ -187,20 +237,18 @@ public enum LLMProvider: String, Codable, CaseIterable, Identifiable {
     
     public var authenticationHeaderName: String {
         switch self {
-        case .openAI, .mistral, .togetherAI, .grok, .openRouter:
+        case .openAI, .mistral, .togetherAI, .grok, .openRouter, .portkey, .abacusAI, .novita, .huggingFace, .moonshot:
             return "Authorization"
         case .anthropic:
             return "x-api-key"
         case .gemini:
             return "x-goog-api-key"
-        case .portkey:
-            return "Authorization"
         }
     }
     
     public func authenticationHeaderValue(apiKey: String) -> String {
         switch self {
-        case .openAI, .mistral, .togetherAI, .grok, .openRouter, .portkey:
+        case .openAI, .mistral, .togetherAI, .grok, .openRouter, .portkey, .abacusAI, .novita, .huggingFace, .moonshot:
             return "Bearer \(apiKey)"
         case .anthropic, .gemini:
             return apiKey
@@ -213,6 +261,10 @@ public enum LLMProvider: String, Codable, CaseIterable, Identifiable {
             return ["anthropic-version": "2023-06-01"]
         case .openRouter:
             return ["HTTP-Referer": "https://mycodeassistant.app"]
+        case .huggingFace:
+            return ["Content-Type": "application/json"]
+        case .moonshot:
+            return ["Content-Type": "application/json"]
         default:
             return [:]
         }

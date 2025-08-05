@@ -1,7 +1,7 @@
 import Foundation
 
 // MARK: - Provider Factory
-/// Factory for creating LLM provider instances
+/// Factory for creating LLM provider instances with enhanced registration system
 public class ProviderFactory {
     
     // MARK: - Singleton
@@ -10,9 +10,71 @@ public class ProviderFactory {
     private let apiKeyManager: APIKeyManagerProtocol
     private let configurationManager: ConfigurationManagerProtocol
     
+    // Enhanced registration system
+    private var providerRegistry: [LLMProvider: ProviderInfo] = [:]
+    
     private init() {
         self.apiKeyManager = APIKeyManager()
         self.configurationManager = ConfigurationManager()
+        
+        // Register all available providers
+        setupProviderRegistry()
+    }
+    
+    /// Setup the provider registry with all available providers
+    private func setupProviderRegistry() {
+        // Core providers (implemented)
+        registerProvider(.openAI, 
+                        status: .implemented, 
+                        priority: .high)
+        
+        // Planned providers (to be implemented)
+        registerProvider(.anthropic, 
+                        status: .planned, 
+                        priority: .high)
+        registerProvider(.gemini, 
+                        status: .planned, 
+                        priority: .high)
+        registerProvider(.mistral, 
+                        status: .planned, 
+                        priority: .medium)
+        registerProvider(.togetherAI, 
+                        status: .planned, 
+                        priority: .medium)
+        registerProvider(.grok, 
+                        status: .planned, 
+                        priority: .medium)
+        registerProvider(.openRouter, 
+                        status: .planned, 
+                        priority: .medium)
+        registerProvider(.portkey, 
+                        status: .planned, 
+                        priority: .medium)
+        registerProvider(.abacusAI, 
+                        status: .planned, 
+                        priority: .low)
+        registerProvider(.novita, 
+                        status: .planned, 
+                        priority: .low)
+        registerProvider(.huggingFace, 
+                        status: .planned, 
+                        priority: .low)
+        registerProvider(.moonshot, 
+                        status: .planned, 
+                        priority: .low)
+    }
+    
+    /// Register a provider with metadata
+    private func registerProvider(_ provider: LLMProvider, 
+                                 status: ProviderStatus, 
+                                 priority: ProviderPriority) {
+        let info = ProviderInfo(
+            provider: provider,
+            status: status,
+            priority: priority,
+            registeredAt: Date()
+        )
+        providerRegistry[provider] = info
     }
     
     // MARK: - Provider Creation
@@ -42,6 +104,14 @@ public class ProviderFactory {
             return OpenRouterProvider(apiKey: apiKey, configuration: configuration)
         case .portkey:
             return PortkeyProvider(apiKey: apiKey, configuration: configuration)
+        case .abacusAI:
+            return AbacusAIProvider(apiKey: apiKey, configuration: configuration)
+        case .novita:
+            return NovitaProvider(apiKey: apiKey, configuration: configuration)
+        case .huggingFace:
+            return HuggingFaceProvider(apiKey: apiKey, configuration: configuration)
+        case .moonshot:
+            return MoonshotProvider(apiKey: apiKey, configuration: configuration)
         }
     }
     
@@ -71,6 +141,14 @@ public class ProviderFactory {
             return OpenRouterProvider(apiKey: apiKey, configuration: configuration)
         case .portkey:
             return PortkeyProvider(apiKey: apiKey, configuration: configuration)
+        case .abacusAI:
+            return AbacusAIProvider(apiKey: apiKey, configuration: configuration)
+        case .novita:
+            return NovitaProvider(apiKey: apiKey, configuration: configuration)
+        case .huggingFace:
+            return HuggingFaceProvider(apiKey: apiKey, configuration: configuration)
+        case .moonshot:
+            return MoonshotProvider(apiKey: apiKey, configuration: configuration)
         }
     }
     
@@ -91,6 +169,63 @@ public class ProviderFactory {
     /// - Returns: Array of providers that have valid configurations and API keys
     public func getAvailableProviders() -> [LLMProvider] {
         return LLMProvider.allCases.filter { canCreateProvider($0) }
+    }
+    
+    // MARK: - Enhanced Registry Methods
+    
+    /// Get all registered providers
+    /// - Returns: Array of all registered providers
+    public func getAllRegisteredProviders() -> [LLMProvider] {
+        return Array(providerRegistry.keys).sorted { $0.displayName < $1.displayName }
+    }
+    
+    /// Get providers by status
+    /// - Parameter status: The status to filter by
+    /// - Returns: Array of providers with the specified status
+    public func getProviders(withStatus status: ProviderStatus) -> [LLMProvider] {
+        return providerRegistry.compactMap { key, value in
+            value.status == status ? key : nil
+        }.sorted { $0.displayName < $1.displayName }
+    }
+    
+    /// Get providers by priority
+    /// - Parameter priority: The priority to filter by
+    /// - Returns: Array of providers with the specified priority
+    public func getProviders(withPriority priority: ProviderPriority) -> [LLMProvider] {
+        return providerRegistry.compactMap { key, value in
+            value.priority == priority ? key : nil
+        }.sorted { $0.displayName < $1.displayName }
+    }
+    
+    /// Get provider information
+    /// - Parameter provider: The provider to get info for
+    /// - Returns: Provider info if registered
+    public func getProviderInfo(_ provider: LLMProvider) -> ProviderInfo? {
+        return providerRegistry[provider]
+    }
+    
+    /// Check if a provider is implemented
+    /// - Parameter provider: The provider to check
+    /// - Returns: True if the provider is implemented
+    public func isProviderImplemented(_ provider: LLMProvider) -> Bool {
+        return providerRegistry[provider]?.status == .implemented
+    }
+    
+    /// Get implementation progress statistics
+    /// - Returns: Statistics about provider implementation
+    public func getImplementationStats() -> ProviderImplementationStats {
+        let implemented = providerRegistry.values.filter { $0.status == .implemented }.count
+        let planned = providerRegistry.values.filter { $0.status == .planned }.count
+        let deprecated = providerRegistry.values.filter { $0.status == .deprecated }.count
+        let total = providerRegistry.count
+        
+        return ProviderImplementationStats(
+            total: total,
+            implemented: implemented,
+            planned: planned,
+            deprecated: deprecated,
+            implementationPercentage: total > 0 ? Double(implemented) / Double(total) : 0.0
+        )
     }
 }
 
@@ -209,4 +344,81 @@ public enum ProviderCapability {
     case functions
     case systemPrompt
     case model(String)
+}
+
+// MARK: - Enhanced Provider Registration System
+
+/// Provider implementation status
+public enum ProviderStatus: String, Codable, CaseIterable {
+    case implemented = "implemented"
+    case planned = "planned"
+    case deprecated = "deprecated"
+    case experimental = "experimental"
+    
+    public var displayName: String {
+        switch self {
+        case .implemented:
+            return "Implemented"
+        case .planned:
+            return "Planned"
+        case .deprecated:
+            return "Deprecated"
+        case .experimental:
+            return "Experimental"
+        }
+    }
+}
+
+/// Provider implementation priority
+public enum ProviderPriority: String, Codable, CaseIterable {
+    case high = "high"
+    case medium = "medium"
+    case low = "low"
+    
+    public var displayName: String {
+        switch self {
+        case .high:
+            return "High"
+        case .medium:
+            return "Medium"
+        case .low:
+            return "Low"
+        }
+    }
+}
+
+/// Provider registration information
+public struct ProviderInfo: Codable {
+    public let provider: LLMProvider
+    public let status: ProviderStatus
+    public let priority: ProviderPriority
+    public let registeredAt: Date
+    
+    public init(provider: LLMProvider, status: ProviderStatus, priority: ProviderPriority, registeredAt: Date) {
+        self.provider = provider
+        self.status = status
+        self.priority = priority
+        self.registeredAt = registeredAt
+    }
+}
+
+/// Statistics about provider implementation
+public struct ProviderImplementationStats {
+    public let total: Int
+    public let implemented: Int
+    public let planned: Int
+    public let deprecated: Int
+    public let implementationPercentage: Double
+    
+    public init(total: Int, implemented: Int, planned: Int, deprecated: Int, implementationPercentage: Double) {
+        self.total = total
+        self.implemented = implemented
+        self.planned = planned
+        self.deprecated = deprecated
+        self.implementationPercentage = implementationPercentage
+    }
+    
+    public var summary: String {
+        return "Implemented: \(implemented)/\(total) (\(String(format: "%.1f", implementationPercentage * 100))%)"
+    }
 }

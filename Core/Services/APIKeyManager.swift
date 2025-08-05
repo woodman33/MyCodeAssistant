@@ -50,6 +50,15 @@ public class APIKeyManager: APIKeyManagerProtocol {
     }
     
     public func getAPIKey(for provider: LLMProvider) throws -> String? {
+        // In development mode, try to load from .env file first
+        if isEnvironmentFileLoadingEnabled() {
+            let envVars = EnvironmentFileLoader.loadEnvironmentFile()
+            if let envKey = envVars[provider.apiKeyEnvironmentVariable], !envKey.isEmpty {
+                return envKey
+            }
+        }
+        
+        // Fall back to Keychain storage
         let account = provider.rawValue
         
         var query: [CFString: Any] = [
@@ -103,6 +112,15 @@ public class APIKeyManager: APIKeyManagerProtocol {
     }
     
     public func hasAPIKey(for provider: LLMProvider) -> Bool {
+        // In development mode, check .env file first
+        if isEnvironmentFileLoadingEnabled() {
+            let envVars = EnvironmentFileLoader.loadEnvironmentFile()
+            if let envKey = envVars[provider.apiKeyEnvironmentVariable], !envKey.isEmpty {
+                return true
+            }
+        }
+        
+        // Fall back to Keychain check
         do {
             return try getAPIKey(for: provider) != nil
         } catch {
@@ -146,6 +164,14 @@ public class APIKeyManager: APIKeyManagerProtocol {
             return key.hasPrefix("sk-or-") && key.count > 20
         case .portkey:
             return key.count > 20
+        case .abacusAI:
+            return key.count > 16 // Abacus.AI API keys are typically shorter
+        case .novita:
+            return key.count > 20
+        case .huggingFace:
+            return key.hasPrefix("hf_") && key.count > 20
+        case .moonshot:
+            return key.hasPrefix("sk-") && key.count > 20
         }
     }
     
@@ -153,6 +179,48 @@ public class APIKeyManager: APIKeyManagerProtocol {
     /// - Returns: Array of providers with stored keys
     public func getProvidersWithKeys() -> [LLMProvider] {
         return LLMProvider.allCases.filter { hasAPIKey(for: $0) }
+    }
+    
+    /// Load API keys from .env file if available and enabled for development
+    /// This method will only work in development mode and requires ENABLE_ENV_FILE_LOADING=true
+    /// - Returns: Dictionary of provider to API key mappings loaded from .env file
+    public func loadFromEnvironmentFile() -> [LLMProvider: String] {
+        guard isEnvironmentFileLoadingEnabled() else {
+            return [:]
+        }
+        
+        var loadedKeys: [LLMProvider: String] = [:]
+        let envVars = EnvironmentFileLoader.loadEnvironmentFile()
+        
+        for provider in LLMProvider.allCases {
+            if let apiKey = envVars[provider.apiKeyEnvironmentVariable] {
+                loadedKeys[provider] = apiKey
+            }
+        }
+        
+        return loadedKeys
+    }
+    
+    /// Check if environment file loading is enabled
+    /// - Returns: True if environment file loading should be used
+    private func isEnvironmentFileLoadingEnabled() -> Bool {
+        // Check both environment variable and process environment
+        if let envValue = ProcessInfo.processInfo.environment["ENABLE_ENV_FILE_LOADING"],
+           envValue.lowercased() == "true" {
+            return true
+        }
+        
+        // Also check if we're in development mode
+        if let environment = ProcessInfo.processInfo.environment["ENVIRONMENT"],
+           environment.lowercased() == "development" {
+            return true
+        }
+        
+        #if DEBUG
+        return true // Always allow in debug builds
+        #else
+        return false
+        #endif
     }
     
     /// Backup API keys to UserDefaults (less secure, for development/testing only)
@@ -280,5 +348,97 @@ public class UserDefaultsAPIKeyManager: APIKeyManagerProtocol {
         for provider in LLMProvider.allCases {
             try deleteAPIKey(for: provider)
         }
+    }
+}
+
+// MARK: - Environment File Loader
+/// Utility class for loading environment variables from .env files
+public class EnvironmentFileLoader {
+    
+    /// Load environment variables from .env file
+    /// - Returns: Dictionary of environment variables loaded from file
+    public static func loadEnvironmentFile() -> [String: String] {
+        guard let envPath = findEnvironmentFile() else {
+            return [:]
+        }
+        
+        return loadEnvironmentFile(from: envPath)
+    }
+    
+    /// Load environment variables from a specific file path
+    /// - Parameter path: Path to the .env file
+    /// - Returns: Dictionary of environment variables
+    public static func loadEnvironmentFile(from path: String) -> [String: String] {
+        var envVars: [String: String] = [:]
+        
+        guard let contents = try? String(contentsOfFile: path, encoding: .utf8) else {
+            return envVars
+        }
+        
+        let lines = contents.components(separatedBy: .newlines)
+        
+        for line in lines {
+            let trimmedLine = line.trimmingCharacters(in: .whitespacesAndNewlines)
+            
+            // Skip empty lines and comments
+            if trimmedLine.isEmpty || trimmedLine.hasPrefix("#") {
+                continue
+            }
+            
+            // Parse KEY=VALUE format
+            let components = trimmedLine.components(separatedBy: "=")
+            guard components.count >= 2 else {
+                continue
+            }
+            
+            let key = components[0].trimmingCharacters(in: .whitespacesAndNewlines)
+            let value = components.dropFirst().joined(separator: "=").trimmingCharacters(in: .whitespacesAndNewlines)
+            
+            // Remove quotes if present
+            let cleanValue = value.replacingOccurrences(of: "^[\"']|[\"']$", with: "", options: .regularExpression)
+            
+            envVars[key] = cleanValue
+        }
+        
+        return envVars
+    }
+    
+    /// Find the .env file in the project hierarchy
+    /// - Returns: Path to .env file if found
+    private static func findEnvironmentFile() -> String? {
+        let fileManager = FileManager.default
+        var currentPath = fileManager.currentDirectoryPath
+        
+        // Try to find .env file in current directory and parent directories
+        for _ in 0..<5 { // Limit search to 5 levels up
+            let envPath = (currentPath as NSString).appendingPathComponent(".env")
+            
+            if fileManager.fileExists(atPath: envPath) {
+                return envPath
+            }
+            
+            // Move up one directory
+            let parentPath = (currentPath as NSString).deletingLastPathComponent
+            if parentPath == currentPath {
+                break // Reached root directory
+            }
+            currentPath = parentPath
+        }
+        
+        // Also check common project locations
+        let commonPaths = [
+            Bundle.main.bundlePath,
+            Bundle.main.resourcePath ?? "",
+            NSHomeDirectory(),
+        ]
+        
+        for basePath in commonPaths {
+            let envPath = (basePath as NSString).appendingPathComponent(".env")
+            if fileManager.fileExists(atPath: envPath) {
+                return envPath
+            }
+        }
+        
+        return nil
     }
 }
