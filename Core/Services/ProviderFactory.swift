@@ -28,12 +28,12 @@ public class ProviderFactory {
                         status: .implemented, 
                         priority: .high)
         
-        // Planned providers (to be implemented)
+        // Recently implemented providers
         registerProvider(.anthropic, 
-                        status: .planned, 
+                        status: .implemented, 
                         priority: .high)
         registerProvider(.gemini, 
-                        status: .planned, 
+                        status: .implemented, 
                         priority: .high)
         registerProvider(.mistral, 
                         status: .planned, 
