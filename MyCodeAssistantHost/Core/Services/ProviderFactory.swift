@@ -23,43 +23,11 @@ public class ProviderFactory {
     
     /// Setup the provider registry with all available providers
     private func setupProviderRegistry() {
-        // Core providers (implemented)
+        // MVP providers (implemented)
         registerProvider(.openAI, 
                         status: .implemented, 
                         priority: .high)
-        
-        // Recently implemented providers
-        registerProvider(.anthropic, 
-                        status: .implemented, 
-                        priority: .high)
-        registerProvider(.gemini, 
-                        status: .implemented, 
-                        priority: .high)
-        registerProvider(.mistral, 
-                        status: .implemented, 
-                        priority: .high)
-        registerProvider(.togetherAI, 
-                        status: .implemented, 
-                        priority: .high)
-        registerProvider(.grok, 
-                        status: .implemented, 
-                        priority: .high)
         registerProvider(.openRouter, 
-                        status: .implemented, 
-                        priority: .high)
-        registerProvider(.portkey, 
-                        status: .implemented, 
-                        priority: .high)
-        registerProvider(.abacusAI, 
-                        status: .implemented, 
-                        priority: .medium)
-        registerProvider(.novita, 
-                        status: .implemented, 
-                        priority: .medium)
-        registerProvider(.huggingFace, 
-                        status: .implemented, 
-                        priority: .high)
-        registerProvider(.moonshot, 
                         status: .implemented, 
                         priority: .high)
     }
@@ -90,28 +58,10 @@ public class ProviderFactory {
         switch provider {
         case .openAI:
             return OpenAIProvider(apiKey: apiKey, configuration: configuration)
-        case .anthropic:
-            return AnthropicProvider(apiKey: apiKey, configuration: configuration)
-        case .gemini:
-            return GeminiProvider(apiKey: apiKey, configuration: configuration)
-        case .mistral:
-            return MistralProvider(apiKey: apiKey, configuration: configuration)
-        case .togetherAI:
-            return TogetherAIProvider(apiKey: apiKey, configuration: configuration)
-        case .grok:
-            return GrokProvider(apiKey: apiKey, configuration: configuration)
         case .openRouter:
             return OpenRouterProvider(apiKey: apiKey, configuration: configuration)
-        case .portkey:
-            return PortkeyProvider(apiKey: apiKey, configuration: configuration)
-        case .abacusAI:
-            return AbacusAIProvider(apiKey: apiKey, configuration: configuration)
-        case .novita:
-            return NovitaProvider(apiKey: apiKey, configuration: configuration)
-        case .huggingFace:
-            return HuggingFaceProvider(apiKey: apiKey, configuration: configuration)
-        case .moonshot:
-            return MoonshotProvider(apiKey: apiKey, configuration: configuration)
+        default:
+            throw ProviderFactoryError.unsupportedProvider(provider)
         }
     }
     
@@ -127,28 +77,10 @@ public class ProviderFactory {
         switch provider {
         case .openAI:
             return OpenAIProvider(apiKey: apiKey, configuration: configuration)
-        case .anthropic:
-            return AnthropicProvider(apiKey: apiKey, configuration: configuration)
-        case .gemini:
-            return GeminiProvider(apiKey: apiKey, configuration: configuration)
-        case .mistral:
-            return MistralProvider(apiKey: apiKey, configuration: configuration)
-        case .togetherAI:
-            return TogetherAIProvider(apiKey: apiKey, configuration: configuration)
-        case .grok:
-            return GrokProvider(apiKey: apiKey, configuration: configuration)
         case .openRouter:
             return OpenRouterProvider(apiKey: apiKey, configuration: configuration)
-        case .portkey:
-            return PortkeyProvider(apiKey: apiKey, configuration: configuration)
-        case .abacusAI:
-            return AbacusAIProvider(apiKey: apiKey, configuration: configuration)
-        case .novita:
-            return NovitaProvider(apiKey: apiKey, configuration: configuration)
-        case .huggingFace:
-            return HuggingFaceProvider(apiKey: apiKey, configuration: configuration)
-        case .moonshot:
-            return MoonshotProvider(apiKey: apiKey, configuration: configuration)
+        default:
+            throw ProviderFactoryError.unsupportedProvider(provider)
         }
     }
     
