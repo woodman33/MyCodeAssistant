@@ -42,11 +42,11 @@ public class ProviderFactory {
                         status: .implemented, 
                         priority: .high)
         registerProvider(.grok, 
-                        status: .planned, 
-                        priority: .medium)
+                        status: .implemented, 
+                        priority: .high)
         registerProvider(.openRouter, 
-                        status: .planned, 
-                        priority: .medium)
+                        status: .implemented, 
+                        priority: .high)
         registerProvider(.portkey, 
                         status: .planned, 
                         priority: .medium)

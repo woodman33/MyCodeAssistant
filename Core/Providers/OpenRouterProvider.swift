@@ -1,13 +1,13 @@
 import Foundation
 
-// MARK: - OpenAI Provider
-/// OpenAI API implementation of LLMProviderProtocol
-public class OpenAIProvider: BaseLLMProvider {
+// MARK: - OpenRouter Provider
+/// OpenRouter's unified API implementation of LLMProviderProtocol
+public class OpenRouterProvider: BaseLLMProvider {
     
     // MARK: - Initialization
     public init(apiKey: String?, configuration: ProviderConfiguration) {
         super.init(
-            providerType: .openAI,
+            providerType: .openRouter,
             apiKey: apiKey,
             configuration: configuration
         )
@@ -20,7 +20,7 @@ public class OpenAIProvider: BaseLLMProvider {
         try validateRequest(request)
         
         let httpClient = HTTPClient()
-        let urlRequest = try createOpenAIRequest(from: request)
+        let urlRequest = try createOpenRouterRequest(from: request)
         
         do {
             let responseData = try await httpClient.performRequest(urlRequest)
@@ -35,7 +35,7 @@ public class OpenAIProvider: BaseLLMProvider {
         try validateRequest(request)
         
         let httpClient = HTTPClient()
-        let urlRequest = try createOpenAIRequest(from: request, streaming: true)
+        let urlRequest = try createOpenRouterRequest(from: request, streaming: true)
         
         return AsyncThrowingStream { continuation in
             Task {
@@ -72,11 +72,11 @@ public class OpenAIProvider: BaseLLMProvider {
     }
     
     public override func transformRequest(_ request: UnifiedRequest) throws -> Data {
-        let openAIRequest = try createOpenAIRequestBody(from: request)
+        let openRouterRequest = try createOpenRouterRequestBody(from: request)
         
         do {
             let encoder = JSONEncoder()
-            return try encoder.encode(openAIRequest)
+            return try encoder.encode(openRouterRequest)
         } catch {
             throw ProviderError.encodingError(error)
         }
@@ -85,8 +85,8 @@ public class OpenAIProvider: BaseLLMProvider {
     public override func transformResponse(_ data: Data, originalRequest: UnifiedRequest) throws -> UnifiedResponse {
         do {
             let decoder = JSONDecoder()
-            let openAIResponse = try decoder.decode(OpenAIResponse.self, from: data)
-            return try convertToUnifiedResponse(openAIResponse, originalRequest: originalRequest)
+            let openRouterResponse = try decoder.decode(OpenRouterResponse.self, from: data)
+            return try convertToUnifiedResponse(openRouterResponse, originalRequest: originalRequest)
         } catch {
             throw ProviderError.decodingError(error)
         }
@@ -94,19 +94,19 @@ public class OpenAIProvider: BaseLLMProvider {
     
     // MARK: - Private Methods
     
-    private func createOpenAIRequest(from request: UnifiedRequest, streaming: Bool = false) throws -> URLRequest {
+    private func createOpenRouterRequest(from request: UnifiedRequest, streaming: Bool = false) throws -> URLRequest {
         let endpoint = "/chat/completions"
         var urlRequest = try createBaseRequest(endpoint: endpoint)
         
-        let requestBody = try createOpenAIRequestBody(from: request, streaming: streaming)
+        let requestBody = try createOpenRouterRequestBody(from: request, streaming: streaming)
         urlRequest.httpBody = try JSONEncoder().encode(requestBody)
         
         return urlRequest
     }
     
-    private func createOpenAIRequestBody(from request: UnifiedRequest, streaming: Bool = false) throws -> OpenAIRequest {
+    private func createOpenRouterRequestBody(from request: UnifiedRequest, streaming: Bool = false) throws -> OpenRouterRequest {
         let messages = request.messages.map { message in
-            OpenAIMessage(
+            OpenRouterMessage(
                 role: message.role.rawValue,
                 content: message.content
             )
@@ -115,38 +115,38 @@ public class OpenAIProvider: BaseLLMProvider {
         // Add system prompt as first message if provided
         var allMessages = messages
         if let systemPrompt = request.systemPrompt {
-            let systemMessage = OpenAIMessage(role: "system", content: systemPrompt)
+            let systemMessage = OpenRouterMessage(role: "system", content: systemPrompt)
             allMessages.insert(systemMessage, at: 0)
         }
         
-        return OpenAIRequest(
+        return OpenRouterRequest(
             model: request.model ?? defaultModel,
             messages: allMessages,
             temperature: request.temperature,
             maxTokens: request.maxTokens,
             stream: streaming,
-            functions: request.functions?.map { convertToOpenAIFunction($0) },
-            functionCall: request.functionCall.map { convertToOpenAIFunctionCall($0) }
+            functions: request.functions?.map { convertToOpenRouterFunction($0) },
+            functionCall: request.functionCall.map { convertToOpenRouterFunctionCall($0) }
         )
     }
     
-    private func convertToOpenAIFunction(_ function: Function) -> OpenAIFunction {
-        return OpenAIFunction(
+    private func convertToOpenRouterFunction(_ function: Function) -> OpenRouterFunction {
+        return OpenRouterFunction(
             name: function.name,
             description: function.description,
             parameters: function.parameters
         )
     }
     
-    private func convertToOpenAIFunctionCall(_ functionCall: FunctionCall) -> OpenAIFunctionCall {
-        return OpenAIFunctionCall(
+    private func convertToOpenRouterFunctionCall(_ functionCall: FunctionCall) -> OpenRouterFunctionCall {
+        return OpenRouterFunctionCall(
             name: functionCall.name,
             arguments: functionCall.arguments
         )
     }
     
-    private func convertToUnifiedResponse(_ openAIResponse: OpenAIResponse, originalRequest: UnifiedRequest) throws -> UnifiedResponse {
-        guard let choice = openAIResponse.choices.first else {
+    private func convertToUnifiedResponse(_ openRouterResponse: OpenRouterResponse, originalRequest: UnifiedRequest) throws -> UnifiedResponse {
+        guard let choice = openRouterResponse.choices.first else {
             throw ProviderError.invalidRequest("No choices in response")
         }
         
@@ -157,29 +157,29 @@ public class OpenAIProvider: BaseLLMProvider {
         
         let finishReason = FinishReason(rawValue: choice.finishReason ?? "stop") ?? .stop
         
-        let usage = openAIResponse.usage.map { openAIUsage in
+        let usage = openRouterResponse.usage.map { openRouterUsage in
             TokenUsage(
-                promptTokens: openAIUsage.promptTokens,
-                completionTokens: openAIUsage.completionTokens,
-                totalTokens: openAIUsage.totalTokens,
+                promptTokens: openRouterUsage.promptTokens,
+                completionTokens: openRouterUsage.completionTokens,
+                totalTokens: openRouterUsage.totalTokens,
                 estimatedCost: estimateCost(for: originalRequest)
             )
         }
         
         return UnifiedResponse(
-            id: openAIResponse.id,
+            id: openRouterResponse.id,
             message: message,
             finishReason: finishReason,
             usage: usage,
-            model: openAIResponse.model,
+            model: openRouterResponse.model,
             provider: providerType,
-            functionCall: choice.message.functionCall.map { convertFromOpenAIFunctionCall($0) }
+            functionCall: choice.message.functionCall.map { convertFromOpenRouterFunctionCall($0) }
         )
     }
     
     private func transformStreamingChunk(_ data: Data, originalRequest: UnifiedRequest) throws -> UnifiedResponse {
         let decoder = JSONDecoder()
-        let chunk = try decoder.decode(OpenAIStreamingChunk.self, from: data)
+        let chunk = try decoder.decode(OpenRouterStreamingChunk.self, from: data)
         
         guard let choice = chunk.choices.first else {
             throw ProviderError.invalidRequest("No choices in streaming chunk")
@@ -202,7 +202,7 @@ public class OpenAIProvider: BaseLLMProvider {
         )
     }
     
-    private func convertFromOpenAIFunctionCall(_ functionCall: OpenAIFunctionCall) -> FunctionCall {
+    private func convertFromOpenRouterFunctionCall(_ functionCall: OpenRouterFunctionCall) -> FunctionCall {
         return FunctionCall(
             name: functionCall.name,
             arguments: functionCall.arguments
@@ -222,6 +222,9 @@ public class OpenAIProvider: BaseLLMProvider {
                     return .rateLimitExceeded(providerType, errorMessage)
                 case 400:
                     return .invalidRequest(errorMessage)
+                case 502, 503:
+                    // OpenRouter specific: Provider routing errors
+                    return .serverError(status, "Provider routing error: \(errorMessage)")
                 case 500...599:
                     return .serverError(status, errorMessage)
                 default:
@@ -240,16 +243,16 @@ public class OpenAIProvider: BaseLLMProvider {
     }
 }
 
-// MARK: - OpenAI API Models
+// MARK: - OpenRouter API Models
 
-private struct OpenAIRequest: Codable {
+private struct OpenRouterRequest: Codable {
     let model: String
-    let messages: [OpenAIMessage]
+    let messages: [OpenRouterMessage]
     let temperature: Double?
     let maxTokens: Int?
     let stream: Bool?
-    let functions: [OpenAIFunction]?
-    let functionCall: OpenAIFunctionCall?
+    let functions: [OpenRouterFunction]?
+    let functionCall: OpenRouterFunctionCall?
     
     private enum CodingKeys: String, CodingKey {
         case model, messages, temperature, stream, functions
@@ -258,10 +261,10 @@ private struct OpenAIRequest: Codable {
     }
 }
 
-private struct OpenAIMessage: Codable {
+private struct OpenRouterMessage: Codable {
     let role: String
     let content: String?
-    let functionCall: OpenAIFunctionCall?
+    let functionCall: OpenRouterFunctionCall?
     
     init(role: String, content: String) {
         self.role = role
@@ -275,27 +278,27 @@ private struct OpenAIMessage: Codable {
     }
 }
 
-private struct OpenAIFunction: Codable {
+private struct OpenRouterFunction: Codable {
     let name: String
     let description: String
     let parameters: FunctionParameters
 }
 
-private struct OpenAIFunctionCall: Codable {
+private struct OpenRouterFunctionCall: Codable {
     let name: String
     let arguments: String
 }
 
-private struct OpenAIResponse: Codable {
+private struct OpenRouterResponse: Codable {
     let id: String
     let model: String
-    let choices: [OpenAIChoice]
-    let usage: OpenAIUsage?
+    let choices: [OpenRouterChoice]
+    let usage: OpenRouterUsage?
     let created: Int?
 }
 
-private struct OpenAIChoice: Codable {
-    let message: OpenAIMessage
+private struct OpenRouterChoice: Codable {
+    let message: OpenRouterMessage
     let finishReason: String?
     let index: Int
     
@@ -305,7 +308,7 @@ private struct OpenAIChoice: Codable {
     }
 }
 
-private struct OpenAIUsage: Codable {
+private struct OpenRouterUsage: Codable {
     let promptTokens: Int
     let completionTokens: Int
     let totalTokens: Int
@@ -317,14 +320,14 @@ private struct OpenAIUsage: Codable {
     }
 }
 
-private struct OpenAIStreamingChunk: Codable {
+private struct OpenRouterStreamingChunk: Codable {
     let id: String
     let model: String
-    let choices: [OpenAIStreamingChoice]
+    let choices: [OpenRouterStreamingChoice]
 }
 
-private struct OpenAIStreamingChoice: Codable {
-    let delta: OpenAIDelta
+private struct OpenRouterStreamingChoice: Codable {
+    let delta: OpenRouterDelta
     let finishReason: String?
     let index: Int
     
@@ -334,120 +337,7 @@ private struct OpenAIStreamingChoice: Codable {
     }
 }
 
-private struct OpenAIDelta: Codable {
+private struct OpenRouterDelta: Codable {
     let content: String?
     let role: String?
-}
-
-// MARK: - Provider Stubs (Implemented separately)
-// AnthropicProvider, GeminiProvider, MistralProvider, TogetherProvider, GrokProvider, and OpenRouterProvider are now implemented in separate files
-
-public class PortkeyProvider: BaseLLMProvider {
-    public init(apiKey: String?, configuration: ProviderConfiguration) {
-        super.init(providerType: .portkey, apiKey: apiKey, configuration: configuration)
-    }
-    
-    public override func sendRequest(_ request: UnifiedRequest) async throws -> UnifiedResponse {
-        fatalError("PortkeyProvider not yet implemented")
-    }
-    
-    public override func sendStreamingRequest(_ request: UnifiedRequest) async throws -> AsyncThrowingStream<UnifiedResponse, Error> {
-        fatalError("PortkeyProvider not yet implemented")
-    }
-    
-    public override func transformRequest(_ request: UnifiedRequest) throws -> Data {
-        fatalError("PortkeyProvider not yet implemented")
-    }
-    
-    public override func transformResponse(_ data: Data, originalRequest: UnifiedRequest) throws -> UnifiedResponse {
-        fatalError("PortkeyProvider not yet implemented")
-    }
-}
-
-public class AbacusAIProvider: BaseLLMProvider {
-    public init(apiKey: String?, configuration: ProviderConfiguration) {
-        super.init(providerType: .abacusAI, apiKey: apiKey, configuration: configuration)
-    }
-    
-    public override func sendRequest(_ request: UnifiedRequest) async throws -> UnifiedResponse {
-        fatalError("AbacusAIProvider not yet implemented")
-    }
-    
-    public override func sendStreamingRequest(_ request: UnifiedRequest) async throws -> AsyncThrowingStream<UnifiedResponse, Error> {
-        fatalError("AbacusAIProvider not yet implemented")
-    }
-    
-    public override func transformRequest(_ request: UnifiedRequest) throws -> Data {
-        fatalError("AbacusAIProvider not yet implemented")
-    }
-    
-    public override func transformResponse(_ data: Data, originalRequest: UnifiedRequest) throws -> UnifiedResponse {
-        fatalError("AbacusAIProvider not yet implemented")
-    }
-}
-
-public class NovitaProvider: BaseLLMProvider {
-    public init(apiKey: String?, configuration: ProviderConfiguration) {
-        super.init(providerType: .novita, apiKey: apiKey, configuration: configuration)
-    }
-    
-    public override func sendRequest(_ request: UnifiedRequest) async throws -> UnifiedResponse {
-        fatalError("NovitaProvider not yet implemented")
-    }
-    
-    public override func sendStreamingRequest(_ request: UnifiedRequest) async throws -> AsyncThrowingStream<UnifiedResponse, Error> {
-        fatalError("NovitaProvider not yet implemented")
-    }
-    
-    public override func transformRequest(_ request: UnifiedRequest) throws -> Data {
-        fatalError("NovitaProvider not yet implemented")
-    }
-    
-    public override func transformResponse(_ data: Data, originalRequest: UnifiedRequest) throws -> UnifiedResponse {
-        fatalError("NovitaProvider not yet implemented")
-    }
-}
-
-public class HuggingFaceProvider: BaseLLMProvider {
-    public init(apiKey: String?, configuration: ProviderConfiguration) {
-        super.init(providerType: .huggingFace, apiKey: apiKey, configuration: configuration)
-    }
-    
-    public override func sendRequest(_ request: UnifiedRequest) async throws -> UnifiedResponse {
-        fatalError("HuggingFaceProvider not yet implemented")
-    }
-    
-    public override func sendStreamingRequest(_ request: UnifiedRequest) async throws -> AsyncThrowingStream<UnifiedResponse, Error> {
-        fatalError("HuggingFaceProvider not yet implemented")
-    }
-    
-    public override func transformRequest(_ request: UnifiedRequest) throws -> Data {
-        fatalError("HuggingFaceProvider not yet implemented")
-    }
-    
-    public override func transformResponse(_ data: Data, originalRequest: UnifiedRequest) throws -> UnifiedResponse {
-        fatalError("HuggingFaceProvider not yet implemented")
-    }
-}
-
-public class MoonshotProvider: BaseLLMProvider {
-    public init(apiKey: String?, configuration: ProviderConfiguration) {
-        super.init(providerType: .moonshot, apiKey: apiKey, configuration: configuration)
-    }
-    
-    public override func sendRequest(_ request: UnifiedRequest) async throws -> UnifiedResponse {
-        fatalError("MoonshotProvider not yet implemented")
-    }
-    
-    public override func sendStreamingRequest(_ request: UnifiedRequest) async throws -> AsyncThrowingStream<UnifiedResponse, Error> {
-        fatalError("MoonshotProvider not yet implemented")
-    }
-    
-    public override func transformRequest(_ request: UnifiedRequest) throws -> Data {
-        fatalError("MoonshotProvider not yet implemented")
-    }
-    
-    public override func transformResponse(_ data: Data, originalRequest: UnifiedRequest) throws -> UnifiedResponse {
-        fatalError("MoonshotProvider not yet implemented")
-    }
 }
