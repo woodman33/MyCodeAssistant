@@ -33,6 +33,7 @@
 		2A3B4C5D6E7F8901BCDEF038 /* MessageCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3B4C5D6E7F8901BCDEF039 /* MessageCard.swift */; };
 		2A3B4C5D6E7F8901BCDEF03A /* ResponseFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3B4C5D6E7F8901BCDEF03B /* ResponseFormatter.swift */; };
 		2A3B4C5D6E7F8901BCDEF03C /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3B4C5D6E7F8901BCDEF03D /* SettingsView.swift */; };
+		3A4B5C6D7E8F9012CDEF0150 /* GuardrailService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A4B5C6D7E8F9012CDEF0151 /* GuardrailService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -89,6 +90,7 @@
 		2A3B4C5D6E7F8901BCDEF039 /* MessageCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCard.swift; sourceTree = "<group>"; };
 		2A3B4C5D6E7F8901BCDEF03B /* ResponseFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponseFormatter.swift; sourceTree = "<group>"; };
 		2A3B4C5D6E7F8901BCDEF03D /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		3A4B5C6D7E8F9012CDEF0151 /* GuardrailService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuardrailService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -200,6 +202,7 @@
 				2A3B4C5D6E7F8901BCDEF025 /* ConversationManager.swift */,
 				2A3B4C5D6E7F8901BCDEF027 /* ProviderFactory.swift */,
 				2A3B4C5D6E7F8901BCDEF029 /* SharedServices.swift */,
+				3A4B5C6D7E8F9012CDEF0151 /* GuardrailService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -353,6 +356,7 @@
 				2A3B4C5D6E7F8901BCDEF038 /* MessageCard.swift in Sources */,
 				2A3B4C5D6E7F8901BCDEF03A /* ResponseFormatter.swift in Sources */,
 				2A3B4C5D6E7F8901BCDEF03C /* SettingsView.swift in Sources */,
+				3A4B5C6D7E8F9012CDEF0150 /* GuardrailService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
