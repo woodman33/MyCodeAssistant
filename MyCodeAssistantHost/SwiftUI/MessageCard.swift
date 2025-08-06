@@ -150,7 +150,7 @@ struct MessageCard: View {
                 .background(Material.ultraThickMaterial)
             } else {
                 // Assistant message: glassy background
-                Material.ultraThickMaterial
+                Color(.systemBackground).opacity(0.8)
             }
         }
     }

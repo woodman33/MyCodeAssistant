@@ -200,7 +200,7 @@ struct InputBar: View {
             .overlay(
                 Rectangle()
                     .frame(height: 1)
-                    .fill(metalBorder)
+                    .foregroundColor(metalBorder)
                     .opacity(0.3),
                 alignment: .top
             )

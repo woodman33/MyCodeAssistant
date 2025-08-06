@@ -1,0 +1,22 @@
+{
+    "configurations": [
+        {
+            "type": "lldb",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:MyCodeAssistant}",
+            "name": "Debug MyCodeAssistant",
+            "program": "${workspaceFolder:MyCodeAssistant}/.build/debug/MyCodeAssistant",
+            "preLaunchTask": "swift: Build Debug MyCodeAssistant"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:MyCodeAssistant}",
+            "name": "Release MyCodeAssistant",
+            "program": "${workspaceFolder:MyCodeAssistant}/.build/release/MyCodeAssistant",
+            "preLaunchTask": "swift: Build Release MyCodeAssistant"
+        }
+    ]
+}
