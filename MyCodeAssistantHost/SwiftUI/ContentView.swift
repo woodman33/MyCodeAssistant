@@ -29,6 +29,7 @@ struct ContentView: View {
             SettingsView()
                 .environmentObject(themeManager)
                 .environmentObject(settingsManager)
+                .environmentObject(viewModel)
         }
         .onAppear {
             // Initialize any needed setup here if required

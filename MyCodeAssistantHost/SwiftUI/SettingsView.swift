@@ -5,6 +5,7 @@ struct SettingsView: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject private var themeManager: ThemeManager
     @EnvironmentObject private var settingsManager: UISettingsManager
+    @EnvironmentObject private var chatViewModel: ChatViewModel
     @StateObject private var apiKeyManager = APIKeyManager()
     
     @State private var selectedProvider: LLMProvider = .openAI
@@ -24,11 +25,14 @@ struct SettingsView: View {
                         // Header
                         headerView
                         
+                        // Guardrails Settings
+                        guardrailsSection
+                        
                         // Theme Settings
                         themeSection
                         
-                        // API Keys Section
-                        apiKeysSection
+                        // Credentials Section (renamed from API Keys)
+                        credentialsSection
                         
                         // Advanced Settings
                         advancedSection
@@ -43,6 +47,7 @@ struct SettingsView: View {
             .navigationBarHidden(true)
             #endif
         }
+        .frame(minWidth: 500, idealWidth: 550, minHeight: 500, idealHeight: 600)
         .onAppear {
             loadCurrentApiKey()
         }
@@ -135,13 +140,104 @@ struct SettingsView: View {
         }
     }
     
-    // MARK: - API Keys Section
-    private var apiKeysSection: some View {
-        SettingsSection(title: "API Keys") {
+    // MARK: - Guardrails Section
+    private var guardrailsSection: some View {
+        SettingsSection(title: "Guardrails & Safety") {
             VStack(spacing: 16) {
-                // Provider selection
+                // Enable Guardrails toggle
+                Toggle("Enable Guardrails", isOn: $chatViewModel.guardrailsEnabled)
+                    .toggleStyle(CustomToggleStyle())
+                    .help("Filter content for safety and validate inputs")
+                
+                // Code-only replies toggle
+                Toggle("Code-only Replies", isOn: $chatViewModel.codeOnlyMode)
+                    .toggleStyle(CustomToggleStyle())
+                    .disabled(!chatViewModel.guardrailsEnabled)
+                    .opacity(chatViewModel.guardrailsEnabled ? 1.0 : 0.5)
+                    .help("Wrap all responses in code blocks")
+                
+                // Language selector for code formatting
+                if chatViewModel.guardrailsEnabled && chatViewModel.codeOnlyMode {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Code Language")
+                            .font(.subheadline)
+                            .fontWeight(.medium)
+                            .foregroundColor(.secondary)
+                        
+                        Picker("Language", selection: $chatViewModel.selectedLanguage) {
+                            ForEach(["swift", "python", "javascript", "java", "cpp", "go", "rust"], id: \.self) { language in
+                                Text(language.capitalized)
+                                    .tag(language)
+                            }
+                        }
+                        .pickerStyle(MenuPickerStyle())
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 12)
+                        .background(
+                            RoundedRectangle(cornerRadius: 12)
+                                .fill(Material.thickMaterial)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .stroke(Color.primary.opacity(0.2), lineWidth: 1)
+                                )
+                        )
+                    }
+                    .transition(.scale.combined(with: .opacity))
+                }
+                
+                // Safety notice
+                if chatViewModel.guardrailsEnabled {
+                    HStack(spacing: 8) {
+                        Image(systemName: "shield.fill")
+                            .foregroundColor(.green)
+                            .font(.caption)
+                        
+                        Text("Content filtering and safety checks are active")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                        
+                        Spacer()
+                    }
+                    .padding(.top, 8)
+                    .transition(.opacity)
+                }
+            }
+        }
+    }
+    
+    // MARK: - Credentials Section (renamed from API Keys)
+    private var credentialsSection: some View {
+        SettingsSection(title: "Credentials") {
+            VStack(spacing: 16) {
+                // Provider credentials status overview
+                HStack(spacing: 16) {
+                    ForEach(LLMProvider.allCases) { provider in
+                        HStack(spacing: 6) {
+                            Circle()
+                                .fill(apiKeyManager.hasAPIKey(for: provider) ? Color.green : Color.gray)
+                                .frame(width: 8, height: 8)
+                            
+                            Text(provider.displayName)
+                                .font(.caption)
+                                .fontWeight(.medium)
+                                .foregroundColor(apiKeyManager.hasAPIKey(for: provider) ? .primary : .secondary)
+                        }
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 6)
+                        .background(
+                            Capsule()
+                                .fill(Material.thinMaterial)
+                                .opacity(apiKeyManager.hasAPIKey(for: provider) ? 1.0 : 0.6)
+                        )
+                    }
+                }
+                
+                Divider()
+                    .padding(.vertical, 4)
+                
+                // Provider selection for editing
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("Provider")
+                    Text("Configure Provider")
                         .font(.subheadline)
                         .fontWeight(.medium)
                         .foregroundColor(.secondary)
