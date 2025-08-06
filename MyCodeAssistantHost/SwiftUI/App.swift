@@ -28,8 +28,10 @@ class ThemeManager: ObservableObject {
     }
 }
 
-// MARK: - UI Settings Manager  
+// MARK: - UI Settings Manager
 class UISettingsManager: ObservableObject {
+    static let shared = UISettingsManager()
+    
     @Published var appSettings: AppSettings = .default
     @Published var isFirstLaunch = true
     

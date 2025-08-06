@@ -7,16 +7,16 @@ let package = Package(
         .macOS(.v13)
     ],
     products: [
-        .executable(name: "MyCodeAssistant", targets: ["MyCodeAssistant"]),
+        .library(name: "MyCodeAssistantCore", targets: ["MyCodeAssistantCore"]),
     ],
     dependencies: [
         // Add any external dependencies here
     ],
     targets: [
-        .executableTarget(
-            name: "MyCodeAssistant",
+        .target(
+            name: "MyCodeAssistantCore",
             dependencies: [],
-            path: ".",
+            path: "MyCodeAssistantHost",
             sources: [
                 "SwiftUI/App.swift",
                 "SwiftUI/ContentView.swift",
@@ -32,31 +32,25 @@ let package = Package(
                 "Core/Protocols/LLMProviderProtocol.swift",
                 "Core/Providers/BaseProvider.swift",
                 "Core/Providers/OpenAIProvider.swift",
-                "Core/Providers/AnthropicProvider.swift",
-                "Core/Providers/GeminiProvider.swift",
-                "Core/Providers/AbacusAIProvider.swift",
-                "Core/Providers/GrokProvider.swift",
-                "Core/Providers/HuggingFaceProvider.swift",
-                "Core/Providers/MistralProvider.swift",
-                "Core/Providers/MoonshotProvider.swift",
-                "Core/Providers/NovitaProvider.swift",
                 "Core/Providers/OpenRouterProvider.swift",
-                "Core/Providers/PortkeyProvider.swift",
-                "Core/Providers/TogetherProvider.swift",
                 "Core/Services/APIKeyManager.swift",
+                "Core/Services/AuthStateStore.swift",
                 "Core/Services/ConversationManager.swift",
+                "Core/Services/GuardrailService.swift",
                 "Core/Services/ProviderFactory.swift",
                 "Core/Services/SharedServices.swift",
                 "Core/Utilities/ErrorHandling.swift",
                 "Core/Utilities/NetworkUtilities.swift"
             ]
         ),
-        .target(
-            name: "AICommand",
-            dependencies: [],
-            path: "AICommand",
+        .testTarget(
+            name: "MyCodeAssistantTests",
+            dependencies: ["MyCodeAssistantCore"],
+            path: "MyCodeAssistantTests",
             sources: [
-                "SourceEditorCommand.swift"
+                "GuardrailServiceTests.swift",
+                "SettingsViewTests.swift",
+                "AuthStateStoreTests.swift"
             ]
         )
     ]

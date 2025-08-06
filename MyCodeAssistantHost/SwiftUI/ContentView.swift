@@ -113,10 +113,28 @@ struct ContentView: View {
                 .padding(.vertical, 12)
             }
             .onChange(of: viewModel.messages.count) { _ in
-                if let lastMessage = viewModel.messages.last {
-                    withAnimation(.easeOut(duration: 0.3)) {
-                        proxy.scrollTo(lastMessage.id, anchor: .bottom)
-                    }
+                scrollToBottom(proxy: proxy)
+            }
+            .onChange(of: viewModel.isStreaming) { isStreaming in
+                if isStreaming {
+                    scrollToBottom(proxy: proxy)
+                }
+            }
+            .onChange(of: viewModel.streamingContent) { _ in
+                // Auto-scroll while streaming tokens
+                if viewModel.isStreaming {
+                    scrollToBottom(proxy: proxy)
+                }
+            }
+        }
+    }
+    
+    // MARK: - Helper Methods
+    private func scrollToBottom(proxy: ScrollViewProxy) {
+        if let lastMessage = viewModel.messages.last {
+            DispatchQueue.main.async {
+                withAnimation(.easeOut(duration: 0.3)) {
+                    proxy.scrollTo(lastMessage.id, anchor: .bottom)
                 }
             }
         }

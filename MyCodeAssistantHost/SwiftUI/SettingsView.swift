@@ -39,6 +39,7 @@ struct SettingsView: View {
                         
                         Spacer(minLength: 50)
                     }
+                    .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal, 24)
                     .padding(.top, 20)
                 }
@@ -47,7 +48,17 @@ struct SettingsView: View {
             .navigationBarHidden(true)
             #endif
         }
-        .frame(minWidth: 500, idealWidth: 550, minHeight: 500, idealHeight: 600)
+        .frame(minWidth: 440, maxWidth: .infinity, minHeight: 500, idealHeight: 600)
+        .background(GeometryReader { geometry in
+            Color.clear.onAppear {
+                // Dynamically size to ~60% of screen width on wide displays
+                let screenWidth = NSScreen.main?.frame.width ?? 1200
+                let targetWidth = min(screenWidth * 0.6, 900) // Cap at 900pt for ultra-wide screens
+                if targetWidth > 440 {
+                    // Will be applied through the frame modifier
+                }
+            }
+        })
         .onAppear {
             loadCurrentApiKey()
         }
@@ -156,34 +167,32 @@ struct SettingsView: View {
                     .opacity(chatViewModel.guardrailsEnabled ? 1.0 : 0.5)
                     .help("Wrap all responses in code blocks")
                 
-                // Language selector for code formatting
-                if chatViewModel.guardrailsEnabled && chatViewModel.codeOnlyMode {
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("Code Language")
-                            .font(.subheadline)
-                            .fontWeight(.medium)
-                            .foregroundColor(.secondary)
-                        
-                        Picker("Language", selection: $chatViewModel.selectedLanguage) {
-                            ForEach(["swift", "python", "javascript", "java", "cpp", "go", "rust"], id: \.self) { language in
-                                Text(language.capitalized)
-                                    .tag(language)
-                            }
+                // Language selector - always visible for default language preference
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Default Code Language")
+                        .font(.subheadline)
+                        .fontWeight(.medium)
+                        .foregroundColor(.secondary)
+                    
+                    Picker("Language", selection: $chatViewModel.selectedLanguage) {
+                        ForEach(["Swift", "Python", "TypeScript", "JavaScript", "Java", "Go", "Rust", "C++"], id: \.self) { language in
+                            Text(language)
+                                .tag(language.lowercased())
                         }
-                        .pickerStyle(MenuPickerStyle())
-                        .padding(.horizontal, 16)
-                        .padding(.vertical, 12)
-                        .background(
-                            RoundedRectangle(cornerRadius: 12)
-                                .fill(Material.thickMaterial)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 12)
-                                        .stroke(Color.primary.opacity(0.2), lineWidth: 1)
-                                )
-                        )
                     }
-                    .transition(.scale.combined(with: .opacity))
+                    .pickerStyle(MenuPickerStyle())
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 12)
+                    .background(
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(Material.thickMaterial)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .stroke(Color.primary.opacity(0.2), lineWidth: 1)
+                            )
+                    )
                 }
+                .transition(.scale.combined(with: .opacity))
                 
                 // Safety notice
                 if chatViewModel.guardrailsEnabled {

@@ -27,14 +27,15 @@ class ChatViewModel: ObservableObject {
     private let providerFactory: ProviderFactory
     private let apiKeyManager: APIKeyManagerProtocol
     private let guardrailService = GuardrailService.shared
+    private let authStateStore = AuthStateStore.shared
     
     // Current conversation
     @Published var currentConversation: Conversation?
     
-    // Available models per provider
+    // Available models per provider with expanded options
     let availableModels: [LLMProvider: [String]] = [
-        .openAI: ["gpt-3.5-turbo", "gpt-4o", "gpt-4o-mini"],
-        .openRouter: ["openrouter/auto", "meta-llama/llama-3.1-8b-instruct", "anthropic/claude-3-haiku"]
+        .openAI: ["gpt-4o-mini", "gpt-4o-preview", "gpt-4-turbo", "gpt-3.5-turbo"],
+        .openRouter: ["🛣️ Best Route", "01-ai/yi-34b-chat", "mistralai/mistral-medium", "qwen/qwen-72b-chat"]
     ]
     
     // MARK: - Initialization
@@ -122,7 +123,23 @@ class ChatViewModel: ObservableObject {
     /// Switch to a different model
     func switchModel(_ model: String) {
         selectedModel = model
-        useRoutingMode = (model == "Route")
+        useRoutingMode = (model == "🛣️ Best Route" || model == "Route")
+        
+        // Persist selected model in settings
+        let settingsManager = UISettingsManager.shared
+        let newSettings = AppSettings(
+            defaultProvider: settingsManager.appSettings.defaultProvider,
+            defaultModel: model,
+            temperature: settingsManager.appSettings.temperature,
+            maxTokens: settingsManager.appSettings.maxTokens,
+            systemPrompt: settingsManager.appSettings.systemPrompt,
+            autoSave: settingsManager.appSettings.autoSave,
+            theme: settingsManager.appSettings.theme,
+            apiTimeoutSeconds: settingsManager.appSettings.apiTimeoutSeconds,
+            retryAttempts: settingsManager.appSettings.retryAttempts,
+            enableLogging: settingsManager.appSettings.enableLogging
+        )
+        settingsManager.updateSettings(newSettings)
     }
     
     /// Clear the current conversation
@@ -146,6 +163,17 @@ class ChatViewModel: ObservableObject {
     
     private func processMessage(_ message: String, with provider: LLMProvider) async {
         do {
+            // Check if authentication is needed (24-hour expiry)
+            if authStateStore.needsAuthentication(for: provider) {
+                // Check if we have a valid API key first
+                if !isProviderConfigured(provider) {
+                    setError("API key not configured for \(provider.displayName). Please configure in Settings.")
+                    return
+                }
+                // Mark as authenticated after validation
+                authStateStore.handleSuccessfulAuth(for: provider)
+            }
+            
             isLoading = true
             clearError()
             
@@ -154,11 +182,14 @@ class ChatViewModel: ObservableObject {
             
             // Determine model to use
             let modelToUse: String
-            if useRoutingMode {
-                // Simple routing logic: use cheaper model for short prompts
-                modelToUse = message.count < 100 ? "gpt-3.5-turbo" : "gpt-4o-mini"
+            if useRoutingMode || selectedModel == "🛣️ Best Route" {
+                // OpenRouter auto-routing mode
+                modelToUse = "openrouter/auto"
+            } else if selectedModel.isEmpty {
+                // Use default model for provider
+                modelToUse = currentProvider?.primaryModel ?? "gpt-4o-mini"
             } else {
-                modelToUse = selectedModel.isEmpty ? (currentProvider?.primaryModel ?? "gpt-3.5-turbo") : selectedModel
+                modelToUse = selectedModel
             }
             
             // Create request
