@@ -157,6 +157,47 @@ The application requires proper code signing for distribution:
 
 *Note: Current builds use ad-hoc signing for development only*
 
+### Distribution Build Process (Placeholder)
+To create a signed and notarized release:
+
+```bash
+# TODO: Once Developer ID certificates are available:
+
+# 1. Archive the app with proper signing
+xcodebuild archive \
+  -scheme MyCodeAssistantHost \
+  -archivePath ./build/MyCodeAssistant.xcarchive \
+  CODE_SIGN_IDENTITY="Developer ID Application: YOUR_NAME" \
+  DEVELOPMENT_TEAM="YOUR_TEAM_ID"
+
+# 2. Export the archive for distribution
+xcodebuild -exportArchive \
+  -archivePath ./build/MyCodeAssistant.xcarchive \
+  -exportPath ./build/Release \
+  -exportOptionsPlist ExportOptions.plist
+
+# 3. Notarize the app
+xcrun notarytool submit ./build/Release/MyCodeAssistantHost.app \
+  --apple-id "your-apple-id@example.com" \
+  --team-id "YOUR_TEAM_ID" \
+  --password "app-specific-password" \
+  --wait
+
+# 4. Staple the notarization ticket
+xcrun stapler staple ./build/Release/MyCodeAssistantHost.app
+
+# 5. Create DMG for distribution (optional)
+hdiutil create -volname "MyCodeAssistant" \
+  -srcfolder ./build/Release/MyCodeAssistantHost.app \
+  -ov -format UDZO MyCodeAssistant-v1.1.0.dmg
+```
+
+### Required for Distribution
+- [ ] Apple Developer Program membership
+- [ ] Developer ID Application certificate
+- [ ] App-specific password for notarization
+- [ ] ExportOptions.plist configured for Developer ID distribution
+
 ## Contributing
 
 Contributions are welcome! Please:
