@@ -339,101 +339,10 @@ private struct OpenAIDelta: Codable {
     let role: String?
 }
 
-// MARK: - Additional Provider Examples (Stub Implementations)
-
-/// Anthropic Provider stub - would implement Claude API
-public class AnthropicProvider: BaseLLMProvider {
-    public init(apiKey: String?, configuration: ProviderConfiguration) {
-        super.init(providerType: .anthropic, apiKey: apiKey, configuration: configuration)
-    }
-    
-    public override func sendRequest(_ request: UnifiedRequest) async throws -> UnifiedResponse {
-        // Implementation would go here
-        fatalError("AnthropicProvider not yet implemented")
-    }
-    
-    public override func sendStreamingRequest(_ request: UnifiedRequest) async throws -> AsyncThrowingStream<UnifiedResponse, Error> {
-        fatalError("AnthropicProvider not yet implemented")
-    }
-    
-    public override func transformRequest(_ request: UnifiedRequest) throws -> Data {
-        fatalError("AnthropicProvider not yet implemented")
-    }
-    
-    public override func transformResponse(_ data: Data, originalRequest: UnifiedRequest) throws -> UnifiedResponse {
-        fatalError("AnthropicProvider not yet implemented")
-    }
-}
-
-/// Gemini Provider stub - would implement Google Gemini API
-public class GeminiProvider: BaseLLMProvider {
-    public init(apiKey: String?, configuration: ProviderConfiguration) {
-        super.init(providerType: .gemini, apiKey: apiKey, configuration: configuration)
-    }
-    
-    public override func sendRequest(_ request: UnifiedRequest) async throws -> UnifiedResponse {
-        // Implementation would go here
-        fatalError("GeminiProvider not yet implemented")
-    }
-    
-    public override func sendStreamingRequest(_ request: UnifiedRequest) async throws -> AsyncThrowingStream<UnifiedResponse, Error> {
-        fatalError("GeminiProvider not yet implemented")
-    }
-    
-    public override func transformRequest(_ request: UnifiedRequest) throws -> Data {
-        fatalError("GeminiProvider not yet implemented")
-    }
-    
-    public override func transformResponse(_ data: Data, originalRequest: UnifiedRequest) throws -> UnifiedResponse {
-        fatalError("GeminiProvider not yet implemented")
-    }
-}
+// MARK: - Provider Stubs (Implemented separately)
+// AnthropicProvider, GeminiProvider, MistralProvider, and TogetherProvider are now implemented in separate files
 
 // MARK: - Remaining Provider Stubs
-
-public class MistralProvider: BaseLLMProvider {
-    public init(apiKey: String?, configuration: ProviderConfiguration) {
-        super.init(providerType: .mistral, apiKey: apiKey, configuration: configuration)
-    }
-    
-    public override func sendRequest(_ request: UnifiedRequest) async throws -> UnifiedResponse {
-        fatalError("MistralProvider not yet implemented")
-    }
-    
-    public override func sendStreamingRequest(_ request: UnifiedRequest) async throws -> AsyncThrowingStream<UnifiedResponse, Error> {
-        fatalError("MistralProvider not yet implemented")
-    }
-    
-    public override func transformRequest(_ request: UnifiedRequest) throws -> Data {
-        fatalError("MistralProvider not yet implemented")
-    }
-    
-    public override func transformResponse(_ data: Data, originalRequest: UnifiedRequest) throws -> UnifiedResponse {
-        fatalError("MistralProvider not yet implemented")
-    }
-}
-
-public class TogetherAIProvider: BaseLLMProvider {
-    public init(apiKey: String?, configuration: ProviderConfiguration) {
-        super.init(providerType: .togetherAI, apiKey: apiKey, configuration: configuration)
-    }
-    
-    public override func sendRequest(_ request: UnifiedRequest) async throws -> UnifiedResponse {
-        fatalError("TogetherAIProvider not yet implemented")
-    }
-    
-    public override func sendStreamingRequest(_ request: UnifiedRequest) async throws -> AsyncThrowingStream<UnifiedResponse, Error> {
-        fatalError("TogetherAIProvider not yet implemented")
-    }
-    
-    public override func transformRequest(_ request: UnifiedRequest) throws -> Data {
-        fatalError("TogetherAIProvider not yet implemented")
-    }
-    
-    public override func transformResponse(_ data: Data, originalRequest: UnifiedRequest) throws -> UnifiedResponse {
-        fatalError("TogetherAIProvider not yet implemented")
-    }
-}
 
 public class GrokProvider: BaseLLMProvider {
     public init(apiKey: String?, configuration: ProviderConfiguration) {
@@ -498,5 +407,93 @@ public class PortkeyProvider: BaseLLMProvider {
     
     public override func transformResponse(_ data: Data, originalRequest: UnifiedRequest) throws -> UnifiedResponse {
         fatalError("PortkeyProvider not yet implemented")
+    }
+}
+
+public class AbacusAIProvider: BaseLLMProvider {
+    public init(apiKey: String?, configuration: ProviderConfiguration) {
+        super.init(providerType: .abacusAI, apiKey: apiKey, configuration: configuration)
+    }
+    
+    public override func sendRequest(_ request: UnifiedRequest) async throws -> UnifiedResponse {
+        fatalError("AbacusAIProvider not yet implemented")
+    }
+    
+    public override func sendStreamingRequest(_ request: UnifiedRequest) async throws -> AsyncThrowingStream<UnifiedResponse, Error> {
+        fatalError("AbacusAIProvider not yet implemented")
+    }
+    
+    public override func transformRequest(_ request: UnifiedRequest) throws -> Data {
+        fatalError("AbacusAIProvider not yet implemented")
+    }
+    
+    public override func transformResponse(_ data: Data, originalRequest: UnifiedRequest) throws -> UnifiedResponse {
+        fatalError("AbacusAIProvider not yet implemented")
+    }
+}
+
+public class NovitaProvider: BaseLLMProvider {
+    public init(apiKey: String?, configuration: ProviderConfiguration) {
+        super.init(providerType: .novita, apiKey: apiKey, configuration: configuration)
+    }
+    
+    public override func sendRequest(_ request: UnifiedRequest) async throws -> UnifiedResponse {
+        fatalError("NovitaProvider not yet implemented")
+    }
+    
+    public override func sendStreamingRequest(_ request: UnifiedRequest) async throws -> AsyncThrowingStream<UnifiedResponse, Error> {
+        fatalError("NovitaProvider not yet implemented")
+    }
+    
+    public override func transformRequest(_ request: UnifiedRequest) throws -> Data {
+        fatalError("NovitaProvider not yet implemented")
+    }
+    
+    public override func transformResponse(_ data: Data, originalRequest: UnifiedRequest) throws -> UnifiedResponse {
+        fatalError("NovitaProvider not yet implemented")
+    }
+}
+
+public class HuggingFaceProvider: BaseLLMProvider {
+    public init(apiKey: String?, configuration: ProviderConfiguration) {
+        super.init(providerType: .huggingFace, apiKey: apiKey, configuration: configuration)
+    }
+    
+    public override func sendRequest(_ request: UnifiedRequest) async throws -> UnifiedResponse {
+        fatalError("HuggingFaceProvider not yet implemented")
+    }
+    
+    public override func sendStreamingRequest(_ request: UnifiedRequest) async throws -> AsyncThrowingStream<UnifiedResponse, Error> {
+        fatalError("HuggingFaceProvider not yet implemented")
+    }
+    
+    public override func transformRequest(_ request: UnifiedRequest) throws -> Data {
+        fatalError("HuggingFaceProvider not yet implemented")
+    }
+    
+    public override func transformResponse(_ data: Data, originalRequest: UnifiedRequest) throws -> UnifiedResponse {
+        fatalError("HuggingFaceProvider not yet implemented")
+    }
+}
+
+public class MoonshotProvider: BaseLLMProvider {
+    public init(apiKey: String?, configuration: ProviderConfiguration) {
+        super.init(providerType: .moonshot, apiKey: apiKey, configuration: configuration)
+    }
+    
+    public override func sendRequest(_ request: UnifiedRequest) async throws -> UnifiedResponse {
+        fatalError("MoonshotProvider not yet implemented")
+    }
+    
+    public override func sendStreamingRequest(_ request: UnifiedRequest) async throws -> AsyncThrowingStream<UnifiedResponse, Error> {
+        fatalError("MoonshotProvider not yet implemented")
+    }
+    
+    public override func transformRequest(_ request: UnifiedRequest) throws -> Data {
+        fatalError("MoonshotProvider not yet implemented")
+    }
+    
+    public override func transformResponse(_ data: Data, originalRequest: UnifiedRequest) throws -> UnifiedResponse {
+        fatalError("MoonshotProvider not yet implemented")
     }
 }

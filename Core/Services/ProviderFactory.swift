@@ -36,11 +36,11 @@ public class ProviderFactory {
                         status: .implemented, 
                         priority: .high)
         registerProvider(.mistral, 
-                        status: .planned, 
-                        priority: .medium)
+                        status: .implemented, 
+                        priority: .high)
         registerProvider(.togetherAI, 
-                        status: .planned, 
-                        priority: .medium)
+                        status: .implemented, 
+                        priority: .high)
         registerProvider(.grok, 
                         status: .planned, 
                         priority: .medium)
