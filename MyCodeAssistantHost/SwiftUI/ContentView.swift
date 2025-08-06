@@ -132,6 +132,7 @@ struct ContentView: View {
             }
         )
         .environmentObject(themeManager)
+        .environmentObject(viewModel)
     }
 }
 

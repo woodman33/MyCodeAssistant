@@ -7,6 +7,7 @@ struct InputBar: View {
     let onSendMessage: (String) -> Void
     
     @EnvironmentObject private var themeManager: ThemeManager
+    @EnvironmentObject private var chatViewModel: ChatViewModel
     @State private var messageText = ""
     @State private var showingProviderPicker = false
     @State private var isTextFieldFocused = false
@@ -26,8 +27,11 @@ struct InputBar: View {
             
             // Main input bar
             HStack(spacing: 12) {
-                // Provider selector
-                providerSelector
+                // Provider and Model selectors
+                VStack(alignment: .leading, spacing: 6) {
+                    providerSelector
+                    modelSelector
+                }
                 
                 // Text input field
                 textInputField
@@ -52,6 +56,7 @@ struct InputBar: View {
                 Button(action: {
                     withAnimation(.easeInOut(duration: 0.2)) {
                         currentProvider = provider
+                        chatViewModel.switchProvider(provider)
                     }
                 }) {
                     HStack {
@@ -73,7 +78,7 @@ struct InputBar: View {
                 
                 // Provider name
                 Text(currentProvider?.displayName ?? "Select Provider")
-                    .font(.system(.caption, design: .rounded))
+                    .font(.system(.footnote, design: .rounded))
                     .fontWeight(.medium)
                     .foregroundColor(.primary)
                     .lineLimit(1)
@@ -84,13 +89,89 @@ struct InputBar: View {
                     .foregroundColor(.secondary)
             }
             .padding(.horizontal, 12)
-            .padding(.vertical, 8)
+            .padding(.vertical, 6)
             .background(
                 RoundedRectangle(cornerRadius: 20)
                     .fill(Material.thickMaterial)
                     .overlay(
                         RoundedRectangle(cornerRadius: 20)
                             .stroke(metalBorder, lineWidth: 1)
+                    )
+            )
+        }
+        .menuStyle(BorderlessButtonMenuStyle())
+    }
+    
+    // MARK: - Model Selector
+    private var modelSelector: some View {
+        Menu {
+            // Route option
+            Button(action: {
+                withAnimation(.easeInOut(duration: 0.2)) {
+                    chatViewModel.switchModel("Route")
+                }
+            }) {
+                HStack {
+                    Image(systemName: "arrow.triangle.branch")
+                        .foregroundColor(.orange)
+                    Text("🛣️ Best Route")
+                    Spacer()
+                    if chatViewModel.selectedModel == "Route" {
+                        Image(systemName: "checkmark")
+                            .foregroundColor(themeManager.accentColor.color)
+                    }
+                }
+            }
+            
+            Divider()
+            
+            // Provider models
+            if let provider = currentProvider,
+               let models = chatViewModel.availableModels[provider] {
+                ForEach(models, id: \.self) { model in
+                    Button(action: {
+                        withAnimation(.easeInOut(duration: 0.2)) {
+                            chatViewModel.switchModel(model)
+                        }
+                    }) {
+                        HStack {
+                            Text(formatModelName(model))
+                            Spacer()
+                            if chatViewModel.selectedModel == model {
+                                Image(systemName: "checkmark")
+                                    .foregroundColor(themeManager.accentColor.color)
+                            }
+                        }
+                    }
+                }
+            }
+        } label: {
+            HStack(spacing: 6) {
+                // Model icon
+                Image(systemName: chatViewModel.useRoutingMode ? "arrow.triangle.branch" : "cpu")
+                    .font(.caption)
+                    .foregroundColor(chatViewModel.useRoutingMode ? .orange : .secondary)
+                
+                // Model name
+                Text(formatModelName(chatViewModel.selectedModel.isEmpty ? "Select Model" : chatViewModel.selectedModel))
+                    .font(.system(.caption, design: .rounded))
+                    .fontWeight(.medium)
+                    .foregroundColor(.primary)
+                    .lineLimit(1)
+                
+                // Dropdown arrow
+                Image(systemName: "chevron.down")
+                    .font(.caption2)
+                    .foregroundColor(.secondary)
+            }
+            .padding(.horizontal, 10)
+            .padding(.vertical, 4)
+            .background(
+                RoundedRectangle(cornerRadius: 15)
+                    .fill(Material.thinMaterial)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 15)
+                            .stroke(metalBorder.opacity(0.5), lineWidth: 0.5)
                     )
             )
         }
@@ -242,6 +323,25 @@ struct InputBar: View {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             textFieldIsFocused = true
         }
+    }
+    
+    // MARK: - Helper Methods
+    private func formatModelName(_ model: String) -> String {
+        if model == "Route" {
+            return "🛣️ Best Route"
+        }
+        
+        // Simplify model names for display
+        let simplified = model
+            .replacingOccurrences(of: "openrouter/", with: "")
+            .replacingOccurrences(of: "meta-llama/", with: "")
+            .replacingOccurrences(of: "anthropic/", with: "")
+        
+        // Capitalize first letter of each word
+        return simplified
+            .split(separator: "-")
+            .map { $0.prefix(1).uppercased() + $0.dropFirst() }
+            .joined(separator: " ")
     }
 }
 
