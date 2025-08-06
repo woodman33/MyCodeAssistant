@@ -14,14 +14,28 @@ class ChatViewModel: ObservableObject {
     @Published var error: String?
     @Published var streamingContent: String = ""
     
+    // Guardrails & Settings
+    @Published var guardrailsEnabled: Bool = true
+    @Published var codeOnlyMode: Bool = false
+    @Published var selectedLanguage: String = "swift"
+    @Published var selectedModel: String = ""
+    @Published var useRoutingMode: Bool = false
+    
     // MARK: - Private Properties
     private let sharedServices: SharedServices
     private let conversationManager: ConversationManagerProtocol
     private let providerFactory: ProviderFactory
     private let apiKeyManager: APIKeyManagerProtocol
+    private let guardrailService = GuardrailService.shared
     
     // Current conversation
     @Published var currentConversation: Conversation?
+    
+    // Available models per provider
+    let availableModels: [LLMProvider: [String]] = [
+        .openAI: ["gpt-3.5-turbo", "gpt-4o", "gpt-4o-mini"],
+        .openRouter: ["openrouter/auto", "meta-llama/llama-3.1-8b-instruct", "anthropic/claude-3-haiku"]
+    ]
     
     // MARK: - Initialization
     init() {
@@ -29,6 +43,13 @@ class ChatViewModel: ObservableObject {
         self.conversationManager = sharedServices.conversationManager
         self.providerFactory = sharedServices.providerFactory
         self.apiKeyManager = sharedServices.apiKeyManager
+        
+        // Set default model for provider
+        if let provider = currentProvider,
+           let models = availableModels[provider],
+           !models.isEmpty {
+            selectedModel = models[0]
+        }
         
         // Load previous conversation if available
         loadLastConversation()
@@ -44,20 +65,35 @@ class ChatViewModel: ObservableObject {
             return
         }
         
+        let messageToSend = currentMessage
+        var processedMessage = messageToSend
+        
+        // Process through guardrails if enabled
+        if guardrailsEnabled {
+            do {
+                // Create JSON prompt for guardrails
+                let jsonPrompt = createJSONPrompt(from: messageToSend)
+                let parsedPrompt = try guardrailService.processRequest(jsonPrompt)
+                processedMessage = parsedPrompt.prompt
+            } catch {
+                setError("Guardrails: \(error.localizedDescription)")
+                return
+            }
+        }
+        
         let userMessage = ChatMessage(
             role: .user,
-            content: currentMessage,
+            content: processedMessage,
             timestamp: Date()
         )
         
         messages.append(userMessage)
-        let messageToSend = currentMessage
         currentMessage = ""
         
         // Create or update conversation
         if currentConversation == nil {
             currentConversation = Conversation(
-                title: String(messageToSend.prefix(50)),
+                title: String(processedMessage.prefix(50)),
                 messages: [userMessage],
                 provider: provider.rawValue
             )
@@ -67,14 +103,26 @@ class ChatViewModel: ObservableObject {
         }
         
         Task {
-            await processMessage(messageToSend, with: provider)
+            await processMessage(processedMessage, with: provider)
         }
     }
     
     /// Switch to a different provider
     func switchProvider(_ provider: LLMProvider) {
         currentProvider = provider
+        
+        // Update available models for new provider
+        if let models = availableModels[provider], !models.isEmpty {
+            selectedModel = useRoutingMode ? "Route" : models[0]
+        }
+        
         clearError()
+    }
+    
+    /// Switch to a different model
+    func switchModel(_ model: String) {
+        selectedModel = model
+        useRoutingMode = (model == "Route")
     }
     
     /// Clear the current conversation
@@ -104,10 +152,19 @@ class ChatViewModel: ObservableObject {
             // Get provider instance
             let llmProvider = try sharedServices.getProvider(provider)
             
+            // Determine model to use
+            let modelToUse: String
+            if useRoutingMode {
+                // Simple routing logic: use cheaper model for short prompts
+                modelToUse = message.count < 100 ? "gpt-3.5-turbo" : "gpt-4o-mini"
+            } else {
+                modelToUse = selectedModel.isEmpty ? (currentProvider?.primaryModel ?? "gpt-3.5-turbo") : selectedModel
+            }
+            
             // Create request
             let request = UnifiedRequest(
                 messages: messages,
-                model: currentProvider?.primaryModel ?? "gpt-3.5-turbo",
+                model: modelToUse,
                 temperature: 0.7,
                 maxTokens: 2000,
                 stream: currentProvider?.supportsStreaming ?? false
@@ -184,11 +241,20 @@ class ChatViewModel: ObservableObject {
                 // For streaming, each chunk should contain partial content
                 streamingContent += chunk.message.content
                 
+                // Process through guardrails if enabled
+                let processedContent: String
+                if guardrailsEnabled {
+                    let prompt = ParsedPrompt(language: selectedLanguage, codeOnly: codeOnlyMode, prompt: "")
+                    processedContent = guardrailService.processResponse(streamingContent, for: prompt)
+                } else {
+                    processedContent = streamingContent
+                }
+                
                 // Update the last message
                 if let lastIndex = messages.indices.last {
                     messages[lastIndex] = ChatMessage(
                         role: .assistant,
-                        content: streamingContent,
+                        content: processedContent,
                         timestamp: assistantMessage.timestamp
                     )
                 }
@@ -214,9 +280,18 @@ class ChatViewModel: ObservableObject {
         do {
             let response = try await provider.sendRequest(request)
             
+            // Process through guardrails if enabled
+            let processedContent: String
+            if guardrailsEnabled {
+                let prompt = ParsedPrompt(language: selectedLanguage, codeOnly: codeOnlyMode, prompt: "")
+                processedContent = guardrailService.processResponse(response.message.content, for: prompt)
+            } else {
+                processedContent = response.message.content
+            }
+            
             let assistantMessage = ChatMessage(
                 role: .assistant,
-                content: response.message.content,
+                content: processedContent,
                 timestamp: Date()
             )
             messages.append(assistantMessage)
@@ -239,5 +314,30 @@ class ChatViewModel: ObservableObject {
     
     private func clearError() {
         error = nil
+    }
+    
+    // MARK: - Helper Methods
+    
+    /// Create JSON prompt for guardrails
+    private func createJSONPrompt(from text: String) -> String {
+        let json: [String: Any] = [
+            "language": selectedLanguage,
+            "codeOnly": codeOnlyMode,
+            "prompt": text
+        ]
+        
+        if let jsonData = try? JSONSerialization.data(withJSONObject: json),
+           let jsonString = String(data: jsonData, encoding: .utf8) {
+            return jsonString
+        }
+        
+        // Fallback to simple format
+        return """
+        {
+            "language": "\(selectedLanguage)",
+            "codeOnly": \(codeOnlyMode),
+            "prompt": "\(text.replacingOccurrences(of: "\"", with: "\\\""))"
+        }
+        """
     }
 }
