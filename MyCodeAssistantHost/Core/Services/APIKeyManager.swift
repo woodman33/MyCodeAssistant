@@ -1,9 +1,10 @@
 import Foundation
 import Security
+import Combine
 
 // MARK: - API Key Manager
 /// Secure API key management using Keychain Services
-public class APIKeyManager: APIKeyManagerProtocol {
+public class APIKeyManager: APIKeyManagerProtocol, ObservableObject {
     
     // MARK: - Constants
     private let service = "com.mycodeassistant.apikeys"
@@ -150,28 +151,8 @@ public class APIKeyManager: APIKeyManagerProtocol {
         switch provider {
         case .openAI:
             return key.hasPrefix("sk-") && key.count > 20
-        case .anthropic:
-            return key.hasPrefix("sk-ant-") && key.count > 20
-        case .gemini:
-            return key.count > 20 // Google API keys don't have a consistent prefix
-        case .mistral:
-            return key.count > 20
-        case .togetherAI:
-            return key.count > 20
-        case .grok:
-            return key.hasPrefix("xai-") && key.count > 20
         case .openRouter:
             return key.hasPrefix("sk-or-") && key.count > 20
-        case .portkey:
-            return key.count > 20
-        case .abacusAI:
-            return key.count > 16 // Abacus.AI API keys are typically shorter
-        case .novita:
-            return key.count > 20
-        case .huggingFace:
-            return key.hasPrefix("hf_") && key.count > 20
-        case .moonshot:
-            return key.hasPrefix("sk-") && key.count > 20
         }
     }
     
@@ -348,6 +329,10 @@ public class UserDefaultsAPIKeyManager: APIKeyManagerProtocol {
         for provider in LLMProvider.allCases {
             try deleteAPIKey(for: provider)
         }
+    }
+    
+    public func getProvidersWithKeys() -> [LLMProvider] {
+        return LLMProvider.allCases.filter { hasAPIKey(for: $0) }
     }
 }
 

@@ -168,7 +168,7 @@ public protocol ConversationManagerProtocol {
     /// Save a conversation
     /// - Parameter conversation: The conversation to save
     /// - Throws: StorageError if saving fails
-    func saveConversation(_ conversation: Conversation) throws
+    func saveConversation(_ conversation: Conversation) async throws
     
     /// Load a conversation by ID
     /// - Parameter id: The conversation ID
@@ -179,7 +179,7 @@ public protocol ConversationManagerProtocol {
     /// Load all conversations
     /// - Returns: Array of all conversations
     /// - Throws: StorageError if loading fails
-    func loadAllConversations() throws -> [Conversation]
+    func loadAllConversations() async throws -> [Conversation]
     
     /// Delete a conversation
     /// - Parameter id: The conversation ID to delete

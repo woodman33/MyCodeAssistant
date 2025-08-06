@@ -28,14 +28,16 @@ public class ConversationManager: ConversationManagerProtocol {
     
     // MARK: - ConversationManagerProtocol Implementation
     
-    public func saveConversation(_ conversation: Conversation) throws {
-        try cacheQueue.sync(flags: .barrier) {
-            // Update cache
-            conversationCache[conversation.id] = conversation
-            
-            // Persist to storage
-            try persistConversations()
-        }
+    public func saveConversation(_ conversation: Conversation) async throws {
+        return try await Task {
+            try cacheQueue.sync(flags: .barrier) {
+                // Update cache
+                conversationCache[conversation.id] = conversation
+                
+                // Persist to storage
+                try persistConversations()
+            }
+        }.value
     }
     
     public func loadConversation(id: UUID) throws -> Conversation? {
@@ -44,12 +46,14 @@ public class ConversationManager: ConversationManagerProtocol {
         }
     }
     
-    public func loadAllConversations() throws -> [Conversation] {
-        return cacheQueue.sync {
-            return Array(conversationCache.values).sorted {
-                $0.updatedAt > $1.updatedAt
+    public func loadAllConversations() async throws -> [Conversation] {
+        return await Task {
+            return cacheQueue.sync {
+                return Array(conversationCache.values).sorted {
+                    $0.updatedAt > $1.updatedAt
+                }
             }
-        }
+        }.value
     }
     
     public func deleteConversation(id: UUID) throws {
@@ -107,7 +111,7 @@ public class ConversationManager: ConversationManagerProtocol {
         initialMessage: ChatMessage? = nil,
         provider: String,
         model: String? = nil
-    ) throws -> Conversation {
+    ) async throws -> Conversation {
         let messages = initialMessage.map { [$0] } ?? []
         
         let conversation = Conversation(
@@ -117,7 +121,7 @@ public class ConversationManager: ConversationManagerProtocol {
             model: model
         )
         
-        try saveConversation(conversation)
+        try await saveConversation(conversation)
         return conversation
     }
     
@@ -127,7 +131,7 @@ public class ConversationManager: ConversationManagerProtocol {
     ///   - conversationId: The ID of the conversation to update
     /// - Returns: The updated conversation
     /// - Throws: StorageError if the conversation doesn't exist or update fails
-    public func addMessage(_ message: ChatMessage, to conversationId: UUID) throws -> Conversation {
+    public func addMessage(_ message: ChatMessage, to conversationId: UUID) async throws -> Conversation {
         guard var conversation = try loadConversation(id: conversationId) else {
             throw StorageError.conversationNotFound(conversationId)
         }
@@ -135,7 +139,7 @@ public class ConversationManager: ConversationManagerProtocol {
         let updatedMessages = conversation.messages + [message]
         conversation = conversation.withUpdatedMessages(updatedMessages)
         
-        try saveConversation(conversation)
+        try await saveConversation(conversation)
         return conversation
     }
     
@@ -145,7 +149,7 @@ public class ConversationManager: ConversationManagerProtocol {
     ///   - newTitle: The new title
     /// - Returns: The updated conversation
     /// - Throws: StorageError if the conversation doesn't exist or update fails
-    public func updateConversationTitle(_ conversationId: UUID, newTitle: String) throws -> Conversation {
+    public func updateConversationTitle(_ conversationId: UUID, newTitle: String) async throws -> Conversation {
         guard let conversation = try loadConversation(id: conversationId) else {
             throw StorageError.conversationNotFound(conversationId)
         }
@@ -160,7 +164,7 @@ public class ConversationManager: ConversationManagerProtocol {
             model: conversation.model
         )
         
-        try saveConversation(updatedConversation)
+        try await saveConversation(updatedConversation)
         return updatedConversation
     }
     
@@ -224,13 +228,13 @@ public class ConversationManager: ConversationManagerProtocol {
     /// - Parameter conversationIds: Optional array of specific conversation IDs to export. If nil, exports all.
     /// - Returns: JSON data containing the conversations
     /// - Throws: StorageError if export fails
-    public func exportConversations(_ conversationIds: [UUID]? = nil) throws -> Data {
+    public func exportConversations(_ conversationIds: [UUID]? = nil) async throws -> Data {
         let conversations: [Conversation]
         
         if let ids = conversationIds {
             conversations = try ids.compactMap { try loadConversation(id: $0) }
         } else {
-            conversations = try loadAllConversations()
+            conversations = try await loadAllConversations()
         }
         
         do {

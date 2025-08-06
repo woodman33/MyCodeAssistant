@@ -8,10 +8,31 @@
 
 /* Begin PBXBuildFile section */
 		1A2B3C4D5E6F7890ABCDEF01 /* MyCodeAssistantApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2B3C4D5E6F7890ABCDEF02 /* MyCodeAssistantApp.swift */; };
-		1A2B3C4D5E6F7890ABCDEF03 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2B3C4D5E6F7890ABCDEF04 /* ContentView.swift */; };
 		1A2B3C4D5E6F7890ABCDEF05 /* MyCodeAssistantExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 1A2B3C4D5E6F7890ABCDEF06 /* MyCodeAssistantExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		1A2B3C4D5E6F7890ABCDEF07 /* SourceEditorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2B3C4D5E6F7890ABCDEF08 /* SourceEditorExtension.swift */; };
 		1A2B3C4D5E6F7890ABCDEF09 /* SourceEditorCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2B3C4D5E6F7890ABCDEF0A /* SourceEditorCommand.swift */; };
+		2A3B4C5D6E7F8901BCDEF012 /* LLMProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3B4C5D6E7F8901BCDEF013 /* LLMProvider.swift */; };
+		2A3B4C5D6E7F8901BCDEF014 /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3B4C5D6E7F8901BCDEF015 /* AppSettings.swift */; };
+		2A3B4C5D6E7F8901BCDEF016 /* ChatMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3B4C5D6E7F8901BCDEF017 /* ChatMessage.swift */; };
+		2A3B4C5D6E7F8901BCDEF018 /* UnifiedRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3B4C5D6E7F8901BCDEF019 /* UnifiedRequest.swift */; };
+		2A3B4C5D6E7F8901BCDEF01A /* LLMProviderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3B4C5D6E7F8901BCDEF01B /* LLMProviderProtocol.swift */; };
+		2A3B4C5D6E7F8901BCDEF01C /* BaseProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3B4C5D6E7F8901BCDEF01D /* BaseProvider.swift */; };
+		2A3B4C5D6E7F8901BCDEF01E /* OpenAIProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3B4C5D6E7F8901BCDEF01F /* OpenAIProvider.swift */; };
+		2A3B4C5D6E7F8901BCDEF020 /* OpenRouterProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3B4C5D6E7F8901BCDEF021 /* OpenRouterProvider.swift */; };
+		2A3B4C5D6E7F8901BCDEF022 /* APIKeyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3B4C5D6E7F8901BCDEF023 /* APIKeyManager.swift */; };
+		2A3B4C5D6E7F8901BCDEF024 /* ConversationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3B4C5D6E7F8901BCDEF025 /* ConversationManager.swift */; };
+		2A3B4C5D6E7F8901BCDEF026 /* ProviderFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3B4C5D6E7F8901BCDEF027 /* ProviderFactory.swift */; };
+		2A3B4C5D6E7F8901BCDEF028 /* SharedServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3B4C5D6E7F8901BCDEF029 /* SharedServices.swift */; };
+		2A3B4C5D6E7F8901BCDEF02A /* ErrorHandling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3B4C5D6E7F8901BCDEF02B /* ErrorHandling.swift */; };
+		2A3B4C5D6E7F8901BCDEF02C /* NetworkUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3B4C5D6E7F8901BCDEF02D /* NetworkUtilities.swift */; };
+		2A3B4C5D6E7F8901BCDEF02E /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3B4C5D6E7F8901BCDEF02F /* App.swift */; };
+		2A3B4C5D6E7F8901BCDEF030 /* ChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3B4C5D6E7F8901BCDEF031 /* ChatViewModel.swift */; };
+		2A3B4C5D6E7F8901BCDEF032 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3B4C5D6E7F8901BCDEF033 /* ContentView.swift */; };
+		2A3B4C5D6E7F8901BCDEF034 /* FormatterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3B4C5D6E7F8901BCDEF035 /* FormatterTests.swift */; };
+		2A3B4C5D6E7F8901BCDEF036 /* InputBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3B4C5D6E7F8901BCDEF037 /* InputBar.swift */; };
+		2A3B4C5D6E7F8901BCDEF038 /* MessageCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3B4C5D6E7F8901BCDEF039 /* MessageCard.swift */; };
+		2A3B4C5D6E7F8901BCDEF03A /* ResponseFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3B4C5D6E7F8901BCDEF03B /* ResponseFormatter.swift */; };
+		2A3B4C5D6E7F8901BCDEF03C /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3B4C5D6E7F8901BCDEF03D /* SettingsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -41,12 +62,33 @@
 /* Begin PBXFileReference section */
 		1A2B3C4D5E6F7890ABCDEF0E /* MyCodeAssistantHost.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MyCodeAssistantHost.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A2B3C4D5E6F7890ABCDEF02 /* MyCodeAssistantApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyCodeAssistantApp.swift; sourceTree = "<group>"; };
-		1A2B3C4D5E6F7890ABCDEF04 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		1A2B3C4D5E6F7890ABCDEF06 /* MyCodeAssistantExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = MyCodeAssistantExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A2B3C4D5E6F7890ABCDEF0F /* MyCodeAssistantExtension-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "MyCodeAssistantExtension-Info.plist"; sourceTree = "<group>"; };
 		1A2B3C4D5E6F7890ABCDEF08 /* SourceEditorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceEditorExtension.swift; sourceTree = "<group>"; };
 		1A2B3C4D5E6F7890ABCDEF0A /* SourceEditorCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceEditorCommand.swift; sourceTree = "<group>"; };
 		1A2B3C4D5E6F7890ABCDEF10 /* MyCodeAssistantHost-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "MyCodeAssistantHost-Info.plist"; sourceTree = "<group>"; };
+		2A3B4C5D6E7F8901BCDEF013 /* LLMProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LLMProvider.swift; sourceTree = "<group>"; };
+		2A3B4C5D6E7F8901BCDEF015 /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
+		2A3B4C5D6E7F8901BCDEF017 /* ChatMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessage.swift; sourceTree = "<group>"; };
+		2A3B4C5D6E7F8901BCDEF019 /* UnifiedRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnifiedRequest.swift; sourceTree = "<group>"; };
+		2A3B4C5D6E7F8901BCDEF01B /* LLMProviderProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LLMProviderProtocol.swift; sourceTree = "<group>"; };
+		2A3B4C5D6E7F8901BCDEF01D /* BaseProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseProvider.swift; sourceTree = "<group>"; };
+		2A3B4C5D6E7F8901BCDEF01F /* OpenAIProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenAIProvider.swift; sourceTree = "<group>"; };
+		2A3B4C5D6E7F8901BCDEF021 /* OpenRouterProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenRouterProvider.swift; sourceTree = "<group>"; };
+		2A3B4C5D6E7F8901BCDEF023 /* APIKeyManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIKeyManager.swift; sourceTree = "<group>"; };
+		2A3B4C5D6E7F8901BCDEF025 /* ConversationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationManager.swift; sourceTree = "<group>"; };
+		2A3B4C5D6E7F8901BCDEF027 /* ProviderFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderFactory.swift; sourceTree = "<group>"; };
+		2A3B4C5D6E7F8901BCDEF029 /* SharedServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedServices.swift; sourceTree = "<group>"; };
+		2A3B4C5D6E7F8901BCDEF02B /* ErrorHandling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorHandling.swift; sourceTree = "<group>"; };
+		2A3B4C5D6E7F8901BCDEF02D /* NetworkUtilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkUtilities.swift; sourceTree = "<group>"; };
+		2A3B4C5D6E7F8901BCDEF02F /* App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
+		2A3B4C5D6E7F8901BCDEF031 /* ChatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewModel.swift; sourceTree = "<group>"; };
+		2A3B4C5D6E7F8901BCDEF033 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		2A3B4C5D6E7F8901BCDEF035 /* FormatterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormatterTests.swift; sourceTree = "<group>"; };
+		2A3B4C5D6E7F8901BCDEF037 /* InputBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputBar.swift; sourceTree = "<group>"; };
+		2A3B4C5D6E7F8901BCDEF039 /* MessageCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCard.swift; sourceTree = "<group>"; };
+		2A3B4C5D6E7F8901BCDEF03B /* ResponseFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponseFormatter.swift; sourceTree = "<group>"; };
+		2A3B4C5D6E7F8901BCDEF03D /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -80,10 +122,95 @@
 			isa = PBXGroup;
 			children = (
 				1A2B3C4D5E6F7890ABCDEF02 /* MyCodeAssistantApp.swift */,
-				1A2B3C4D5E6F7890ABCDEF04 /* ContentView.swift */,
+				3A4B5C6D7E8F9012CDEF0140 /* Core */,
+				3A4B5C6D7E8F9012CDEF0141 /* SwiftUI */,
 				1A2B3C4D5E6F7890ABCDEF10 /* MyCodeAssistantHost-Info.plist */,
 			);
 			path = MyCodeAssistantHost;
+			sourceTree = "<group>";
+		};
+		3A4B5C6D7E8F9012CDEF0140 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				3A4B5C6D7E8F9012CDEF0142 /* Enums */,
+				3A4B5C6D7E8F9012CDEF0143 /* Models */,
+				3A4B5C6D7E8F9012CDEF0144 /* Protocols */,
+				3A4B5C6D7E8F9012CDEF0145 /* Providers */,
+				3A4B5C6D7E8F9012CDEF0146 /* Services */,
+				3A4B5C6D7E8F9012CDEF0147 /* Utilities */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		3A4B5C6D7E8F9012CDEF0141 /* SwiftUI */ = {
+			isa = PBXGroup;
+			children = (
+				2A3B4C5D6E7F8901BCDEF02F /* App.swift */,
+				2A3B4C5D6E7F8901BCDEF031 /* ChatViewModel.swift */,
+				2A3B4C5D6E7F8901BCDEF033 /* ContentView.swift */,
+				2A3B4C5D6E7F8901BCDEF035 /* FormatterTests.swift */,
+				2A3B4C5D6E7F8901BCDEF037 /* InputBar.swift */,
+				2A3B4C5D6E7F8901BCDEF039 /* MessageCard.swift */,
+				2A3B4C5D6E7F8901BCDEF03B /* ResponseFormatter.swift */,
+				2A3B4C5D6E7F8901BCDEF03D /* SettingsView.swift */,
+			);
+			path = SwiftUI;
+			sourceTree = "<group>";
+		};
+		3A4B5C6D7E8F9012CDEF0142 /* Enums */ = {
+			isa = PBXGroup;
+			children = (
+				2A3B4C5D6E7F8901BCDEF013 /* LLMProvider.swift */,
+			);
+			path = Enums;
+			sourceTree = "<group>";
+		};
+		3A4B5C6D7E8F9012CDEF0143 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				2A3B4C5D6E7F8901BCDEF015 /* AppSettings.swift */,
+				2A3B4C5D6E7F8901BCDEF017 /* ChatMessage.swift */,
+				2A3B4C5D6E7F8901BCDEF019 /* UnifiedRequest.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		3A4B5C6D7E8F9012CDEF0144 /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				2A3B4C5D6E7F8901BCDEF01B /* LLMProviderProtocol.swift */,
+			);
+			path = Protocols;
+			sourceTree = "<group>";
+		};
+		3A4B5C6D7E8F9012CDEF0145 /* Providers */ = {
+			isa = PBXGroup;
+			children = (
+				2A3B4C5D6E7F8901BCDEF01D /* BaseProvider.swift */,
+				2A3B4C5D6E7F8901BCDEF01F /* OpenAIProvider.swift */,
+				2A3B4C5D6E7F8901BCDEF021 /* OpenRouterProvider.swift */,
+			);
+			path = Providers;
+			sourceTree = "<group>";
+		};
+		3A4B5C6D7E8F9012CDEF0146 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				2A3B4C5D6E7F8901BCDEF023 /* APIKeyManager.swift */,
+				2A3B4C5D6E7F8901BCDEF025 /* ConversationManager.swift */,
+				2A3B4C5D6E7F8901BCDEF027 /* ProviderFactory.swift */,
+				2A3B4C5D6E7F8901BCDEF029 /* SharedServices.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		3A4B5C6D7E8F9012CDEF0147 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				2A3B4C5D6E7F8901BCDEF02B /* ErrorHandling.swift */,
+				2A3B4C5D6E7F8901BCDEF02D /* NetworkUtilities.swift */,
+			);
+			path = Utilities;
 			sourceTree = "<group>";
 		};
 		1A2B3C4D5E6F7890ABCDEF15 /* MyCodeAssistantExtension */ = {
@@ -203,8 +330,29 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1A2B3C4D5E6F7890ABCDEF03 /* ContentView.swift in Sources */,
 				1A2B3C4D5E6F7890ABCDEF01 /* MyCodeAssistantApp.swift in Sources */,
+				2A3B4C5D6E7F8901BCDEF012 /* LLMProvider.swift in Sources */,
+				2A3B4C5D6E7F8901BCDEF014 /* AppSettings.swift in Sources */,
+				2A3B4C5D6E7F8901BCDEF016 /* ChatMessage.swift in Sources */,
+				2A3B4C5D6E7F8901BCDEF018 /* UnifiedRequest.swift in Sources */,
+				2A3B4C5D6E7F8901BCDEF01A /* LLMProviderProtocol.swift in Sources */,
+				2A3B4C5D6E7F8901BCDEF01C /* BaseProvider.swift in Sources */,
+				2A3B4C5D6E7F8901BCDEF01E /* OpenAIProvider.swift in Sources */,
+				2A3B4C5D6E7F8901BCDEF020 /* OpenRouterProvider.swift in Sources */,
+				2A3B4C5D6E7F8901BCDEF022 /* APIKeyManager.swift in Sources */,
+				2A3B4C5D6E7F8901BCDEF024 /* ConversationManager.swift in Sources */,
+				2A3B4C5D6E7F8901BCDEF026 /* ProviderFactory.swift in Sources */,
+				2A3B4C5D6E7F8901BCDEF028 /* SharedServices.swift in Sources */,
+				2A3B4C5D6E7F8901BCDEF02A /* ErrorHandling.swift in Sources */,
+				2A3B4C5D6E7F8901BCDEF02C /* NetworkUtilities.swift in Sources */,
+				2A3B4C5D6E7F8901BCDEF02E /* App.swift in Sources */,
+				2A3B4C5D6E7F8901BCDEF030 /* ChatViewModel.swift in Sources */,
+				2A3B4C5D6E7F8901BCDEF032 /* ContentView.swift in Sources */,
+				2A3B4C5D6E7F8901BCDEF034 /* FormatterTests.swift in Sources */,
+				2A3B4C5D6E7F8901BCDEF036 /* InputBar.swift in Sources */,
+				2A3B4C5D6E7F8901BCDEF038 /* MessageCard.swift in Sources */,
+				2A3B4C5D6E7F8901BCDEF03A /* ResponseFormatter.swift in Sources */,
+				2A3B4C5D6E7F8901BCDEF03C /* SettingsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

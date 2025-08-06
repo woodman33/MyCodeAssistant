@@ -215,7 +215,7 @@ struct FormatterTestView: View {
                         Text(testCases[selectedTest].content)
                             .font(.system(.caption, design: .monospaced))
                             .padding()
-                            .background(Color(.systemGray6))
+                            .background(Color(NSColor.controlBackgroundColor))
                             .cornerRadius(8)
                         
                         Text("Formatted Result:")
@@ -271,7 +271,7 @@ struct FormatterTestView: View {
                                     Text(codeBlock.code)
                                         .font(.system(.caption2, design: .monospaced))
                                         .padding(8)
-                                        .background(Color(.systemGray6))
+                                        .background(Color(NSColor.controlBackgroundColor))
                                         .cornerRadius(6)
                                 }
                                 .padding(.vertical, 4)

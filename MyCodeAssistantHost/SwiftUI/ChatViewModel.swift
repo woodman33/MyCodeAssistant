@@ -16,9 +16,9 @@ class ChatViewModel: ObservableObject {
     
     // MARK: - Private Properties
     private let sharedServices: SharedServices
-    private let conversationManager: ConversationManager
+    private let conversationManager: ConversationManagerProtocol
     private let providerFactory: ProviderFactory
-    private let apiKeyManager: APIKeyManager
+    private let apiKeyManager: APIKeyManagerProtocol
     
     // Current conversation
     @Published var currentConversation: Conversation?
@@ -57,12 +57,9 @@ class ChatViewModel: ObservableObject {
         // Create or update conversation
         if currentConversation == nil {
             currentConversation = Conversation(
-                id: UUID().uuidString,
                 title: String(messageToSend.prefix(50)),
-                provider: provider.rawValue,
                 messages: [userMessage],
-                createdAt: Date(),
-                updatedAt: Date()
+                provider: provider.rawValue
             )
         } else {
             currentConversation?.messages.append(userMessage)
@@ -91,7 +88,7 @@ class ChatViewModel: ObservableObject {
     func isProviderConfigured(_ provider: LLMProvider) -> Bool {
         do {
             let apiKey = try apiKeyManager.getAPIKey(for: provider)
-            return !apiKey.isEmpty
+            return !(apiKey?.isEmpty ?? true)
         } catch {
             return false
         }
@@ -109,12 +106,10 @@ class ChatViewModel: ObservableObject {
             
             // Create request
             let request = UnifiedRequest(
-                messages: messages.map { msg in
-                    UnifiedMessage(role: msg.role, content: msg.content)
-                },
+                messages: messages,
                 model: currentProvider?.primaryModel ?? "gpt-3.5-turbo",
-                maxTokens: 2000,
                 temperature: 0.7,
+                maxTokens: 2000,
                 stream: currentProvider?.supportsStreaming ?? false
             )
             
@@ -186,19 +181,16 @@ class ChatViewModel: ObservableObject {
             let stream = try await provider.sendStreamingRequest(request)
             
             for try await chunk in stream {
-                if let choice = chunk.choices.first,
-                   let delta = choice.delta,
-                   let content = delta.content {
-                    streamingContent += content
-                    
-                    // Update the last message
-                    if let lastIndex = messages.indices.last {
-                        messages[lastIndex] = ChatMessage(
-                            role: .assistant,
-                            content: streamingContent,
-                            timestamp: assistantMessage.timestamp
-                        )
-                    }
+                // For streaming, each chunk should contain partial content
+                streamingContent += chunk.message.content
+                
+                // Update the last message
+                if let lastIndex = messages.indices.last {
+                    messages[lastIndex] = ChatMessage(
+                        role: .assistant,
+                        content: streamingContent,
+                        timestamp: assistantMessage.timestamp
+                    )
                 }
             }
             
@@ -222,18 +214,16 @@ class ChatViewModel: ObservableObject {
         do {
             let response = try await provider.sendRequest(request)
             
-            if let choice = response.choices.first {
-                let assistantMessage = ChatMessage(
-                    role: .assistant,
-                    content: choice.message?.content ?? "No response",
-                    timestamp: Date()
-                )
-                messages.append(assistantMessage)
-                
-                // Update conversation
-                currentConversation?.messages = messages
-                currentConversation?.updatedAt = Date()
-            }
+            let assistantMessage = ChatMessage(
+                role: .assistant,
+                content: response.message.content,
+                timestamp: Date()
+            )
+            messages.append(assistantMessage)
+            
+            // Update conversation
+            currentConversation?.messages = messages
+            currentConversation?.updatedAt = Date()
             
         } catch {
             setError("Request failed: \(error.localizedDescription)")

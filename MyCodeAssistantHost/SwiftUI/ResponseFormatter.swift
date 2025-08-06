@@ -21,11 +21,11 @@ public class ResponseFormatter: ObservableObject {
         
         static func light() -> FormattingConfig {
             FormattingConfig(
-                codeBackgroundColor: Color(.systemGray6),
-                codeTextColor: Color(.systemRed),
+                codeBackgroundColor: Color.gray.opacity(0.1),
+                codeTextColor: Color.red,
                 linkColor: Color.blue,
-                quoteBarColor: Color(.systemGray3),
-                quoteBgColor: Color(.systemGray6),
+                quoteBarColor: Color.gray.opacity(0.4),
+                quoteBgColor: Color.gray.opacity(0.1),
                 headingColor: Color.primary,
                 strongTextColor: Color.primary,
                 emphasisTextColor: Color.primary
@@ -34,11 +34,11 @@ public class ResponseFormatter: ObservableObject {
         
         static func dark() -> FormattingConfig {
             FormattingConfig(
-                codeBackgroundColor: Color(.systemGray5),
-                codeTextColor: Color(.systemOrange),
+                codeBackgroundColor: Color.gray.opacity(0.2),
+                codeTextColor: Color.orange,
                 linkColor: Color.cyan,
-                quoteBarColor: Color(.systemGray2),
-                quoteBgColor: Color(.systemGray5),
+                quoteBarColor: Color.gray.opacity(0.6),
+                quoteBgColor: Color.gray.opacity(0.2),
                 headingColor: Color.primary,
                 strongTextColor: Color.primary,
                 emphasisTextColor: Color.primary

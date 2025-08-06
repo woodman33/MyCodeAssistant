@@ -12,8 +12,8 @@ class SourceEditorExtension: NSObject, XCSourceEditorExtension {
         return [
             [
                 XCSourceEditorCommandDefinitionKey.classNameKey: "SourceEditorCommand",
-                XCSourceEditorCommandDefinitionKey.commandNameKey: "MyCodeAssistant.AICommand",
-                XCSourceEditorCommandDefinitionKey.commandIdentifierKey: "ai-command"
+                XCSourceEditorCommandDefinitionKey.nameKey: "MyCodeAssistant.AICommand",
+                XCSourceEditorCommandDefinitionKey.identifierKey: "ai-command"
             ]
         ]
     }

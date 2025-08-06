@@ -1,22 +1,7 @@
 import SwiftUI
 
-// MARK: - MyCodeAssistant App
-@main
-struct MyCodeAssistantApp: App {
-    @StateObject private var themeManager = ThemeManager()
-    @StateObject private var settingsManager = UISettingsManager()
-    
-    var body: some Scene {
-        WindowGroup {
-            ContentView()
-                .environmentObject(themeManager)
-                .environmentObject(settingsManager)
-                .preferredColorScheme(themeManager.colorScheme)
-        }
-        .windowStyle(HiddenTitleBarWindowStyle())
-        .windowResizability(.contentSize)
-    }
-}
+// MARK: - App Configuration
+// This file contains the theme and settings managers used by the main app
 
 // MARK: - Theme Manager
 class ThemeManager: ObservableObject {
@@ -44,7 +29,7 @@ class ThemeManager: ObservableObject {
 }
 
 // MARK: - UI Settings Manager  
-class UIUISettingsManager: ObservableObject {
+class UISettingsManager: ObservableObject {
     @Published var appSettings: AppSettings = .default
     @Published var isFirstLaunch = true
     

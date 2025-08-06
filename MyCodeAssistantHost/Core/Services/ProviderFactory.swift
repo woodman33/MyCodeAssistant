@@ -60,8 +60,6 @@ public class ProviderFactory {
             return OpenAIProvider(apiKey: apiKey, configuration: configuration)
         case .openRouter:
             return OpenRouterProvider(apiKey: apiKey, configuration: configuration)
-        default:
-            throw ProviderFactoryError.unsupportedProvider(provider)
         }
     }
     
@@ -79,8 +77,6 @@ public class ProviderFactory {
             return OpenAIProvider(apiKey: apiKey, configuration: configuration)
         case .openRouter:
             return OpenRouterProvider(apiKey: apiKey, configuration: configuration)
-        default:
-            throw ProviderFactoryError.unsupportedProvider(provider)
         }
     }
     

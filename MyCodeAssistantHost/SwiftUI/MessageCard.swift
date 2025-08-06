@@ -81,19 +81,19 @@ struct MessageCard: View {
                 .textSelection(.enabled)
         }
         .background(
-            RoundedRectangle(cornerRadius: 12)
-                .fill(cardBackground)
-                .shadow(
-                    color: shadowColor,
-                    radius: isHovered ? 8 : 4,
-                    x: 0,
-                    y: isHovered ? 4 : 2
-                )
-                .overlay(
-                    RoundedRectangle(cornerRadius: 12)
-                        .stroke(accentBorder, lineWidth: isHovered ? 1.5 : 1)
-                        .opacity(isHovered ? 1 : 0.6)
-                )
+            ZStack {
+                cardBackground
+                
+                RoundedRectangle(cornerRadius: 12)
+                    .stroke(accentBorder, lineWidth: isHovered ? 1.5 : 1)
+                    .opacity(isHovered ? 1 : 0.6)
+            }
+            .shadow(
+                color: shadowColor,
+                radius: isHovered ? 8 : 4,
+                x: 0,
+                y: isHovered ? 4 : 2
+            )
         )
         .scaleEffect(isHovered ? 1.02 : 1.0)
         .animation(.spring(response: 0.3, dampingFraction: 0.8), value: isHovered)
@@ -135,23 +135,29 @@ struct MessageCard: View {
         }
     }
     
+    @ViewBuilder
     private var cardBackground: some View {
-        Group {
-            if message.role == .user {
-                // User message: more solid background
-                LinearGradient(
-                    colors: [
-                        themeManager.accentColor.color.opacity(0.15),
-                        themeManager.accentColor.color.opacity(0.08)
-                    ],
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
+        if message.role == .user {
+            // User message: more solid background
+            RoundedRectangle(cornerRadius: 12)
+                .fill(
+                    LinearGradient(
+                        colors: [
+                            themeManager.accentColor.color.opacity(0.15),
+                            themeManager.accentColor.color.opacity(0.08)
+                        ],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
                 )
-                .background(Material.ultraThickMaterial)
-            } else {
-                // Assistant message: glassy background
-                Color(.systemBackground).opacity(0.8)
-            }
+                .background(
+                    RoundedRectangle(cornerRadius: 12)
+                        .fill(Material.ultraThickMaterial)
+                )
+        } else {
+            // Assistant message: glassy background
+            RoundedRectangle(cornerRadius: 12)
+                .fill(Color(NSColor.controlBackgroundColor).opacity(0.8))
         }
     }
     

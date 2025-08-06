@@ -1,0 +1,283 @@
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -scheme MyCodeAssistantHost -destination platform=macOS build
+
+--- xcodebuild: WARNING: Using the first of multiple matching destinations:
+{ platform:macOS, arch:arm64, id:00006041-001C29D11480801C, name:My Mac }
+{ platform:macOS, arch:x86_64, id:00006041-001C29D11480801C, name:My Mac }
+ComputePackagePrebuildTargetDependencyGraph
+
+Prepare packages
+
+CreateBuildRequest
+
+SendProjectDescription
+
+CreateBuildOperation
+
+ComputeTargetDependencyGraph
+note: Building targets in dependency order
+note: Target dependency graph (2 targets)
+    Target 'MyCodeAssistantHost' in project 'MyCodeAssistant'
+        ➜ Explicit dependency on target 'MyCodeAssistantExtension' in project 'MyCodeAssistant'
+    Target 'MyCodeAssistantExtension' in project 'MyCodeAssistant' (no dependencies)
+
+GatherProvisioningInputs
+
+CreateBuildDescription
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc --version
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -v -E -dM -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk -x c -c /dev/null
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld -version_details
+
+Build description signature: bf87aeaf6d1c635b40279582cfc22432
+Build description path: /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/XCBuildData/bf87aeaf6d1c635b40279582cfc22432.xcbuilddata
+CreateBuildDirectory /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex
+    cd /Users/willmeldman/Downloads/MyCodeAssistant-main/MyCodeAssistant/MyCodeAssistant.xcodeproj
+    builtin-create-build-directory /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex
+
+CreateBuildDirectory /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Products
+    cd /Users/willmeldman/Downloads/MyCodeAssistant-main/MyCodeAssistant/MyCodeAssistant.xcodeproj
+    builtin-create-build-directory /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Products
+
+ClangStatCache /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk /Users/willmeldman/Library/Developer/Xcode/DerivedData/SDKStatCaches.noindex/macosx15.5-24F74-8254517eb8b97d462ccbc072ba9094c9.sdkstatcache
+    cd /Users/willmeldman/Downloads/MyCodeAssistant-main/MyCodeAssistant/MyCodeAssistant.xcodeproj
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk -o /Users/willmeldman/Library/Developer/Xcode/DerivedData/SDKStatCaches.noindex/macosx15.5-24F74-8254517eb8b97d462ccbc072ba9094c9.sdkstatcache
+
+CreateBuildDirectory /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Products/Debug
+    cd /Users/willmeldman/Downloads/MyCodeAssistant-main/MyCodeAssistant/MyCodeAssistant.xcodeproj
+    builtin-create-build-directory /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Products/Debug
+
+CreateBuildDirectory /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/EagerLinkingTBDs/Debug
+    cd /Users/willmeldman/Downloads/MyCodeAssistant-main/MyCodeAssistant/MyCodeAssistant.xcodeproj
+    builtin-create-build-directory /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/EagerLinkingTBDs/Debug
+
+WriteAuxiliaryFile /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistant-e74cf1571fbc53ec94076b54a9643df0-VFS/all-product-headers.yaml
+    cd /Users/willmeldman/Downloads/MyCodeAssistant-main/MyCodeAssistant/MyCodeAssistant.xcodeproj
+    write-file /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistant-e74cf1571fbc53ec94076b54a9643df0-VFS/all-product-headers.yaml
+
+WriteAuxiliaryFile /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantHost.build/MyCodeAssistantHost.hmap (in target 'MyCodeAssistantHost' from project 'MyCodeAssistant')
+    cd /Users/willmeldman/Downloads/MyCodeAssistant-main/MyCodeAssistant
+    write-file /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantHost.build/MyCodeAssistantHost.hmap
+
+WriteAuxiliaryFile /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantHost.build/MyCodeAssistantHost.DependencyStaticMetadataFileList (in target 'MyCodeAssistantHost' from project 'MyCodeAssistant')
+    cd /Users/willmeldman/Downloads/MyCodeAssistant-main/MyCodeAssistant
+    write-file /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantHost.build/MyCodeAssistantHost.DependencyStaticMetadataFileList
+
+WriteAuxiliaryFile /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantHost.build/MyCodeAssistantHost.DependencyMetadataFileList (in target 'MyCodeAssistantHost' from project 'MyCodeAssistant')
+    cd /Users/willmeldman/Downloads/MyCodeAssistant-main/MyCodeAssistant
+    write-file /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantHost.build/MyCodeAssistantHost.DependencyMetadataFileList
+
+WriteAuxiliaryFile /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantHost.build/MyCodeAssistantHost-project-headers.hmap (in target 'MyCodeAssistantHost' from project 'MyCodeAssistant')
+    cd /Users/willmeldman/Downloads/MyCodeAssistant-main/MyCodeAssistant
+    write-file /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantHost.build/MyCodeAssistantHost-project-headers.hmap
+
+WriteAuxiliaryFile /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantHost.build/MyCodeAssistantHost-own-target-headers.hmap (in target 'MyCodeAssistantHost' from project 'MyCodeAssistant')
+    cd /Users/willmeldman/Downloads/MyCodeAssistant-main/MyCodeAssistant
+    write-file /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantHost.build/MyCodeAssistantHost-own-target-headers.hmap
+
+WriteAuxiliaryFile /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantHost.build/MyCodeAssistantHost-generated-files.hmap (in target 'MyCodeAssistantHost' from project 'MyCodeAssistant')
+    cd /Users/willmeldman/Downloads/MyCodeAssistant-main/MyCodeAssistant
+    write-file /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantHost.build/MyCodeAssistantHost-generated-files.hmap
+
+WriteAuxiliaryFile /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantHost.build/MyCodeAssistantHost-all-target-headers.hmap (in target 'MyCodeAssistantHost' from project 'MyCodeAssistant')
+    cd /Users/willmeldman/Downloads/MyCodeAssistant-main/MyCodeAssistant
+    write-file /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantHost.build/MyCodeAssistantHost-all-target-headers.hmap
+
+WriteAuxiliaryFile /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantHost.build/MyCodeAssistantHost-all-non-framework-target-headers.hmap (in target 'MyCodeAssistantHost' from project 'MyCodeAssistant')
+    cd /Users/willmeldman/Downloads/MyCodeAssistant-main/MyCodeAssistant
+    write-file /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantHost.build/MyCodeAssistantHost-all-non-framework-target-headers.hmap
+
+WriteAuxiliaryFile /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantHost.build/Objects-normal/arm64/MyCodeAssistantHost_const_extract_protocols.json (in target 'MyCodeAssistantHost' from project 'MyCodeAssistant')
+    cd /Users/willmeldman/Downloads/MyCodeAssistant-main/MyCodeAssistant
+    write-file /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantHost.build/Objects-normal/arm64/MyCodeAssistantHost_const_extract_protocols.json
+
+WriteAuxiliaryFile /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantHost.build/Objects-normal/arm64/MyCodeAssistantHost.SwiftConstValuesFileList (in target 'MyCodeAssistantHost' from project 'MyCodeAssistant')
+    cd /Users/willmeldman/Downloads/MyCodeAssistant-main/MyCodeAssistant
+    write-file /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantHost.build/Objects-normal/arm64/MyCodeAssistantHost.SwiftConstValuesFileList
+
+WriteAuxiliaryFile /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantHost.build/Objects-normal/arm64/MyCodeAssistantHost-OutputFileMap.json (in target 'MyCodeAssistantHost' from project 'MyCodeAssistant')
+    cd /Users/willmeldman/Downloads/MyCodeAssistant-main/MyCodeAssistant
+    write-file /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantHost.build/Objects-normal/arm64/MyCodeAssistantHost-OutputFileMap.json
+
+WriteAuxiliaryFile /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantHost.build/Objects-normal/arm64/MyCodeAssistantHost.LinkFileList (in target 'MyCodeAssistantHost' from project 'MyCodeAssistant')
+    cd /Users/willmeldman/Downloads/MyCodeAssistant-main/MyCodeAssistant
+    write-file /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantHost.build/Objects-normal/arm64/MyCodeAssistantHost.LinkFileList
+
+WriteAuxiliaryFile /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantHost.build/Objects-normal/arm64/MyCodeAssistantHost.SwiftFileList (in target 'MyCodeAssistantHost' from project 'MyCodeAssistant')
+    cd /Users/willmeldman/Downloads/MyCodeAssistant-main/MyCodeAssistant
+    write-file /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantHost.build/Objects-normal/arm64/MyCodeAssistantHost.SwiftFileList
+
+WriteAuxiliaryFile /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantHost.build/MyCodeAssistantHost-DebugDylibPath-normal-arm64.txt (in target 'MyCodeAssistantHost' from project 'MyCodeAssistant')
+    cd /Users/willmeldman/Downloads/MyCodeAssistant-main/MyCodeAssistant
+    write-file /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantHost.build/MyCodeAssistantHost-DebugDylibPath-normal-arm64.txt
+
+WriteAuxiliaryFile /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantHost.build/MyCodeAssistantHost-DebugDylibInstallName-normal-arm64.txt (in target 'MyCodeAssistantHost' from project 'MyCodeAssistant')
+    cd /Users/willmeldman/Downloads/MyCodeAssistant-main/MyCodeAssistant
+    write-file /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantHost.build/MyCodeAssistantHost-DebugDylibInstallName-normal-arm64.txt
+
+WriteAuxiliaryFile /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantHost.build/DerivedSources/Entitlements.plist (in target 'MyCodeAssistantHost' from project 'MyCodeAssistant')
+    cd /Users/willmeldman/Downloads/MyCodeAssistant-main/MyCodeAssistant
+    write-file /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantHost.build/DerivedSources/Entitlements.plist
+
+WriteAuxiliaryFile /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantExtension.build/Objects-normal/arm64/MyCodeAssistantExtension_const_extract_protocols.json (in target 'MyCodeAssistantExtension' from project 'MyCodeAssistant')
+    cd /Users/willmeldman/Downloads/MyCodeAssistant-main/MyCodeAssistant
+    write-file /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantExtension.build/Objects-normal/arm64/MyCodeAssistantExtension_const_extract_protocols.json
+
+WriteAuxiliaryFile /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantExtension.build/Objects-normal/arm64/MyCodeAssistantExtension.SwiftFileList (in target 'MyCodeAssistantExtension' from project 'MyCodeAssistant')
+    cd /Users/willmeldman/Downloads/MyCodeAssistant-main/MyCodeAssistant
+    write-file /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantExtension.build/Objects-normal/arm64/MyCodeAssistantExtension.SwiftFileList
+
+WriteAuxiliaryFile /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantExtension.build/Objects-normal/arm64/MyCodeAssistantExtension.LinkFileList (in target 'MyCodeAssistantExtension' from project 'MyCodeAssistant')
+    cd /Users/willmeldman/Downloads/MyCodeAssistant-main/MyCodeAssistant
+    write-file /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantExtension.build/Objects-normal/arm64/MyCodeAssistantExtension.LinkFileList
+
+WriteAuxiliaryFile /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantExtension.build/Objects-normal/arm64/MyCodeAssistantExtension.SwiftConstValuesFileList (in target 'MyCodeAssistantExtension' from project 'MyCodeAssistant')
+    cd /Users/willmeldman/Downloads/MyCodeAssistant-main/MyCodeAssistant
+    write-file /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantExtension.build/Objects-normal/arm64/MyCodeAssistantExtension.SwiftConstValuesFileList
+
+WriteAuxiliaryFile /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantExtension.build/Objects-normal/arm64/MyCodeAssistantExtension-OutputFileMap.json (in target 'MyCodeAssistantExtension' from project 'MyCodeAssistant')
+    cd /Users/willmeldman/Downloads/MyCodeAssistant-main/MyCodeAssistant
+    write-file /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantExtension.build/Objects-normal/arm64/MyCodeAssistantExtension-OutputFileMap.json
+
+WriteAuxiliaryFile /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantExtension.build/MyCodeAssistantExtension.hmap (in target 'MyCodeAssistantExtension' from project 'MyCodeAssistant')
+    cd /Users/willmeldman/Downloads/MyCodeAssistant-main/MyCodeAssistant
+    write-file /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantExtension.build/MyCodeAssistantExtension.hmap
+
+WriteAuxiliaryFile /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantExtension.build/MyCodeAssistantExtension.DependencyStaticMetadataFileList (in target 'MyCodeAssistantExtension' from project 'MyCodeAssistant')
+    cd /Users/willmeldman/Downloads/MyCodeAssistant-main/MyCodeAssistant
+    write-file /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantExtension.build/MyCodeAssistantExtension.DependencyStaticMetadataFileList
+
+WriteAuxiliaryFile /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantExtension.build/MyCodeAssistantExtension.DependencyMetadataFileList (in target 'MyCodeAssistantExtension' from project 'MyCodeAssistant')
+    cd /Users/willmeldman/Downloads/MyCodeAssistant-main/MyCodeAssistant
+    write-file /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantExtension.build/MyCodeAssistantExtension.DependencyMetadataFileList
+
+WriteAuxiliaryFile /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantExtension.build/MyCodeAssistantExtension-project-headers.hmap (in target 'MyCodeAssistantExtension' from project 'MyCodeAssistant')
+    cd /Users/willmeldman/Downloads/MyCodeAssistant-main/MyCodeAssistant
+    write-file /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantExtension.build/MyCodeAssistantExtension-project-headers.hmap
+
+WriteAuxiliaryFile /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantExtension.build/MyCodeAssistantExtension-own-target-headers.hmap (in target 'MyCodeAssistantExtension' from project 'MyCodeAssistant')
+    cd /Users/willmeldman/Downloads/MyCodeAssistant-main/MyCodeAssistant
+    write-file /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantExtension.build/MyCodeAssistantExtension-own-target-headers.hmap
+
+WriteAuxiliaryFile /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantExtension.build/MyCodeAssistantExtension-generated-files.hmap (in target 'MyCodeAssistantExtension' from project 'MyCodeAssistant')
+    cd /Users/willmeldman/Downloads/MyCodeAssistant-main/MyCodeAssistant
+    write-file /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantExtension.build/MyCodeAssistantExtension-generated-files.hmap
+
+WriteAuxiliaryFile /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantExtension.build/MyCodeAssistantExtension-all-target-headers.hmap (in target 'MyCodeAssistantExtension' from project 'MyCodeAssistant')
+    cd /Users/willmeldman/Downloads/MyCodeAssistant-main/MyCodeAssistant
+    write-file /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantExtension.build/MyCodeAssistantExtension-all-target-headers.hmap
+
+WriteAuxiliaryFile /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantExtension.build/MyCodeAssistantExtension-all-non-framework-target-headers.hmap (in target 'MyCodeAssistantExtension' from project 'MyCodeAssistant')
+    cd /Users/willmeldman/Downloads/MyCodeAssistant-main/MyCodeAssistant
+    write-file /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantExtension.build/MyCodeAssistantExtension-all-non-framework-target-headers.hmap
+
+WriteAuxiliaryFile /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantExtension.build/MyCodeAssistantExtension-DebugEntryPoint-normal-arm64.txt (in target 'MyCodeAssistantExtension' from project 'MyCodeAssistant')
+    cd /Users/willmeldman/Downloads/MyCodeAssistant-main/MyCodeAssistant
+    write-file /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantExtension.build/MyCodeAssistantExtension-DebugEntryPoint-normal-arm64.txt
+
+WriteAuxiliaryFile /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantExtension.build/MyCodeAssistantExtension-DebugDylibPath-normal-arm64.txt (in target 'MyCodeAssistantExtension' from project 'MyCodeAssistant')
+    cd /Users/willmeldman/Downloads/MyCodeAssistant-main/MyCodeAssistant
+    write-file /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantExtension.build/MyCodeAssistantExtension-DebugDylibPath-normal-arm64.txt
+
+WriteAuxiliaryFile /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantExtension.build/MyCodeAssistantExtension-DebugDylibInstallName-normal-arm64.txt (in target 'MyCodeAssistantExtension' from project 'MyCodeAssistant')
+    cd /Users/willmeldman/Downloads/MyCodeAssistant-main/MyCodeAssistant
+    write-file /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantExtension.build/MyCodeAssistantExtension-DebugDylibInstallName-normal-arm64.txt
+
+WriteAuxiliaryFile /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantExtension.build/DerivedSources/Entitlements.plist (in target 'MyCodeAssistantExtension' from project 'MyCodeAssistant')
+    cd /Users/willmeldman/Downloads/MyCodeAssistant-main/MyCodeAssistant
+    write-file /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantExtension.build/DerivedSources/Entitlements.plist
+
+MkDir /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Products/Debug/MyCodeAssistantHost.app/Contents/MacOS (in target 'MyCodeAssistantHost' from project 'MyCodeAssistant')
+    cd /Users/willmeldman/Downloads/MyCodeAssistant-main/MyCodeAssistant
+    /bin/mkdir -p /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Products/Debug/MyCodeAssistantHost.app/Contents/MacOS
+
+MkDir /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Products/Debug/MyCodeAssistantHost.app/Contents/PlugIns (in target 'MyCodeAssistantHost' from project 'MyCodeAssistant')
+    cd /Users/willmeldman/Downloads/MyCodeAssistant-main/MyCodeAssistant
+    /bin/mkdir -p /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Products/Debug/MyCodeAssistantHost.app/Contents/PlugIns
+
+MkDir /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Products/Debug/MyCodeAssistantHost.app/Contents (in target 'MyCodeAssistantHost' from project 'MyCodeAssistant')
+    cd /Users/willmeldman/Downloads/MyCodeAssistant-main/MyCodeAssistant
+    /bin/mkdir -p /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Products/Debug/MyCodeAssistantHost.app/Contents
+
+MkDir /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Products/Debug/MyCodeAssistantHost.app (in target 'MyCodeAssistantHost' from project 'MyCodeAssistant')
+    cd /Users/willmeldman/Downloads/MyCodeAssistant-main/MyCodeAssistant
+    /bin/mkdir -p /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Products/Debug/MyCodeAssistantHost.app
+
+MkDir /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Products/Debug/MyCodeAssistantExtension.appex/Contents (in target 'MyCodeAssistantExtension' from project 'MyCodeAssistant')
+    cd /Users/willmeldman/Downloads/MyCodeAssistant-main/MyCodeAssistant
+    /bin/mkdir -p /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Products/Debug/MyCodeAssistantExtension.appex/Contents
+
+MkDir /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Products/Debug/MyCodeAssistantExtension.appex/Contents/MacOS (in target 'MyCodeAssistantExtension' from project 'MyCodeAssistant')
+    cd /Users/willmeldman/Downloads/MyCodeAssistant-main/MyCodeAssistant
+    /bin/mkdir -p /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Products/Debug/MyCodeAssistantExtension.appex/Contents/MacOS
+
+MkDir /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Products/Debug/MyCodeAssistantExtension.appex (in target 'MyCodeAssistantExtension' from project 'MyCodeAssistant')
+    cd /Users/willmeldman/Downloads/MyCodeAssistant-main/MyCodeAssistant
+    /bin/mkdir -p /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Products/Debug/MyCodeAssistantExtension.appex
+
+ProcessProductPackaging "" /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantExtension.build/MyCodeAssistantExtension.appex.xcent (in target 'MyCodeAssistantExtension' from project 'MyCodeAssistant')
+    cd /Users/willmeldman/Downloads/MyCodeAssistant-main/MyCodeAssistant
+    
+    Entitlements:
+    
+    {
+    "com.apple.security.get-task-allow" = 1;
+}
+    
+    builtin-productPackagingUtility -entitlements -format xml -o /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantExtension.build/MyCodeAssistantExtension.appex.xcent
+
+ProcessProductPackagingDER /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantExtension.build/MyCodeAssistantExtension.appex.xcent /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantExtension.build/MyCodeAssistantExtension.appex.xcent.der (in target 'MyCodeAssistantExtension' from project 'MyCodeAssistant')
+    cd /Users/willmeldman/Downloads/MyCodeAssistant-main/MyCodeAssistant
+    /usr/bin/derq query -f xml -i /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantExtension.build/MyCodeAssistantExtension.appex.xcent -o /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantExtension.build/MyCodeAssistantExtension.appex.xcent.der --raw
+
+ProcessInfoPlistFile /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Products/Debug/MyCodeAssistantExtension.appex/Contents/Info.plist /Users/willmeldman/Downloads/MyCodeAssistant-main/MyCodeAssistant/MyCodeAssistantExtension/MyCodeAssistantExtension-Info.plist (in target 'MyCodeAssistantExtension' from project 'MyCodeAssistant')
+    cd /Users/willmeldman/Downloads/MyCodeAssistant-main/MyCodeAssistant
+    builtin-infoPlistUtility /Users/willmeldman/Downloads/MyCodeAssistant-main/MyCodeAssistant/MyCodeAssistantExtension/MyCodeAssistantExtension-Info.plist -producttype com.apple.product-type.xcode-extension -expandbuildsettings -platform macosx -o /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Products/Debug/MyCodeAssistantExtension.appex/Contents/Info.plist
+
+Ld /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Products/Debug/MyCodeAssistantExtension.appex/Contents/MacOS/__preview.dylib normal (in target 'MyCodeAssistantExtension' from project 'MyCodeAssistant')
+    cd /Users/willmeldman/Downloads/MyCodeAssistant-main/MyCodeAssistant
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -Xlinker -reproducible -target arm64-apple-macos13.0 -dynamiclib -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk -O0 -L/Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Products/Debug -F/Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Products/Debug -L/Applications/Xcode.app/Contents/Developer/usr/lib -F/Applications/Xcode.app/Contents/Developer/Library/Frameworks -install_name @rpath/MyCodeAssistantExtension.debug.dylib -rdynamic -Xlinker -no_deduplicate -Xlinker -dependency_info -Xlinker /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantExtension.build/Objects-normal/arm64/MyCodeAssistantExtension_dependency_info.dat -Xlinker -no_adhoc_codesign -o /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Products/Debug/MyCodeAssistantExtension.appex/Contents/MacOS/__preview.dylib
+
+SwiftDriver MyCodeAssistantExtension normal arm64 com.apple.xcode.tools.swift.compiler (in target 'MyCodeAssistantExtension' from project 'MyCodeAssistant')
+    cd /Users/willmeldman/Downloads/MyCodeAssistant-main/MyCodeAssistant
+    builtin-SwiftDriver -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name MyCodeAssistantExtension -Onone -enforce-exclusivity\=checked @/Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantExtension.build/Objects-normal/arm64/MyCodeAssistantExtension.SwiftFileList -DDEBUG -enable-bare-slash-regex -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk -target arm64-apple-macos13.0 -g -module-cache-path /Users/willmeldman/Library/Developer/Xcode/DerivedData/ModuleCache.noindex -Xfrontend -serialize-debugging-options -application-extension -enable-testing -index-store-path /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Index.noindex/DataStore -swift-version 5 -I /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Products/Debug -F /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Products/Debug -F /Applications/Xcode.app/Contents/Developer/Library/Frameworks -emit-localized-strings -emit-localized-strings-path /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantExtension.build/Objects-normal/arm64 -c -j14 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /Users/willmeldman/Library/Developer/Xcode/DerivedData/SDKStatCaches.noindex/macosx15.5-24F74-8254517eb8b97d462ccbc072ba9094c9.sdkstatcache -output-file-map /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantExtension.build/Objects-normal/arm64/MyCodeAssistantExtension-OutputFileMap.json -use-frontend-parseable-output -save-temps -no-color-diagnostics -serialize-diagnostics -emit-dependencies -emit-module -emit-module-path /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantExtension.build/Objects-normal/arm64/MyCodeAssistantExtension.swiftmodule -validate-clang-modules-once -clang-build-session-file /Users/willmeldman/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/Session.modulevalidation -Xcc -I/Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantExtension.build/swift-overrides.hmap -emit-const-values -Xfrontend -const-gather-protocols-file -Xfrontend /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantExtension.build/Objects-normal/arm64/MyCodeAssistantExtension_const_extract_protocols.json -Xcc -iquote -Xcc /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantExtension.build/MyCodeAssistantExtension-generated-files.hmap -Xcc -I/Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantExtension.build/MyCodeAssistantExtension-own-target-headers.hmap -Xcc -I/Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantExtension.build/MyCodeAssistantExtension-all-target-headers.hmap -Xcc -iquote -Xcc /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantExtension.build/MyCodeAssistantExtension-project-headers.hmap -Xcc -I/Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Products/Debug/include -Xcc -I/Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantExtension.build/DerivedSources-normal/arm64 -Xcc -I/Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantExtension.build/DerivedSources/arm64 -Xcc -I/Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantExtension.build/DerivedSources -Xcc -DDEBUG\=1 -emit-objc-header -emit-objc-header-path /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantExtension.build/Objects-normal/arm64/MyCodeAssistantExtension-Swift.h -working-directory /Users/willmeldman/Downloads/MyCodeAssistant-main/MyCodeAssistant -experimental-emit-module-separately -disable-cmo
+
+SwiftEmitModule normal arm64 Emitting\ module\ for\ MyCodeAssistantExtension (in target 'MyCodeAssistantExtension' from project 'MyCodeAssistant')
+
+EmitSwiftModule normal arm64 (in target 'MyCodeAssistantExtension' from project 'MyCodeAssistant')
+    cd /Users/willmeldman/Downloads/MyCodeAssistant-main/MyCodeAssistant
+    
+/Users/willmeldman/Downloads/MyCodeAssistant-main/MyCodeAssistant/MyCodeAssistantExtension/SourceEditorCommand.swift:7:7: error: invalid redeclaration of 'SourceEditorExtension'
+class SourceEditorExtension: NSObject, XCSourceEditorExtension {
+      ^
+/Users/willmeldman/Downloads/MyCodeAssistant-main/MyCodeAssistant/MyCodeAssistantExtension/SourceEditorExtension.swift:4:7: note: 'SourceEditorExtension' previously declared here
+class SourceEditorExtension: NSObject, XCSourceEditorExtension {
+      ^
+/Users/willmeldman/Downloads/MyCodeAssistant-main/MyCodeAssistant/MyCodeAssistantExtension/SourceEditorExtension.swift:4:7: note: 'SourceEditorExtension' previously declared here
+class SourceEditorExtension: NSObject, XCSourceEditorExtension {
+      ^
+
+Failed frontend command:
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swift-frontend -frontend -emit-module -experimental-skip-non-inlinable-function-bodies-without-types /Users/willmeldman/Downloads/MyCodeAssistant-main/MyCodeAssistant/MyCodeAssistantExtension/SourceEditorCommand.swift /Users/willmeldman/Downloads/MyCodeAssistant-main/MyCodeAssistant/MyCodeAssistantExtension/SourceEditorExtension.swift -target arm64-apple-macos13.0 -Xllvm -aarch64-use-tbi -enable-objc-interop -stack-check -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk -I /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Products/Debug -F /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Products/Debug -F /Applications/Xcode.app/Contents/Developer/Library/Frameworks -no-color-diagnostics -application-extension -enable-testing -g -debug-info-format\=dwarf -dwarf-version\=4 -module-cache-path /Users/willmeldman/Library/Developer/Xcode/DerivedData/ModuleCache.noindex -swift-version 5 -enforce-exclusivity\=checked -Onone -D DEBUG -serialize-debugging-options -const-gather-protocols-file /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantExtension.build/Objects-normal/arm64/MyCodeAssistantExtension_const_extract_protocols.json -enable-experimental-feature DebugDescriptionMacro -enable-bare-slash-regex -empty-abi-descriptor -validate-clang-modules-once -clang-build-session-file /Users/willmeldman/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/Session.modulevalidation -Xcc -working-directory -Xcc /Users/willmeldman/Downloads/MyCodeAssistant-main/MyCodeAssistant -resource-dir /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift -enable-anonymous-context-mangled-names -file-compilation-dir /Users/willmeldman/Downloads/MyCodeAssistant-main/MyCodeAssistant -Xcc -ivfsstatcache -Xcc /Users/willmeldman/Library/Developer/Xcode/DerivedData/SDKStatCaches.noindex/macosx15.5-24F74-8254517eb8b97d462ccbc072ba9094c9.sdkstatcache -Xcc -I/Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantExtension.build/swift-overrides.hmap -Xcc -iquote -Xcc /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantExtension.build/MyCodeAssistantExtension-generated-files.hmap -Xcc -I/Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantExtension.build/MyCodeAssistantExtension-own-target-headers.hmap -Xcc -I/Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantExtension.build/MyCodeAssistantExtension-all-target-headers.hmap -Xcc -iquote -Xcc /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantExtension.build/MyCodeAssistantExtension-project-headers.hmap -Xcc -I/Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Products/Debug/include -Xcc -I/Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantExtension.build/DerivedSources-normal/arm64 -Xcc -I/Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantExtension.build/DerivedSources/arm64 -Xcc -I/Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantExtension.build/DerivedSources -Xcc -DDEBUG\=1 -module-name MyCodeAssistantExtension -frontend-parseable-output -disable-clang-spi -target-sdk-version 15.5 -target-sdk-name macosx15.5 -external-plugin-path /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib/swift/host/plugins\#/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/bin/swift-plugin-server -external-plugin-path /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/local/lib/swift/host/plugins\#/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/bin/swift-plugin-server -in-process-plugin-server-path /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/libSwiftInProcPluginServer.dylib -plugin-path /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins -plugin-path /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/local/lib/swift/host/plugins -emit-module-doc-path /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantExtension.build/Objects-normal/arm64/MyCodeAssistantExtension.swiftdoc -emit-module-source-info-path /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantExtension.build/Objects-normal/arm64/MyCodeAssistantExtension.swiftsourceinfo -emit-objc-header-path /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantExtension.build/Objects-normal/arm64/MyCodeAssistantExtension-Swift.h -serialize-diagnostics-path /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantExtension.build/Objects-normal/arm64/MyCodeAssistantExtension-master-emit-module.dia -emit-dependencies-path /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantExtension.build/Objects-normal/arm64/MyCodeAssistantExtension-master-emit-module.d -o /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantExtension.build/Objects-normal/arm64/MyCodeAssistantExtension.swiftmodule -emit-abi-descriptor-path /Users/willmeldman/Library/Developer/Xcode/DerivedData/MyCodeAssistant-crmsfrwppsdlribetmzdcluittba/Build/Intermediates.noindex/MyCodeAssistant.build/Debug/MyCodeAssistantExtension.build/Objects-normal/arm64/MyCodeAssistantExtension.abi.json
+SwiftCompile normal arm64 Compiling\ SourceEditorExtension.swift /Users/willmeldman/Downloads/MyCodeAssistant-main/MyCodeAssistant/MyCodeAssistantExtension/SourceEditorExtension.swift (in target 'MyCodeAssistantExtension' from project 'MyCodeAssistant')
+SwiftCompile normal arm64 /Users/willmeldman/Downloads/MyCodeAssistant-main/MyCodeAssistant/MyCodeAssistantExtension/SourceEditorExtension.swift (in target 'MyCodeAssistantExtension' from project 'MyCodeAssistant')
+    cd /Users/willmeldman/Downloads/MyCodeAssistant-main/MyCodeAssistant
+    
+
+SwiftCompile normal arm64 Compiling\ SourceEditorCommand.swift /Users/willmeldman/Downloads/MyCodeAssistant-main/MyCodeAssistant/MyCodeAssistantExtension/SourceEditorCommand.swift (in target 'MyCodeAssistantExtension' from project 'MyCodeAssistant')
+
+SwiftCompile normal arm64 /Users/willmeldman/Downloads/MyCodeAssistant-main/MyCodeAssistant/MyCodeAssistantExtension/SourceEditorCommand.swift (in target 'MyCodeAssistantExtension' from project 'MyCodeAssistant')
+    cd /Users/willmeldman/Downloads/MyCodeAssistant-main/MyCodeAssistant
+    
+
+note: Disabling hardened runtime with ad-hoc codesigning. (in target 'MyCodeAssistantHost' from project 'MyCodeAssistant')
+** BUILD FAILED **
+
+
+The following build commands failed:
+	EmitSwiftModule normal arm64 (in target 'MyCodeAssistantExtension' from project 'MyCodeAssistant')
+	SwiftEmitModule normal arm64 Emitting\ module\ for\ MyCodeAssistantExtension (in target 'MyCodeAssistantExtension' from project 'MyCodeAssistant')
+	Building project MyCodeAssistant with scheme MyCodeAssistantHost
+(3 failures)

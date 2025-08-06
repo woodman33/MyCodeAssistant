@@ -4,7 +4,7 @@ import SwiftUI
 struct SettingsView: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject private var themeManager: ThemeManager
-    @EnvironmentObject private var settingsManager: SettingsManager
+    @EnvironmentObject private var settingsManager: UISettingsManager
     @StateObject private var apiKeyManager = APIKeyManager()
     
     @State private var selectedProvider: LLMProvider = .openAI
@@ -39,7 +39,9 @@ struct SettingsView: View {
                     .padding(.top, 20)
                 }
             }
+            #if os(iOS)
             .navigationBarHidden(true)
+            #endif
         }
         .onAppear {
             loadCurrentApiKey()
@@ -451,12 +453,23 @@ struct ThemeOption: View {
             .frame(maxWidth: .infinity)
             .padding(.vertical, 12)
             .background(
-                RoundedRectangle(cornerRadius: 12)
-                    .fill(isSelected ? Color.blue : Material.thinMaterial)
-                    .overlay(
+                Group {
+                    if isSelected {
                         RoundedRectangle(cornerRadius: 12)
-                            .stroke(isSelected ? Color.blue : Color.primary.opacity(0.2), lineWidth: 1)
-                    )
+                            .fill(Color.blue)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .stroke(Color.blue, lineWidth: 1)
+                            )
+                    } else {
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(Material.thinMaterial)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .stroke(Color.primary.opacity(0.2), lineWidth: 1)
+                            )
+                    }
+                }
             )
         }
         .buttonStyle(PlainButtonStyle())
@@ -589,6 +602,6 @@ enum SaveStatus {
 #Preview {
     SettingsView()
         .environmentObject(ThemeManager())
-        .environmentObject(SettingsManager())
+        .environmentObject(UISettingsManager())
         .preferredColorScheme(.dark)
 }

@@ -429,7 +429,7 @@ struct AdvancedOptionButtonStyle: ButtonStyle {
         Spacer()
         
         InputBar(
-            currentProvider: .constant(.anthropic),
+            currentProvider: .constant(.openAI),
             isLoading: true,
             onSendMessage: { _ in }
         )

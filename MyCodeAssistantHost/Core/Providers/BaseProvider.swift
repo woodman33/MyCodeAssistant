@@ -81,8 +81,8 @@ open class BaseLLMProvider: LLMProviderProtocol {
     }
     
     public func estimateCost(for request: UnifiedRequest) -> Double? {
-        guard let model = request.model ?? defaultModel,
-              let inputTokens = estimateInputTokens(for: request),
+        let model = request.model ?? defaultModel
+        guard let inputTokens = estimateInputTokens(for: request),
               let outputTokens = request.maxTokens else {
             return nil
         }

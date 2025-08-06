@@ -31,7 +31,7 @@ struct ContentView: View {
                 .environmentObject(settingsManager)
         }
         .onAppear {
-            viewModel.initialize(with: settingsManager.appSettings)
+            // Initialize any needed setup here if required
         }
     }
     
@@ -127,9 +127,8 @@ struct ContentView: View {
             currentProvider: $viewModel.currentProvider,
             isLoading: viewModel.isLoading,
             onSendMessage: { message in
-                Task {
-                    await viewModel.sendMessage(message)
-                }
+                viewModel.currentMessage = message
+                viewModel.sendMessage()
             }
         )
         .environmentObject(themeManager)
@@ -156,6 +155,6 @@ struct GlassButtonStyle: ButtonStyle {
 #Preview {
     ContentView()
         .environmentObject(ThemeManager())
-        .environmentObject(SettingsManager())
+        .environmentObject(UISettingsManager())
         .preferredColorScheme(.dark)
 }
