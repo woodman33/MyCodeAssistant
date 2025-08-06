@@ -4,7 +4,10 @@ import SwiftUI
 struct MessageCard: View {
     let message: ChatMessage
     @EnvironmentObject private var themeManager: ThemeManager
+    @Environment(\.colorScheme) var colorScheme
     @State private var isHovered = false
+    @State private var showCopyOptions = false
+    @StateObject private var formatter = ResponseFormatter.shared
     
     var body: some View {
         HStack(alignment: .top, spacing: 0) {
@@ -33,6 +36,19 @@ struct MessageCard: View {
                 isHovered = hovering
             }
         }
+        .overlay(
+            // Copy and action buttons overlay
+            HStack {
+                Spacer()
+                if isHovered {
+                    MessageActionsView(message: message, showCopyOptions: $showCopyOptions)
+                        .transition(.opacity.combined(with: .scale(scale: 0.8)))
+                }
+            }
+            .padding(.trailing, 8)
+            .padding(.top, 8),
+            alignment: .topTrailing
+        )
     }
     
     // MARK: - Role Header
@@ -59,14 +75,10 @@ struct MessageCard: View {
     // MARK: - Message Card Content
     private var messageCardContent: some View {
         VStack(alignment: .leading, spacing: 0) {
-            Text(message.content)
-                .font(.system(.body, design: .rounded))
-                .foregroundColor(.primary)
+            FormattedText(content: message.content, colorScheme: colorScheme)
                 .padding(.horizontal, 16)
                 .padding(.vertical, 12)
                 .textSelection(.enabled)
-                .lineLimit(nil)
-                .multilineTextAlignment(.leading)
         }
         .background(
             RoundedRectangle(cornerRadius: 12)
@@ -180,7 +192,9 @@ struct MessageCard: View {
 struct StreamingMessageCard: View {
     let content: String
     @EnvironmentObject private var themeManager: ThemeManager
+    @Environment(\.colorScheme) var colorScheme
     @State private var cursorVisible = true
+    @StateObject private var formatter = ResponseFormatter.shared
     
     var body: some View {
         HStack(alignment: .top, spacing: 0) {
@@ -220,12 +234,8 @@ struct StreamingMessageCard: View {
                 // Message content with cursor
                 VStack(alignment: .leading, spacing: 0) {
                     HStack {
-                        Text(content)
-                            .font(.system(.body, design: .rounded))
-                            .foregroundColor(.primary)
+                        FormattedStreamingText(content: content, colorScheme: colorScheme)
                             .textSelection(.enabled)
-                            .lineLimit(nil)
-                            .multilineTextAlignment(.leading)
                         
                         // Typing cursor
                         Rectangle()
@@ -256,6 +266,127 @@ struct StreamingMessageCard: View {
         .onAppear {
             cursorVisible = true
         }
+    }
+}
+
+// MARK: - Formatted Text Views
+struct FormattedText: View {
+    let content: String
+    let colorScheme: ColorScheme
+    
+    var body: some View {
+        Text(ResponseFormatter.shared.formatResponse(content, colorScheme: colorScheme))
+            .font(.system(.body, design: .rounded))
+            .lineLimit(nil)
+            .multilineTextAlignment(.leading)
+    }
+}
+
+struct FormattedStreamingText: View {
+    let content: String
+    let colorScheme: ColorScheme
+    
+    var body: some View {
+        Text(ResponseFormatter.shared.formatStreamingResponse(content, colorScheme: colorScheme))
+            .font(.system(.body, design: .rounded))
+            .lineLimit(nil)
+            .multilineTextAlignment(.leading)
+    }
+}
+
+// MARK: - Enhanced Message Actions
+struct MessageActionsView: View {
+    let message: ChatMessage
+    @Binding var showCopyOptions: Bool
+    @State private var showingCopyConfirmation = false
+    @State private var codeBlocks: [CodeBlock] = []
+    
+    var body: some View {
+        HStack(spacing: 8) {
+            // Copy entire message button
+            Button(action: { copyEntireMessage() }) {
+                Image(systemName: "doc.on.doc")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+            .buttonStyle(ActionButtonStyle())
+            
+            // Copy code blocks button (if any exist)
+            if !codeBlocks.isEmpty {
+                Menu {
+                    ForEach(codeBlocks) { codeBlock in
+                        Button("Copy \(codeBlock.displayName) Code") {
+                            copyCodeBlock(codeBlock)
+                        }
+                    }
+                } label: {
+                    Image(systemName: "curlybraces")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+                .buttonStyle(ActionButtonStyle())
+            }
+            
+            // Share button
+            Button(action: shareMessage) {
+                Image(systemName: "square.and.arrow.up")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+            .buttonStyle(ActionButtonStyle())
+        }
+        .opacity(0.8)
+        .overlay(
+            Text("Copied!")
+                .font(.caption2)
+                .foregroundColor(.green)
+                .opacity(showingCopyConfirmation ? 1 : 0)
+                .scaleEffect(showingCopyConfirmation ? 1 : 0.8)
+                .animation(.spring(response: 0.3), value: showingCopyConfirmation)
+                .offset(y: -25)
+        )
+        .onAppear {
+            codeBlocks = ResponseFormatter.shared.extractCodeBlocks(message.content)
+        }
+    }
+    
+    private func copyEntireMessage() {
+        #if os(macOS)
+        NSPasteboard.general.clearContents()
+        NSPasteboard.general.setString(message.content, forType: .string)
+        #elseif os(iOS)
+        UIPasteboard.general.string = message.content
+        #endif
+        
+        showCopyConfirmation()
+    }
+    
+    private func copyCodeBlock(_ codeBlock: CodeBlock) {
+        #if os(macOS)
+        NSPasteboard.general.clearContents()
+        NSPasteboard.general.setString(codeBlock.code, forType: .string)
+        #elseif os(iOS)
+        UIPasteboard.general.string = codeBlock.code
+        #endif
+        
+        showCopyConfirmation()
+    }
+    
+    private func showCopyConfirmation() {
+        withAnimation {
+            showingCopyConfirmation = true
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+            withAnimation {
+                showingCopyConfirmation = false
+            }
+        }
+    }
+    
+    private func shareMessage() {
+        // Implementation for sharing functionality
+        // This would typically present a share sheet
     }
 }
 
@@ -348,11 +479,11 @@ struct ActionButtonStyle: ButtonStyle {
     .background(Color.black.opacity(0.8))
 }
 
-#Preview("Assistant Message") {
+#Preview("Assistant Message with Formatting") {
     MessageCard(
         message: ChatMessage(
             role: .assistant,
-            content: "This is a sample assistant response that demonstrates the glassy material design with proper spacing and typography. The response can be quite long and should handle multiple lines gracefully."
+            content: "# Sample Response\n\nThis is a **formatted** assistant response that demonstrates:\n\n- *Italic text*\n- **Bold text**\n- `inline code`\n\n```swift\nfunc example() {\n    print(\"Hello, World!\")\n}\n```\n\n> This is a blockquote example\n\nAnd here's a [link](https://example.com) for demonstration."
         )
     )
     .environmentObject(ThemeManager())
