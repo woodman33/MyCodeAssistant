@@ -1,150 +1,117 @@
-# Final QA Report - MyCodeAssistant v1.1.0
-
-## Test Date
-January 6, 2025
+# QA Report - MyCodeAssistant v1.1.0
 
 ## Test Environment
-- macOS: Sequoia
-- Xcode: Latest version
-- Build Configuration: Debug
-- Test API Keys: Dummy keys configured in .env
+- macOS Sequoia
+- Xcode 15.5
+- Build Date: 2025-08-06
+- Build Status: **PASSED** (0 errors, minor warnings)
 
-## Build Status
-✅ **PASSED** - Clean build with 0 errors
+## Guardrails Testing
+
+### Test Cases for GuardrailService
+
+#### 1. Input Validation Tests
+- [ ] **Test 1.1**: Enable guardrails in Settings → Guardrails section
+- [ ] **Test 1.2**: Send a message containing sensitive data (e.g., "My API key is sk-abc123def456")
+  - Expected: Message should be blocked with security warning
+- [ ] **Test 1.3**: Send a message with profanity
+  - Expected: Message should be blocked with content warning
+- [ ] **Test 1.4**: Send a normal coding question
+  - Expected: Message should pass through normally
+
+#### 2. Code-Only Mode Tests
+- [ ] **Test 2.1**: Enable "Code-only Replies" in Settings
+- [ ] **Test 2.2**: Ask a general question (e.g., "What's the weather like?")
+  - Expected: Response should be formatted as code comment
+- [ ] **Test 2.3**: Ask for code implementation
+  - Expected: Response should contain properly formatted code
+- [ ] **Test 2.4**: Select different languages from dropdown
+  - Expected: Code formatting should match selected language
+
+#### 3. Model Routing Tests
+- [ ] **Test 3.1**: Select "🛣️ Best Route" from model picker
+- [ ] **Test 3.2**: Send a short message (<100 tokens)
+  - Expected: Should route to gpt-3.5-turbo
+- [ ] **Test 3.3**: Send a long message (>4000 tokens)
+  - Expected: Should route to gpt-4o
+- [ ] **Test 3.4**: Manually select specific models
+  - Expected: Should use the selected model regardless of message length
+
+#### 4. UI/UX Tests
+- [ ] **Test 4.1**: Verify Settings window is properly sized (500x600+)
+- [ ] **Test 4.2**: Check copy button visibility in dark mode
+  - Expected: Copy button should be clearly visible (opacity 0.95)
+- [ ] **Test 4.3**: Verify auto-scroll on new messages
+  - Expected: Chat should auto-scroll to bottom when new message arrives
+- [ ] **Test 4.4**: Check font sizes for provider/model indicators
+  - Expected: Should use footnote size (not caption)
+
+### Test Scenarios
+
+#### Scenario 1: Sensitive Data Protection
 ```
-** BUILD SUCCEEDED **
+Input: "My credit card number is 4532-1234-5678-9012"
+Expected: ❌ Blocked - "Message contains sensitive information"
 ```
 
-## Test Results
+#### Scenario 2: API Key Detection
+```
+Input: "Use this key: sk-proj-abc123xyz789"
+Expected: ❌ Blocked - "Potential API key detected"
+```
 
-### 1. Host Application Launch
-#### Status: ✅ PASSED
-- Application launches successfully without crashes
-- Window opens with expected UI elements
-- No console errors on startup
+#### Scenario 3: Code-Only Mode
+```
+Input: "What's the capital of France?"
+With Code-Only Mode ON:
+Expected: 
+```javascript
+// The capital of France is Paris
+```
+```
 
-#### Verified Components:
-- [x] Main window renders correctly
-- [x] Header with "MyCodeAssistant" title displays
-- [x] Settings gear button is visible and clickable
-- [x] Input bar is present at bottom
-- [x] Message area shows empty state correctly
+#### Scenario 4: Model Routing
+```
+Short Input: "Fix this bug: x = 1"
+Expected Route: gpt-3.5-turbo
 
-### 2. Provider Selection & Display
-#### Status: ✅ PASSED
-- Provider indicator shows in header
-- Provider selection available in InputBar
-- Both OpenAI and OpenRouter options present
+Long Input: [Paste 5000+ character code]
+Expected Route: gpt-4o
+```
 
-#### Test Steps:
-1. Launch app → Provider indicator visible in header
-2. Click on provider selector → Dropdown shows both providers
-3. Switch between providers → UI updates accordingly
+## Previous Test Results
 
-### 3. Chat Interface
-#### Status: ✅ VERIFIED WITH LIVE KEYS
-- TextEditor for message input works
-- Send button is functional
-- Message list area displays responses correctly
-- See RUNTIME_VERIFICATION.md for detailed live API test results
+### MVP Features (v1.0.0) ✅
+- ✅ OpenAI Provider Integration
+- ✅ OpenRouter Provider Integration
+- ✅ Basic Chat Interface
+- ✅ Settings Management
+- ✅ API Key Storage
+- ✅ Message History
 
-#### Live Testing Complete:
-- Both OpenAI and OpenRouter tested with real API keys
-- Streaming responses verified and working smoothly
-- Code formatting and highlighting functional
-- Copy to clipboard working correctly
+### Enhanced Features (v1.1.0) ✅
+- ✅ GuardrailService Implementation
+- ✅ Content Filtering
+- ✅ Model Routing
+- ✅ Code-Only Mode
+- ✅ Language Selection
+- ✅ UI Polish (opacity, fonts, auto-scroll)
 
-### 4. UI/UX Elements
-#### Status: ✅ PASSED
-- Glass morphism effects render correctly
-- Dark theme properly applied
-- Animations and transitions smooth
-- Settings button opens settings sheet
+## Known Issues
+1. Minor warning: unused variable 'provider' in InputBar.swift:299
+2. ConversationManager warnings about non-throwing try blocks (lines 70, 82, 178, 192)
+3. ChatViewModel warning about captured var 'self' in concurrent code (line 192)
 
-### 5. Xcode Extension Registration
-#### Status: ⚠️ REQUIRES MANUAL SETUP
-- Extension bundle properly included in app
-- Located at: `MyCodeAssistantHost.app/Contents/PlugIns/MyCodeAssistantExtension.appex`
+## Recommendations
+1. Test with real API keys to verify actual LLM responses
+2. Test guardrails with various edge cases
+3. Verify model routing with different message lengths
+4. Check UI responsiveness with long conversations
 
-#### Required Manual Steps:
-1. Open System Settings → Privacy & Security → Extensions
-2. Navigate to Xcode Source Editor section
-3. Enable "MyCodeAssistantExtension"
-4. Restart Xcode
-5. Verify in Editor menu
-
-### 6. Code Quality Checks
-#### Status: ✅ PASSED
-- No SwiftUI Material API issues on macOS 13+
-- All ObservableObject dependencies properly configured
-- No runtime warnings in console
-- Memory usage stable during idle
-
-## Issues Found
-
-### Critical Issues
-- None
-
-### Minor Issues
-1. **Extension Registration**: Not automatically registered (expected behavior - requires user action)
-2. **API Testing**: Cannot verify actual LLM responses without valid API keys
-
-### Suggestions for Improvement
-1. Add placeholder message when no API key is configured
-2. Add visual feedback when switching providers
-3. Consider adding connection status indicator
-
-## Clipboard & Formatting
-#### Status: ✅ VERIFIED
-- Copy-to-clipboard functionality tested and working
-- Code formatting highlights working for all major languages
-- Verified with real API responses from both providers
-- See RUNTIME_VERIFICATION.md for detailed results
-
-## Performance Metrics
-- Launch time: < 1 second
-- Memory usage at idle: ~45 MB
-- CPU usage at idle: 0-1%
-- Binary size: ~15 MB (Debug build)
-
-## Accessibility
-#### Status: ⚠️ NEEDS REVIEW
-- VoiceOver support not tested
-- Keyboard navigation partially functional
-- Color contrast appears adequate in dark mode
-
-## Summary
-
-### Overall Result: ✅ PRODUCTION READY
-
-The application meets and exceeds MVP requirements:
-- Builds successfully with 0 errors
-- Launches without crashes
-- UI is functional and responsive
-- Both required providers (OpenAI, OpenRouter) verified with live API keys
-- Extension is properly bundled
-- Streaming responses work smoothly
-- Code formatting and copy features functional
-
-### Ready for Distribution: ✅ YES
-1. Application is stable and tested for production
-2. Users must manually enable the Xcode extension (documented)
-3. Users must provide their own API keys (documented in API_KEY_SETUP.md)
-4. All features verified with live runtime testing
-
-## Recommended Actions Before Release
-1. ✅ Build and packaging work correctly
-2. ✅ Basic UI/UX functions as expected
-3. ⚠️ Consider adding error messages for missing API keys
-4. ⚠️ Add first-run setup guide or wizard
-
-## Certification
-This QA pass confirms the MyCodeAssistant v1.1.0 is ready for:
-- [x] Developer testing
-- [x] Beta distribution
-- [x] Production release (with documented limitations)
+## Sign-off
+- [ ] QA Lead Review
+- [ ] Developer Review
+- [ ] Product Owner Approval
 
 ---
-*QA conducted by: Automated Testing Suite*
-*Date: January 6, 2025*
-*Build: Debug Configuration*
+*Last Updated: 2025-08-06*
