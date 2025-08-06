@@ -51,9 +51,9 @@ public enum MessageRole: String, Codable, CaseIterable {
 public struct Conversation: Codable, Equatable, Identifiable {
     public let id: UUID
     public let title: String
-    public let messages: [ChatMessage]
+    public var messages: [ChatMessage]
     public let createdAt: Date
-    public let updatedAt: Date
+    public var updatedAt: Date
     public let provider: String
     public let model: String?
     

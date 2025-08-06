@@ -230,8 +230,8 @@ public class TogetherAIProvider: BaseLLMProvider {
         var functionCall: FunctionCall? = nil
         if let toolCalls = choice.delta.toolCalls?.first {
             functionCall = FunctionCall(
-                name: toolCalls.function?.name ?? "",
-                arguments: toolCalls.function?.arguments ?? ""
+                name: toolCalls.function.name,
+                arguments: toolCalls.function.arguments
             )
         }
         

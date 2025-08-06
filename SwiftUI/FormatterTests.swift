@@ -263,4 +263,49 @@ struct FormatterTestView: View {
                                             #elseif os(iOS)
                                             UIPasteboard.general.string = codeBlock.code
                                             #endif
-                                        }\n                                        .font(.caption)\n                                        .foregroundColor(.blue)\n                                    }\n                                    \n                                    Text(codeBlock.code)\n                                        .font(.system(.caption2, design: .monospaced))\n                                        .padding(8)\n                                        .background(Color(.systemGray6))\n                                        .cornerRadius(6)\n                                }\n                                .padding(.vertical, 4)\n                            }\n                        }\n                        \n                        // JSON detection test\n                        if ResponseFormatter.shared.isJSON(testCases[selectedTest].content) {\n                            Text("JSON Detected")  \n                                .font(.caption)\n                                .foregroundColor(.green)\n                                .padding(.horizontal, 8)\n                                .padding(.vertical, 2)\n                                .background(\n                                    Capsule()\n                                        .fill(Color.green.opacity(0.2))\n                                )\n                        }\n                    }\n                    .padding()\n                }\n            }\n            .navigationTitle("Formatter Tests")\n        }\n    }\n}\n\n// MARK: - Test Case Model\nstruct TestCase {\n    let title: String\n    let content: String\n}\n\n// MARK: - Preview\n#Preview {\n    FormatterTestView()\n}
+                                        }
+                                        .font(.caption)
+                                        .foregroundColor(.blue)
+                                    }
+                                    
+                                    Text(codeBlock.code)
+                                        .font(.system(.caption2, design: .monospaced))
+                                        .padding(8)
+                                        .background(Color(.systemGray6))
+                                        .cornerRadius(6)
+                                }
+                                .padding(.vertical, 4)
+                            }
+                        }
+                        
+                        // JSON detection test
+                        if ResponseFormatter.shared.isJSON(testCases[selectedTest].content) {
+                            Text("JSON Detected")  
+                                .font(.caption)
+                                .foregroundColor(.green)
+                                .padding(.horizontal, 8)
+                                .padding(.vertical, 2)
+                                .background(
+                                    Capsule()
+                                        .fill(Color.green.opacity(0.2))
+                                )
+                        }
+                    }
+                    .padding()
+                }
+            }
+            .navigationTitle("Formatter Tests")
+        }
+    }
+}
+
+// MARK: - Test Case Model
+struct TestCase {
+    let title: String
+    let content: String
+}
+
+// MARK: - Preview
+#Preview {
+    FormatterTestView()
+}

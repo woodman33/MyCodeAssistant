@@ -1,5 +1,9 @@
 import Foundation
 
+// MARK: - Unified Message
+/// Message format that maps to ChatMessage
+public typealias UnifiedMessage = ChatMessage
+
 // MARK: - Unified Request
 /// Standardized request format for all LLM providers
 public struct UnifiedRequest: Codable, Equatable {

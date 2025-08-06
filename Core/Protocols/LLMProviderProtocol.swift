@@ -100,6 +100,10 @@ public protocol APIKeyManagerProtocol {
     /// - Throws: KeychainError if deletion fails
     func deleteAPIKey(for provider: LLMProvider) throws
     
+    /// Get all providers that have API keys configured
+    /// - Returns: Array of providers with stored API keys
+    func getProvidersWithKeys() -> [LLMProvider]
+    
     /// Check if an API key exists for a provider
     /// - Parameter provider: The provider to check for
     /// - Returns: True if a key exists, false otherwise
