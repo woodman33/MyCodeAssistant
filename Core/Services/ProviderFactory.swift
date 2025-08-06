@@ -48,20 +48,20 @@ public class ProviderFactory {
                         status: .implemented, 
                         priority: .high)
         registerProvider(.portkey, 
-                        status: .planned, 
-                        priority: .medium)
+                        status: .implemented, 
+                        priority: .high)
         registerProvider(.abacusAI, 
-                        status: .planned, 
-                        priority: .low)
+                        status: .implemented, 
+                        priority: .medium)
         registerProvider(.novita, 
-                        status: .planned, 
-                        priority: .low)
+                        status: .implemented, 
+                        priority: .medium)
         registerProvider(.huggingFace, 
-                        status: .planned, 
-                        priority: .low)
+                        status: .implemented, 
+                        priority: .high)
         registerProvider(.moonshot, 
-                        status: .planned, 
-                        priority: .low)
+                        status: .implemented, 
+                        priority: .high)
     }
     
     /// Register a provider with metadata
