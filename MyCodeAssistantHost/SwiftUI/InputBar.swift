@@ -149,7 +149,7 @@ struct InputBar: View {
             HStack(spacing: 6) {
                 // Model icon
                 Image(systemName: chatViewModel.useRoutingMode ? "arrow.triangle.branch" : "cpu")
-                    .font(.caption)
+                    .font(.footnote)
                     .foregroundColor(chatViewModel.useRoutingMode ? .orange : .secondary)
                 
                 // Model name
@@ -493,7 +493,7 @@ struct AdvancedInputBar: View {
 struct AdvancedOptionButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .font(.caption)
+            .font(.footnote)
             .foregroundColor(.secondary)
             .padding(.horizontal, 12)
             .padding(.vertical, 8)

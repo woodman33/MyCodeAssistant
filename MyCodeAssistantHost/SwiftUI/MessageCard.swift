@@ -341,7 +341,7 @@ struct MessageActionsView: View {
             }
             .buttonStyle(ActionButtonStyle())
         }
-        .opacity(0.8)
+        .opacity(0.95)  // Increased opacity for better visibility in dark mode
         .overlay(
             Text("Copied!")
                 .font(.caption2)

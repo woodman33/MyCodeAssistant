@@ -68,7 +68,7 @@ struct ContentView: View {
                         .frame(width: 6, height: 6)
                     
                     Text(currentProvider.displayName)
-                        .font(.caption)
+                        .font(.footnote)
                         .foregroundColor(.secondary)
                 }
                 .padding(.horizontal, 8)
