@@ -1,229 +1,145 @@
-import SwiftUI
 import Foundation
-import Combine
+import SwiftUI
 
 // MARK: - Chat View Model
 @MainActor
 class ChatViewModel: ObservableObject {
+    
     // MARK: - Published Properties
     @Published var messages: [ChatMessage] = []
-    @Published var currentProvider: LLMProvider?
-    @Published var isLoading = false
-    @Published var errorMessage: String?
-    @Published var streamingContent = ""
-    @Published var isStreaming = false
+    @Published var currentMessage: String = ""
+    @Published var isLoading: Bool = false
+    @Published var isStreaming: Bool = false
+    @Published var currentProvider: LLMProvider? = .openAI
+    @Published var error: String?
+    @Published var streamingContent: String = ""
     
     // MARK: - Private Properties
-    private let apiKeyManager: APIKeyManagerProtocol
+    private let sharedServices: SharedServices
+    private let conversationManager: ConversationManager
     private let providerFactory: ProviderFactory
-    private let conversationManager: ConversationManagerProtocol
-    private var currentConversation: Conversation?
-    private var cancellables = Set<AnyCancellable>()
+    private let apiKeyManager: APIKeyManager
+    
+    // Current conversation
+    @Published var currentConversation: Conversation?
     
     // MARK: - Initialization
     init() {
-        self.apiKeyManager = APIKeyManager()
-        self.providerFactory = ProviderFactory.shared
-        self.conversationManager = ConversationManager()
+        self.sharedServices = SharedServices.shared
+        self.conversationManager = sharedServices.conversationManager
+        self.providerFactory = sharedServices.providerFactory
+        self.apiKeyManager = sharedServices.apiKeyManager
         
-        setupDefaultProvider()
-    }
-    
-    func initialize(with settings: AppSettings) {
-        currentProvider = settings.defaultProvider
+        // Load previous conversation if available
         loadLastConversation()
     }
     
-    // MARK: - Provider Management
-    private func setupDefaultProvider() {
-        // Find the first available provider with an API key
-        let availableProviders = providerFactory.getAvailableProviders()
-        currentProvider = availableProviders.first ?? .openAI
-    }
+    // MARK: - Public Methods
     
-    func switchProvider(to provider: LLMProvider) {
-        guard providerFactory.canCreateProvider(provider) else {
-            errorMessage = "Provider \(provider.displayName) is not available. Please check your API key configuration."
-            return
-        }
-        
-        currentProvider = provider
-        errorMessage = nil
-    }
-    
-    // MARK: - Message Management
-    func sendMessage(_ content: String) async {
-        guard !content.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return }
+    /// Send a message using the current provider
+    func sendMessage() {
+        guard !currentMessage.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return }
         guard let provider = currentProvider else {
-            errorMessage = "No provider selected"
+            setError("No provider selected")
             return
         }
         
-        // Add user message
         let userMessage = ChatMessage(
             role: .user,
-            content: content.trimmingCharacters(in: .whitespacesAndNewlines)
+            content: currentMessage,
+            timestamp: Date()
         )
         
-        withAnimation(.easeOut(duration: 0.3)) {
-            messages.append(userMessage)
-        }
+        messages.append(userMessage)
+        let messageToSend = currentMessage
+        currentMessage = ""
         
-        // Create conversation if none exists
+        // Create or update conversation
         if currentConversation == nil {
-            createNewConversation(with: provider)
+            currentConversation = Conversation(
+                id: UUID().uuidString,
+                title: String(messageToSend.prefix(50)),
+                provider: provider.rawValue,
+                messages: [userMessage],
+                createdAt: Date(),
+                updatedAt: Date()
+            )
+        } else {
+            currentConversation?.messages.append(userMessage)
+            currentConversation?.updatedAt = Date()
         }
         
-        // Update conversation with new message
-        updateConversation(with: userMessage)
-        
-        isLoading = true
-        errorMessage = nil
-        
+        Task {
+            await processMessage(messageToSend, with: provider)
+        }
+    }
+    
+    /// Switch to a different provider
+    func switchProvider(_ provider: LLMProvider) {
+        currentProvider = provider
+        clearError()
+    }
+    
+    /// Clear the current conversation
+    func clearConversation() {
+        messages.removeAll()
+        currentConversation = nil
+        clearError()
+    }
+    
+    /// Validate if a provider is properly configured
+    func isProviderConfigured(_ provider: LLMProvider) -> Bool {
         do {
-            // Get LLM provider instance
-            let llmProvider = try providerFactory.createProvider(provider)
+            let apiKey = try apiKeyManager.getAPIKey(for: provider)
+            return !apiKey.isEmpty
+        } catch {
+            return false
+        }
+    }
+    
+    // MARK: - Private Methods
+    
+    private func processMessage(_ message: String, with provider: LLMProvider) async {
+        do {
+            isLoading = true
+            clearError()
             
-            // Create unified request
-            let request = createUnifiedRequest(from: messages)
+            // Get provider instance
+            let llmProvider = try sharedServices.getProvider(provider)
             
-            // Check if provider supports streaming
-            if llmProvider.supportsStreaming {
+            // Create request
+            let request = UnifiedRequest(
+                messages: messages.map { msg in
+                    UnifiedMessage(role: msg.role, content: msg.content)
+                },
+                model: currentProvider?.primaryModel ?? "gpt-3.5-turbo",
+                maxTokens: 2000,
+                temperature: 0.7,
+                stream: currentProvider?.supportsStreaming ?? false
+            )
+            
+            if request.stream {
                 await handleStreamingResponse(provider: llmProvider, request: request)
             } else {
-                await handleNonStreamingResponse(provider: llmProvider, request: request)
+                await handleRegularResponse(provider: llmProvider, request: request)
             }
             
         } catch {
-            await handleError(error)
+            setError("Failed to send message: \(error.localizedDescription)")
         }
         
         isLoading = false
-    }
-    
-    // MARK: - Streaming Support
-    private func handleStreamingResponse(provider: LLMProviderProtocol, request: UnifiedRequest) async {
-        do {
-            isStreaming = true
-            streamingContent = ""
-            
-            // Create placeholder assistant message
-            let assistantMessage = ChatMessage(
-                role: .assistant,
-                content: ""
-            )
-            
-            withAnimation(.easeOut(duration: 0.3)) {
-                messages.append(assistantMessage)
-            }
-            
-            // Handle streaming response
-            let stream = try await provider.sendStreamingRequest(request)
-            
-            for try await response in stream {
-                if !response.message.content.isEmpty {
-                    streamingContent += response.message.content
-                    
-                    // Update the last message with accumulated content
-                    if let lastIndex = messages.lastIndex(where: { $0.role == .assistant }) {
-                        let updatedMessage = ChatMessage(
-                            id: messages[lastIndex].id,
-                            role: .assistant,
-                            content: streamingContent,
-                            timestamp: messages[lastIndex].timestamp
-                        )
-                        messages[lastIndex] = updatedMessage
-                    }
-                }
-            }
-            
-            // Final update
-            if let lastIndex = messages.lastIndex(where: { $0.role == .assistant }) {
-                let finalMessage = ChatMessage(
-                    id: messages[lastIndex].id,
-                    role: .assistant,
-                    content: streamingContent,
-                    timestamp: messages[lastIndex].timestamp
-                )
-                messages[lastIndex] = finalMessage
-                updateConversation(with: finalMessage)
-            }
-            
-        } catch {
-            await handleError(error)
-        }
-        
-        isStreaming = false
-        streamingContent = ""
-    }
-    
-    private func handleNonStreamingResponse(provider: LLMProviderProtocol, request: UnifiedRequest) async {
-        do {
-            let response = try await provider.sendRequest(request)
-            
-            let assistantMessage = ChatMessage(
-                role: .assistant,
-                content: response.message.content
-            )
-            
-            withAnimation(.easeOut(duration: 0.3)) {
-                messages.append(assistantMessage)
-            }
-            
-            updateConversation(with: assistantMessage)
-            
-        } catch {
-            await handleError(error)
-        }
-    }
-    
-    // MARK: - Request Creation
-    private func createUnifiedRequest(from messages: [ChatMessage]) -> UnifiedRequest {
-        return UnifiedRequest(
-            messages: messages,
-            model: currentProvider?.primaryModel ?? "gpt-3.5-turbo",
-            maxTokens: 2000,
-            temperature: 0.7,
-            stream: currentProvider?.supportsStreaming ?? false
-        )
-    }
-    
-    // MARK: - Error Handling
-    private func handleError(_ error: Error) async {
-        withAnimation(.easeOut(duration: 0.3)) {
-            errorMessage = error.localizedDescription
-        }
-        
-        // Remove any incomplete assistant message
-        if let lastMessage = messages.last, lastMessage.role == .assistant && lastMessage.content.isEmpty {
-            messages.removeLast()
-        }
-    }
-    
-    // MARK: - Conversation Management
-    private func createNewConversation(with provider: LLMProvider) {
-        let title = messages.first?.content.prefix(50).trimmingCharacters(in: .whitespacesAndNewlines) ?? "New Conversation"
-        currentConversation = Conversation(
-            title: String(title),
-            messages: [],
-            provider: provider.rawValue,
-            model: provider.primaryModel
-        )
-    }
-    
-    private func updateConversation(with message: ChatMessage) {
-        guard var conversation = currentConversation else { return }
-        
-        let updatedMessages = conversation.messages + [message]
-        currentConversation = conversation.withUpdatedMessages(updatedMessages)
         
         // Save conversation asynchronously
-        Task.detached { [weak self, conversation = self?.currentConversation] in
-            guard let conversation = conversation else { return }
-            do {
-                try self?.conversationManager.saveConversation(conversation)
-            } catch {
-                print("Failed to save conversation: \(error)")
+        if let conversation = currentConversation {
+            Task.detached { [weak self] in
+                do {
+                    try await self?.conversationManager.saveConversation(conversation)
+                } catch {
+                    await MainActor.run {
+                        self?.setError("Failed to save conversation: \(error.localizedDescription)")
+                    }
+                }
             }
         }
     }
@@ -231,10 +147,10 @@ class ChatViewModel: ObservableObject {
     private func loadLastConversation() {
         Task.detached { [weak self] in
             do {
-                let conversations = try self?.conversationManager.loadAllConversations() ?? []
+                let conversations = try await self?.conversationManager.loadAllConversations() ?? []
                 let lastConversation = conversations.max(by: { $0.updatedAt < $1.updatedAt })
                 
-                await MainActor.run {
+                await MainActor.run { [weak self] in
                     if let conversation = lastConversation {
                         self?.currentConversation = conversation
                         self?.messages = conversation.messages
@@ -247,86 +163,91 @@ class ChatViewModel: ObservableObject {
                     }
                 }
             } catch {
-                print("Failed to load conversations: \(error)")
+                await MainActor.run { [weak self] in
+                    self?.setError("Failed to load conversation: \(error.localizedDescription)")
+                }
             }
         }
     }
     
-    // MARK: - Conversation Actions
-    func clearConversation() {
-        withAnimation(.easeOut(duration: 0.3)) {
-            messages.removeAll()
+    private func handleStreamingResponse(provider: any LLMProviderProtocol, request: UnifiedRequest) async {
+        isStreaming = true
+        streamingContent = ""
+        
+        // Add placeholder message for streaming
+        let assistantMessage = ChatMessage(
+            role: .assistant,
+            content: "",
+            timestamp: Date()
+        )
+        messages.append(assistantMessage)
+        
+        do {
+            let stream = try await provider.sendStreamingRequest(request)
+            
+            for try await chunk in stream {
+                if let choice = chunk.choices.first,
+                   let delta = choice.delta,
+                   let content = delta.content {
+                    streamingContent += content
+                    
+                    // Update the last message
+                    if let lastIndex = messages.indices.last {
+                        messages[lastIndex] = ChatMessage(
+                            role: .assistant,
+                            content: streamingContent,
+                            timestamp: assistantMessage.timestamp
+                        )
+                    }
+                }
+            }
+            
+            // Update conversation
+            currentConversation?.messages = messages
+            currentConversation?.updatedAt = Date()
+            
+        } catch {
+            setError("Streaming failed: \(error.localizedDescription)")
+            // Remove placeholder message on error
+            if messages.last?.role == .assistant && messages.last?.content.isEmpty == true {
+                messages.removeLast()
+            }
         }
-        currentConversation = nil
-        errorMessage = nil
+        
+        isStreaming = false
         streamingContent = ""
     }
     
-    func newConversation() {
-        clearConversation()
-        if let provider = currentProvider {
-            createNewConversation(with: provider)
+    private func handleRegularResponse(provider: any LLMProviderProtocol, request: UnifiedRequest) async {
+        do {
+            let response = try await provider.sendRequest(request)
+            
+            if let choice = response.choices.first {
+                let assistantMessage = ChatMessage(
+                    role: .assistant,
+                    content: choice.message?.content ?? "No response",
+                    timestamp: Date()
+                )
+                messages.append(assistantMessage)
+                
+                // Update conversation
+                currentConversation?.messages = messages
+                currentConversation?.updatedAt = Date()
+            }
+            
+        } catch {
+            setError("Request failed: \(error.localizedDescription)")
         }
     }
     
-    // MARK: - Provider Validation
-    func validateCurrentProvider() -> Bool {
-        guard let provider = currentProvider else { return false }
-        return providerFactory.canCreateProvider(provider)
-    }
-    
-    func getAvailableProviders() -> [LLMProvider] {
-        return providerFactory.getAvailableProviders()
-    }
-}
-
-// MARK: - Configuration Manager Protocol Implementation
-protocol ConfigurationManagerProtocol {
-    func getConfiguration(for provider: LLMProvider) -> ProviderConfiguration
-    func updateConfiguration(for provider: LLMProvider, configuration: ProviderConfiguration)
-    func getAllConfigurations() -> [ProviderConfiguration]
-}
-
-// MARK: - Configuration Manager
-class ConfigurationManager: ConfigurationManagerProtocol {
-    private var configurations: [LLMProvider: ProviderConfiguration] = [:]
-    
-    init() {
-        setupDefaultConfigurations()
-    }
-    
-    private func setupDefaultConfigurations() {
-        for provider in LLMProvider.allCases {
-            configurations[provider] = ProviderConfiguration(
-                provider: provider,
-                baseURL: provider.baseURL,
-                apiKeyRequired: provider.requiresAPIKey,
-                supportedModels: provider.defaultModels.map { model in
-                    ModelConfiguration(
-                        provider: provider,
-                        modelName: model,
-                        displayName: model,
-                        maxTokens: provider.maxTokensLimit,
-                        supportsSystemPrompt: provider.supportsSystemPrompt,
-                        supportsFunctions: provider.supportsFunctions
-                    )
-                }
-            )
+    private func setError(_ message: String) {
+        error = message
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5) { [weak self] in
+            self?.clearError()
         }
     }
     
-    func getConfiguration(for provider: LLMProvider) -> ProviderConfiguration {
-        return configurations[provider] ?? ProviderConfiguration(
-            provider: provider,
-            baseURL: provider.baseURL
-        )
-    }
-    
-    func updateConfiguration(for provider: LLMProvider, configuration: ProviderConfiguration) {
-        configurations[provider] = configuration
-    }
-    
-    func getAllConfigurations() -> [ProviderConfiguration] {
-        return Array(configurations.values)
+    private func clearError() {
+        error = nil
     }
 }

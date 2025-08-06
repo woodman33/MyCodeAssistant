@@ -3,7 +3,7 @@ import SwiftUI
 // MARK: - Content View
 struct ContentView: View {
     @EnvironmentObject private var themeManager: ThemeManager
-    @EnvironmentObject private var settingsManager: SettingsManager
+    @EnvironmentObject private var settingsManager: UISettingsManager
     @StateObject private var viewModel = ChatViewModel()
     @State private var showingSettings = false
     

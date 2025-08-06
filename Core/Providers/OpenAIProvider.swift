@@ -1505,4 +1505,3 @@ private struct MoonshotDelta: Codable {
     let content: String?
     let role: String?
 }
-EOF < /dev/null

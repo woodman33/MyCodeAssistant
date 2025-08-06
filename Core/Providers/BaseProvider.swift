@@ -99,7 +99,7 @@ open class BaseLLMProvider: LLMProviderProtocol {
     /// Creates the base URLRequest with common headers
     /// - Parameter endpoint: The API endpoint path
     /// - Returns: Configured URLRequest
-    protected func createBaseRequest(endpoint: String) throws -> URLRequest {
+    func createBaseRequest(endpoint: String) throws -> URLRequest {
         guard let url = URL(string: baseURL + endpoint) else {
             throw ProviderError.invalidURL(baseURL + endpoint)
         }
@@ -127,7 +127,7 @@ open class BaseLLMProvider: LLMProviderProtocol {
     /// This is a basic estimation - subclasses can override for more accurate tokenization
     /// - Parameter request: The request to estimate tokens for
     /// - Returns: Estimated input token count
-    protected func estimateInputTokens(for request: UnifiedRequest) -> Int? {
+    func estimateInputTokens(for request: UnifiedRequest) -> Int? {
         let messageTokens = request.messages.reduce(0) { total, message in
             total + estimateTokens(in: message.content)
         }
@@ -140,7 +140,7 @@ open class BaseLLMProvider: LLMProviderProtocol {
     /// Basic token estimation (roughly 4 characters per token)
     /// - Parameter text: The text to estimate tokens for
     /// - Returns: Estimated token count
-    protected func estimateTokens(in text: String) -> Int {
+    func estimateTokens(in text: String) -> Int {
         return max(1, text.count / 4)
     }
     
@@ -149,7 +149,7 @@ open class BaseLLMProvider: LLMProviderProtocol {
     ///   - response: The HTTP response
     ///   - data: The response data
     /// - Throws: ProviderError for various HTTP error conditions
-    protected func handleHTTPError(response: HTTPURLResponse, data: Data) throws {
+    func handleHTTPError(response: HTTPURLResponse, data: Data) throws {
         let statusCode = response.statusCode
         let errorBody = String(data: data, encoding: .utf8) ?? "Unknown error"
         
@@ -172,7 +172,7 @@ open class BaseLLMProvider: LLMProviderProtocol {
     ///   - error: The error that occurred
     ///   - originalRequest: The original request
     /// - Returns: UnifiedResponse with error information
-    protected func createErrorResponse(from error: Error, originalRequest: UnifiedRequest) -> UnifiedResponse {
+    func createErrorResponse(from error: Error, originalRequest: UnifiedRequest) -> UnifiedResponse {
         let errorMessage = ChatMessage(
             role: .assistant,
             content: "Error: \(error.localizedDescription)"
@@ -189,7 +189,7 @@ open class BaseLLMProvider: LLMProviderProtocol {
     /// Validates that a model is supported by this provider
     /// - Parameter model: The model name to validate
     /// - Throws: ProviderError if model is not supported
-    protected func validateModel(_ model: String?) throws {
+    func validateModel(_ model: String?) throws {
         guard let model = model else { return }
         
         if !availableModels.contains(model) {
@@ -200,7 +200,7 @@ open class BaseLLMProvider: LLMProviderProtocol {
     /// Validates request parameters before sending
     /// - Parameter request: The request to validate
     /// - Throws: ProviderError if validation fails
-    protected func validateRequest(_ request: UnifiedRequest) throws {
+    func validateRequest(_ request: UnifiedRequest) throws {
         // Validate model
         try validateModel(request.model)
         

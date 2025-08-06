@@ -4,7 +4,7 @@ import SwiftUI
 @main
 struct MyCodeAssistantApp: App {
     @StateObject private var themeManager = ThemeManager()
-    @StateObject private var settingsManager = SettingsManager()
+    @StateObject private var settingsManager = UISettingsManager()
     
     var body: some Scene {
         WindowGroup {
@@ -43,8 +43,8 @@ class ThemeManager: ObservableObject {
     }
 }
 
-// MARK: - Settings Manager
-class SettingsManager: ObservableObject {
+// MARK: - UI Settings Manager  
+class UIUISettingsManager: ObservableObject {
     @Published var appSettings: AppSettings = .default
     @Published var isFirstLaunch = true
     
