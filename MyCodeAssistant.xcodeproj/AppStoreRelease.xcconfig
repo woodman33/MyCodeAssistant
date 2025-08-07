@@ -1,0 +1,37 @@
+// AppStoreRelease.xcconfig
+// Configuration settings for App Store distribution
+
+// Bundle Identifiers
+PRODUCT_BUNDLE_IDENTIFIER = com.mycodeassistant.app
+PRODUCT_BUNDLE_IDENTIFIER_EXTENSION = com.mycodeassistant.app.extension
+
+// Code Signing - Distribution
+CODE_SIGN_STYLE = Manual
+DEVELOPMENT_TEAM = XXXXXXXXXX
+CODE_SIGN_IDENTITY = Apple Distribution
+
+// App Store Distribution Provisioning Profiles
+// Replace with your actual provisioning profile names
+PROVISIONING_PROFILE_SPECIFIER = MyCodeAssistant App Store
+PROVISIONING_PROFILE_SPECIFIER_EXTENSION = MyCodeAssistant Extension App Store
+
+// Developer ID (for notarization outside App Store)
+DEVELOPER_ID_CODE_SIGN_IDENTITY = Developer ID Application
+DEVELOPER_ID_INSTALLER_SIGN_IDENTITY = Developer ID Installer
+
+// Build Settings
+ENABLE_HARDENED_RUNTIME = YES
+OTHER_CODE_SIGN_FLAGS = --timestamp --options=runtime
+
+// Deployment
+MACOSX_DEPLOYMENT_TARGET = 13.0
+MARKETING_VERSION = 1.0.0
+CURRENT_PROJECT_VERSION = 1
+
+// App Store Connect
+ENABLE_BITCODE = NO
+STRIP_SWIFT_SYMBOLS = YES
+
+// Entitlements
+CODE_SIGN_ENTITLEMENTS_HOST = MyCodeAssistantHost/MyCodeAssistantHost.entitlements
+CODE_SIGN_ENTITLEMENTS_EXTENSION = MyCodeAssistantExtension/MyCodeAssistantExtension.entitlements

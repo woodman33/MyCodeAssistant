@@ -1,0 +1,166 @@
+name: Nightly Release
+
+on:
+  schedule:
+    # Run at 2 AM UTC every day
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+    inputs:
+      upload_to_testflight:
+        description: 'Upload to TestFlight'
+        required: false
+        default: 'true'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
+
+env:
+  XCODE_VERSION: '15.0'
+  MACOS_VERSION: 'macos-13'
+
+jobs:
+  build-and-release:
+    runs-on: macos-13
+    
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+      
+    - name: Select Xcode Version
+      run: sudo xcode-select -s /Applications/Xcode_${{ env.XCODE_VERSION }}.app
+      
+    - name: Setup Certificates
+      env:
+        BUILD_CERTIFICATE_BASE64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
+        P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
+        BUILD_PROVISION_PROFILE_BASE64: ${{ secrets.BUILD_PROVISION_PROFILE_BASE64 }}
+        KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+      run: |
+        # Create variables
+        CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
+        PP_PATH=$RUNNER_TEMP/build_pp.mobileprovision
+        KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
+        
+        # Import certificate and provisioning profile from secrets
+        echo -n "$BUILD_CERTIFICATE_BASE64" | base64 --decode -o $CERTIFICATE_PATH
+        echo -n "$BUILD_PROVISION_PROFILE_BASE64" | base64 --decode -o $PP_PATH
+        
+        # Create temporary keychain
+        security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+        security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
+        security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+        
+        # Import certificate to keychain
+        security import $CERTIFICATE_PATH -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
+        security list-keychain -d user -s $KEYCHAIN_PATH
+        
+        # Apply provisioning profile
+        mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+        cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
+        
+    - name: Configure Git
+      run: |
+        git config --global user.email "ci@mycodeassistant.com"
+        git config --global user.name "CI Bot"
+        
+    - name: Increment Build Number
+      run: |
+        # Get current build number and increment
+        CURRENT_BUILD=$(grep -A1 'CFBundleVersion' MyCodeAssistantHost/MyCodeAssistantHost-Info.plist | grep -o '[0-9]*' | head -1)
+        NEW_BUILD=$((CURRENT_BUILD + 1))
+        
+        # Update build number in Info.plist files
+        /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $NEW_BUILD" MyCodeAssistantHost/MyCodeAssistantHost-Info.plist
+        /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $NEW_BUILD" MyCodeAssistantExtension/MyCodeAssistantExtension-Info.plist
+        
+        echo "BUILD_NUMBER=$NEW_BUILD" >> $GITHUB_ENV
+        
+    - name: Archive Application
+      run: |
+        xcodebuild -project MyCodeAssistant.xcodeproj \
+          -scheme MyCodeAssistantHost \
+          -configuration Release \
+          -xcconfig MyCodeAssistant.xcodeproj/AppStoreRelease.xcconfig \
+          -archivePath $RUNNER_TEMP/MyCodeAssistant.xcarchive \
+          archive \
+          CODE_SIGN_STYLE=Manual \
+          DEVELOPMENT_TEAM="${{ secrets.TEAM_ID }}"
+          
+    - name: Export Archive
+      run: |
+        xcodebuild -exportArchive \
+          -archivePath $RUNNER_TEMP/MyCodeAssistant.xcarchive \
+          -exportPath $RUNNER_TEMP/export \
+          -exportOptionsPlist Scripts/ExportOptions.plist
+          
+    - name: Notarize Application
+      env:
+        NOTARIZATION_APPLE_ID: ${{ secrets.NOTARIZATION_APPLE_ID }}
+        NOTARIZATION_PASSWORD: ${{ secrets.NOTARIZATION_PASSWORD }}
+        TEAM_ID: ${{ secrets.TEAM_ID }}
+        CREATE_INSTALLER: 'true'
+        INSTALLER_CERT_NAME: ${{ secrets.INSTALLER_CERT_NAME }}
+      run: |
+        chmod +x Scripts/notarize.sh
+        ./Scripts/notarize.sh "$RUNNER_TEMP/export/MyCodeAssistantHost.app" "./Releases"
+        
+    - name: Upload to TestFlight
+      if: github.event.inputs.upload_to_testflight != 'false'
+      env:
+        APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
+        APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+        APP_STORE_CONNECT_API_KEY_BASE64: ${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}
+      run: |
+        # Create API key file
+        mkdir -p ~/.appstoreconnect/private_keys
+        echo -n "$APP_STORE_CONNECT_API_KEY_BASE64" | base64 --decode > ~/.appstoreconnect/private_keys/AuthKey_$APP_STORE_CONNECT_API_KEY_ID.p8
+        
+        # Upload to TestFlight
+        xcrun altool --upload-app \
+          --type macos \
+          --file "./Releases/MyCodeAssistantHost.pkg" \
+          --apiKey "$APP_STORE_CONNECT_API_KEY_ID" \
+          --apiIssuer "$APP_STORE_CONNECT_ISSUER_ID" \
+          --verbose
+          
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: nightly-${{ github.run_number }}
+        name: Nightly Build ${{ env.BUILD_NUMBER }}
+        draft: false
+        prerelease: true
+        files: |
+          ./Releases/MyCodeAssistantHost.pkg
+          ./Releases/MyCodeAssistantHost.zip
+        body: |
+          ## Nightly Build ${{ env.BUILD_NUMBER }}
+          
+          This is an automated nightly build.
+          
+          ### Installation
+          - Download and open the `.pkg` file to install
+          - The app has been notarized by Apple for security
+          
+          ### Changes
+          - See [recent commits](https://github.com/${{ github.repository }}/commits/main) for latest changes
+          
+          Build Date: ${{ github.event.head_commit.timestamp }}
+          Commit: ${{ github.sha }}
+          
+    - name: Clean up keychain
+      if: always()
+      run: |
+        security delete-keychain $RUNNER_TEMP/app-signing.keychain-db
+        rm -f ~/Library/MobileDevice/Provisioning\ Profiles/build_pp.mobileprovision
+        
+    - name: Upload Build Artifacts
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: build-artifacts
+        path: |
+          ./Releases/*.pkg
+          ./Releases/*.zip
+        retention-days: 30
