@@ -1,19 +1,28 @@
-# Xcode
+# macOS
 .DS_Store
-/build/
-/DerivedData/
-*.xcodeproj/project.xcworkspace
-*.xcodeproj/xcuserdata/
-*.xcworkspace/contents.xcworkspacedata
-*.xcworkspace/xcuserdata/
 
-# Swift Package Manager
-/.build/
-/Packages/
+# Xcode
+DerivedData/
+*.xcuserdatad/
+xcuserdata/
+*.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist
+*.xcresult
+build/
+*.dSYM
+*.ipa
 
-# Secrets
+# SwiftPM / CocoaPods / Carthage
+.swiftpm/
+.build/
+Pods/
+Carthage/Build/
+
+# Node
+node_modules/
+npm-debug.log*
+yarn.lock
+pnpm-lock.yaml
+
+# Env/Secrets
 .env
-.roo/
-cloudflare.dev.vars
-cloudfare.dev.vars
-cloudfare_secrets.env
+.env.*
