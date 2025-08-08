@@ -26,11 +26,14 @@ final class AuthStateStoreTests: XCTestCase {
     
     func testInitialStateNeedsAuthentication() {
         // Initially should need authentication for all providers
-        XCTAssertTrue(authStore.needsAuthentication(for: .openAI), 
+        XCTAssertTrue(authStore.needsAuthentication(for: .openAI),
                      "Should need authentication initially for OpenAI")
-        XCTAssertTrue(authStore.needsAuthentication(for: .openRouter), 
+        XCTAssertTrue(authStore.needsAuthentication(for: .openRouter),
                      "Should need authentication initially for OpenRouter")
-        XCTAssertFalse(authStore.isSessionValid(), 
+        // Edge provider doesn't require authentication
+        XCTAssertFalse(authStore.needsAuthentication(for: .edge),
+                      "Edge provider should not need authentication")
+        XCTAssertFalse(authStore.isSessionValid(),
                       "Session should be invalid initially")
     }
     

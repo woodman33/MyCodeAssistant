@@ -14,6 +14,10 @@ public struct AppSettings: Codable, Equatable {
     public let retryAttempts: Int
     public let enableLogging: Bool
     
+    // Edge backend configuration
+    public let edgeAPIBase: String
+    public let edgeSSEEndpoint: String
+    
     public init(
         defaultProvider: LLMProvider = .openAI,
         defaultModel: String? = nil,
@@ -24,7 +28,9 @@ public struct AppSettings: Codable, Equatable {
         theme: AppTheme = .system,
         apiTimeoutSeconds: TimeInterval = 30,
         retryAttempts: Int = 3,
-        enableLogging: Bool = false
+        enableLogging: Bool = false,
+        edgeAPIBase: String = "https://agents-starter.wmeldman33.workers.dev",
+        edgeSSEEndpoint: String = "/stream"
     ) {
         self.defaultProvider = defaultProvider
         self.defaultModel = defaultModel
@@ -36,6 +42,8 @@ public struct AppSettings: Codable, Equatable {
         self.apiTimeoutSeconds = apiTimeoutSeconds
         self.retryAttempts = retryAttempts
         self.enableLogging = enableLogging
+        self.edgeAPIBase = edgeAPIBase
+        self.edgeSSEEndpoint = edgeSSEEndpoint
     }
     
     public static let `default` = AppSettings()

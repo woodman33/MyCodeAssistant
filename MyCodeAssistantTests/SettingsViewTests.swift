@@ -69,6 +69,14 @@ final class SettingsViewTests: XCTestCase {
         let openRouterModels = chatViewModel.availableModels[.openRouter]
         XCTAssertNotNil(openRouterModels, "OpenRouter should have available models")
         XCTAssertTrue(openRouterModels!.contains("🛣️ Best Route"), "Should include auto-routing option")
+        
+        // Switch to Edge
+        chatViewModel.switchProvider(.edge)
+        
+        // Check Edge models are available
+        let edgeModels = chatViewModel.availableModels[.edge]
+        XCTAssertNotNil(edgeModels, "Edge should have available models")
+        XCTAssertGreaterThan(edgeModels!.count, 0, "Edge should have at least one model")
     }
     
     @MainActor
@@ -92,26 +100,36 @@ final class SettingsViewTests: XCTestCase {
     func testAuthStateCaching() {
         let authStore = AuthStateStore.shared
         
-        // Initially should need authentication
-        XCTAssertTrue(authStore.needsAuthentication(for: .openAI), 
-                     "Should need authentication initially")
+        // Initially should need authentication for API-based providers
+        XCTAssertTrue(authStore.needsAuthentication(for: .openAI),
+                     "Should need authentication initially for OpenAI")
         
-        // Mark as signed in
+        // Edge provider should not need authentication
+        XCTAssertFalse(authStore.needsAuthentication(for: .edge),
+                      "Edge should not need authentication")
+        
+        // Mark as signed in for OpenAI
         authStore.setSignedIn(for: .openAI)
         
         // Should not need authentication now
-        XCTAssertFalse(authStore.needsAuthentication(for: .openAI), 
+        XCTAssertFalse(authStore.needsAuthentication(for: .openAI),
                       "Should not need authentication after sign in")
         XCTAssertTrue(authStore.isSessionValid(), "Session should be valid")
         
-        // Different provider should need auth
-        XCTAssertTrue(authStore.needsAuthentication(for: .openRouter), 
+        // Different API provider should need auth
+        XCTAssertTrue(authStore.needsAuthentication(for: .openRouter),
                      "Different provider should need authentication")
+        
+        // Edge still doesn't need auth
+        XCTAssertFalse(authStore.needsAuthentication(for: .edge),
+                      "Edge should never need authentication")
         
         // Sign out
         authStore.signOut()
-        XCTAssertTrue(authStore.needsAuthentication(for: .openAI), 
+        XCTAssertTrue(authStore.needsAuthentication(for: .openAI),
                      "Should need authentication after sign out")
+        XCTAssertFalse(authStore.needsAuthentication(for: .edge),
+                      "Edge should still not need authentication after sign out")
     }
     
     @MainActor
@@ -207,6 +225,11 @@ final class ModelPickerTests: XCTestCase {
         chatViewModel.currentProvider = .openRouter
         let openRouterModels = chatViewModel.availableModels[.openRouter] ?? []
         XCTAssertGreaterThan(openRouterModels.count, 0, "OpenRouter should have models")
+        
+        // Test model display for Edge
+        chatViewModel.currentProvider = .edge
+        let edgeModels = chatViewModel.availableModels[.edge] ?? []
+        XCTAssertGreaterThan(edgeModels.count, 0, "Edge should have models")
     }
     
     @MainActor

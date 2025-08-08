@@ -1,0 +1,109 @@
+// Production Build Configuration for MyCodeAssistant v1.2.0
+// This file configures the production build settings for release
+
+#include "AppStoreRelease.xcconfig"
+
+// Product Information
+PRODUCT_NAME = MyCodeAssistant
+PRODUCT_BUNDLE_IDENTIFIER = com.mycodeassistant.app
+MARKETING_VERSION = 1.2.0
+CURRENT_PROJECT_VERSION = 120
+
+// Code Signing - Production
+
+// Build Settings
+SWIFT_OPTIMIZATION_LEVEL = -O
+GCC_OPTIMIZATION_LEVEL = s
+SWIFT_COMPILATION_MODE = wholemodule
+DEBUG_INFORMATION_FORMAT = dwarf-with-dsym
+ENABLE_NS_ASSERTIONS = NO
+ENABLE_TESTABILITY = NO
+VALIDATE_PRODUCT = YES
+
+// Deployment Target
+MACOSX_DEPLOYMENT_TARGET = 13.0
+IPHONEOS_DEPLOYMENT_TARGET = 16.0
+
+// Swift Settings
+SWIFT_VERSION = 5.9
+SWIFT_ACTIVE_COMPILATION_CONDITIONS = RELEASE PRODUCTION
+
+// API Endpoints - Production URLs
+EDGE_BASE_URL = https://api.mycodeassistant.ai
+EDGE_SSE_ENDPOINT = /stream
+OPENAI_BASE_URL = https://api.openai.com/v1
+OPENROUTER_BASE_URL = https://openrouter.ai/api/v1
+
+// Feature Flags
+ENABLE_EDGE_PROVIDER = YES
+ENABLE_LANGFLOW_INTEGRATION = YES
+ENABLE_VECTORIZE = YES
+ENABLE_ANALYTICS = YES
+ENABLE_CRASH_REPORTING = YES
+
+// Security Settings
+ENABLE_HARDENED_RUNTIME = YES
+ENABLE_APP_SANDBOX = YES
+ENABLE_USER_SELECTED_FILES = readwrite
+ENABLE_DOWNLOADS_FOLDER = readwrite
+ENABLE_OUTGOING_CONNECTIONS = YES
+
+// Notarization Settings
+OTHER_CODE_SIGN_FLAGS = --timestamp --options runtime
+ENABLE_HARDENED_RUNTIME = YES
+
+// Asset Catalog Compiler
+ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon
+ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES
+
+// Info.plist Processing
+INFOPLIST_FILE = MyCodeAssistantHost/MyCodeAssistantHost-Info.plist
+INFOPLIST_KEY_NSHumanReadableCopyright = Copyright © 2024 MyCodeAssistant. All rights reserved.
+INFOPLIST_KEY_LSApplicationCategoryType = public.app-category.developer-tools
+
+// Extension Settings
+INFOPLIST_FILE_EXTENSION = MyCodeAssistantExtension/MyCodeAssistantExtension-Info.plist
+SKIP_INSTALL_EXTENSION = NO
+
+// Build Paths
+CONFIGURATION_BUILD_DIR = $(BUILD_DIR)/$(CONFIGURATION)
+BUILT_PRODUCTS_DIR = $(CONFIGURATION_BUILD_DIR)
+
+// Custom Build Settings for Workers Integration
+CLOUDFLARE_ACCOUNT_ID = 091c9e59ca0fc3bea9f9d432fa12a3b1
+CLOUDFLARE_WORKERS_URL = https://agents-starter.wmeldman33.workers.dev
+CLOUDFLARE_PRODUCTION_URL = https://api.mycodeassistant.ai
+
+// Analytics and Monitoring
+SENTRY_DSN = YOUR_SENTRY_DSN_HERE
+MIXPANEL_TOKEN = YOUR_MIXPANEL_TOKEN_HERE
+TELEMETRY_ENABLED = YES
+
+// TestFlight Settings
+ENABLE_TESTFLIGHT = YES
+TESTFLIGHT_BETA_TESTING = YES
+
+// Archive Settings
+SKIP_INSTALL = NO
+INSTALL_PATH = /Applications
+DEPLOYMENT_LOCATION = YES
+DEPLOYMENT_POSTPROCESSING = YES
+STRIP_INSTALLED_PRODUCT = YES
+COPY_PHASE_STRIP = YES
+STRIP_STYLE = non-global
+
+// Optimization Flags
+OTHER_SWIFT_FLAGS = -D PRODUCTION -D EDGE_ENABLED
+GCC_PREPROCESSOR_DEFINITIONS = PRODUCTION=1 EDGE_ENABLED=1
+
+// Universal Binary Support
+ARCHS = $(ARCHS_STANDARD)
+ONLY_ACTIVE_ARCH = NO
+VALID_ARCHS = x86_64 arm64
+
+// Documentation
+CLANG_WARN_DOCUMENTATION_COMMENTS = YES
+GCC_WARN_CHECK_SWITCH_STATEMENTS = YES
+
+// Additional Linker Flags
+OTHER_LDFLAGS = -ObjC -framework CloudKit -framework Network

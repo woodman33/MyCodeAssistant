@@ -1,0 +1,130 @@
+{
+  "webhook_configuration": {
+    "name": "MyCodeAssistant Edge Embeddings Webhook",
+    "description": "Configuration for LangFlow to send embeddings to MyCodeAssistant Edge Backend",
+    "version": "1.0.0",
+    "endpoints": {
+      "production": {
+        "url": "https://{worker-name}.{account}.workers.dev/embeddings",
+        "description": "Production endpoint for embedding ingestion"
+      },
+      "development": {
+        "url": "http://localhost:8787/embeddings",
+        "description": "Local development endpoint"
+      }
+    },
+    "webhook_settings": {
+      "method": "POST",
+      "content_type": "application/json",
+      "timeout_seconds": 30,
+      "retry_attempts": 3,
+      "retry_delay_seconds": 5
+    },
+    "authentication": {
+      "type": "bearer",
+      "header_name": "Authorization",
+      "token_placeholder": "Bearer {YOUR_API_TOKEN}",
+      "description": "Optional: Add authentication token if configured"
+    },
+    "expected_payload_structure": {
+      "single_embedding": {
+        "text": "string - The text content to be embedded",
+        "metadata": {
+          "pipeline_id": "string - LangFlow pipeline identifier",
+          "flow_id": "string - Specific flow execution ID",
+          "node_id": "string - Node that generated the embedding",
+          "timestamp": "string - ISO 8601 timestamp",
+          "custom_fields": "object - Any additional metadata"
+        },
+        "namespace": "string - Optional namespace for vector organization",
+        "source": "string - Defaults to 'langflow'"
+      },
+      "batch_embedding": {
+        "endpoint": "/embeddings/batch",
+        "documents": [
+          {
+            "id": "string - Optional document ID",
+            "text": "string - The text content to be embedded",
+            "metadata": {
+              "pipeline_id": "string",
+              "flow_id": "string",
+              "node_id": "string",
+              "timestamp": "string",
+              "custom_fields": "object"
+            }
+          }
+        ],
+        "namespace": "string - Optional namespace",
+        "source": "string - Defaults to 'langflow'"
+      }
+    },
+    "langflow_webhook_payload": {
+      "description": "Format that LangFlow sends in webhook notifications",
+      "structure": {
+        "flow_id": "string",
+        "pipeline_id": "string",
+        "node_id": "string",
+        "timestamp": "string",
+        "data": {
+          "type": "embedding",
+          "content": "string or array",
+          "vector": "array of floats (if pre-computed)",
+          "metadata": "object"
+        },
+        "status": "string - success/error",
+        "error": "string - Error message if status is error"
+      }
+    },
+    "response_format": {
+      "success": {
+        "id": "string - Generated embedding ID",
+        "success": true,
+        "vectorsStored": "number - Count of vectors stored",
+        "timestamp": "string - ISO 8601 timestamp"
+      },
+      "error": {
+        "id": "",
+        "success": false,
+        "error": "string - Error description",
+        "timestamp": "string - ISO 8601 timestamp"
+      }
+    },
+    "integration_headers": {
+      "X-LangFlow-Pipeline-ID": "Pipeline identifier",
+      "X-LangFlow-Flow-ID": "Flow execution identifier",
+      "X-LangFlow-Node-ID": "Node identifier",
+      "X-LangFlow-Timestamp": "Request timestamp",
+      "X-LangFlow-Signature": "Optional HMAC signature for webhook validation"
+    },
+    "webhook_validation": {
+      "signature_header": "X-LangFlow-Signature",
+      "algorithm": "HMAC-SHA256",
+      "secret_env_var": "LANGFLOW_WEBHOOK_SECRET",
+      "validation_enabled": false,
+      "description": "Enable signature validation for secure webhook delivery"
+    },
+    "error_handling": {
+      "retry_on_status_codes": [500, 502, 503, 504],
+      "max_payload_size_mb": 10,
+      "log_failed_attempts": true,
+      "dead_letter_queue": {
+        "enabled": false,
+        "endpoint": "/embeddings/failed",
+        "retention_days": 7
+      }
+    },
+    "monitoring": {
+      "metrics_enabled": true,
+      "log_level": "info",
+      "performance_tracking": {
+        "measure_latency": true,
+        "measure_throughput": true,
+        "alert_threshold_ms": 5000
+      }
+    },
+    "examples": {
+      "curl_single_embedding": "curl -X POST https://your-worker.workers.dev/embeddings -H 'Content-Type: application/json' -H 'X-LangFlow-Pipeline-ID: pipeline-123' -d '{\"text\": \"Sample text\", \"metadata\": {\"pipeline_id\": \"pipeline-123\"}}'",
+      "curl_batch_embedding": "curl -X POST https://your-worker.workers.dev/embeddings/batch -H 'Content-Type: application/json' -d '{\"documents\": [{\"text\": \"Doc 1\"}, {\"text\": \"Doc 2\"}], \"source\": \"langflow\"}'"
+    }
+  }
+}

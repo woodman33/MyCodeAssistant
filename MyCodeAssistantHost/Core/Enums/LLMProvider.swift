@@ -5,6 +5,7 @@ import Foundation
 public enum LLMProvider: String, Codable, CaseIterable, Identifiable {
     case openAI = "openai"
     case openRouter = "openrouter"
+    case edge = "edge"
     
     public var id: String { rawValue }
     
@@ -16,6 +17,8 @@ public enum LLMProvider: String, Codable, CaseIterable, Identifiable {
             return "OpenAI"
         case .openRouter:
             return "OpenRouter"
+        case .edge:
+            return "Edge (Workers AI)"
         }
     }
     
@@ -25,6 +28,8 @@ public enum LLMProvider: String, Codable, CaseIterable, Identifiable {
             return "OpenAI's GPT models including GPT-4, GPT-3.5, and more"
         case .openRouter:
             return "OpenRouter's unified API for multiple AI providers"
+        case .edge:
+            return "Cloudflare Workers AI edge computing platform"
         }
     }
     
@@ -36,6 +41,8 @@ public enum LLMProvider: String, Codable, CaseIterable, Identifiable {
             return "https://api.openai.com/v1"
         case .openRouter:
             return "https://openrouter.ai/api/v1"
+        case .edge:
+            return "https://agents-starter.wmeldman33.workers.dev"
         }
     }
     
@@ -45,6 +52,8 @@ public enum LLMProvider: String, Codable, CaseIterable, Identifiable {
             return ["gpt-4-turbo", "gpt-4", "gpt-3.5-turbo", "gpt-4o", "gpt-4o-mini"]
         case .openRouter:
             return ["openai/gpt-4-turbo", "anthropic/claude-3-sonnet", "google/gemini-pro-1.5"]
+        case .edge:
+            return ["@cf/meta/llama-3-8b-instruct", "@cf/mistral/mistral-7b-instruct-v0.1", "@cf/meta/llama-2-7b-chat-int8"]
         }
     }
     
@@ -54,7 +63,7 @@ public enum LLMProvider: String, Codable, CaseIterable, Identifiable {
     
     public var supportsStreaming: Bool {
         switch self {
-        case .openAI, .openRouter:
+        case .openAI, .openRouter, .edge:
             return true
         }
     }
@@ -63,12 +72,14 @@ public enum LLMProvider: String, Codable, CaseIterable, Identifiable {
         switch self {
         case .openAI, .openRouter:
             return true
+        case .edge:
+            return false // Edge doesn't support function calling yet
         }
     }
     
     public var supportsSystemPrompt: Bool {
         switch self {
-        case .openAI, .openRouter:
+        case .openAI, .openRouter, .edge:
             return true
         }
     }
@@ -79,13 +90,20 @@ public enum LLMProvider: String, Codable, CaseIterable, Identifiable {
             return 128000 // GPT-4 Turbo
         case .openRouter:
             return nil // Varies by underlying model
+        case .edge:
+            return 4096 // Workers AI models typically have this limit
         }
     }
     
     // MARK: - Authentication
     
     public var requiresAPIKey: Bool {
-        return true // All providers currently require API keys
+        switch self {
+        case .openAI, .openRouter:
+            return true
+        case .edge:
+            return false // Edge authentication is handled at Workers level
+        }
     }
     
     public var apiKeyEnvironmentVariable: String {
@@ -94,6 +112,8 @@ public enum LLMProvider: String, Codable, CaseIterable, Identifiable {
             return "OPENAI_API_KEY"
         case .openRouter:
             return "OPENROUTER_API_KEY"
+        case .edge:
+            return "EDGE_API_KEY" // Optional, for custom authentication
         }
     }
     
@@ -101,14 +121,14 @@ public enum LLMProvider: String, Codable, CaseIterable, Identifiable {
     
     public var authenticationHeaderName: String {
         switch self {
-        case .openAI, .openRouter:
+        case .openAI, .openRouter, .edge:
             return "Authorization"
         }
     }
     
     public func authenticationHeaderValue(apiKey: String) -> String {
         switch self {
-        case .openAI, .openRouter:
+        case .openAI, .openRouter, .edge:
             return "Bearer \(apiKey)"
         }
     }
@@ -117,7 +137,7 @@ public enum LLMProvider: String, Codable, CaseIterable, Identifiable {
         switch self {
         case .openRouter:
             return ["HTTP-Referer": "https://mycodeassistant.app"]
-        case .openAI:
+        case .openAI, .edge:
             return [:]
         }
     }
@@ -136,6 +156,8 @@ public enum LLMProvider: String, Codable, CaseIterable, Identifiable {
             ]
         case .openRouter:
             return [:] // Pricing varies by underlying model
+        case .edge:
+            return [:] // Workers AI pricing is usage-based at the account level
         }
     }
     
@@ -151,6 +173,8 @@ public enum LLMProvider: String, Codable, CaseIterable, Identifiable {
             ]
         case .openRouter:
             return [:] // Pricing varies by underlying model
+        case .edge:
+            return [:] // Workers AI pricing is usage-based at the account level
         }
     }
     

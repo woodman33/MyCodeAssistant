@@ -7,10 +7,29 @@ import AppKit
 class SourceEditorCommand: NSObject, XCSourceEditorCommand {
 
     func perform(with invocation: XCSourceEditorCommandInvocation, completionHandler: @escaping (Error?) -> Void) {
-        // Placeholder implementation for MVP
-        let placeholderCode = "// MyCodeAssistant - Generated code will appear here"
-        insertCode(placeholderCode, in: invocation.buffer)
-        completionHandler(nil)
+        guard let selection = invocation.buffer.selections.firstObject as? XCSourceTextRange else {
+            completionHandler(nil)
+            return
+        }
+
+        let selectedText = invocation.buffer.lines[selection.start.line] as! String
+
+        // Route to Edge Backend instead of GPT5
+        Task {
+            let client = EdgeBackendClient()
+            do {
+                let reply = try await client.chat(selectedText)
+                DispatchQueue.main.async {
+                    self.insertCode(reply, in: invocation.buffer)
+                    completionHandler(nil)
+                }
+            } catch {
+                DispatchQueue.main.async {
+                    self.insertCode("Error: \(error.localizedDescription)", in: invocation.buffer)
+                    completionHandler(error)
+                }
+            }
+        }
     }
 
     private func insertCode(_ code: String, in buffer: XCSourceTextBuffer) {

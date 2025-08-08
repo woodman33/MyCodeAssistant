@@ -6,14 +6,15 @@ PRODUCT_BUNDLE_IDENTIFIER = com.mycodeassistant.app
 PRODUCT_BUNDLE_IDENTIFIER_EXTENSION = com.mycodeassistant.app.extension
 
 // Code Signing - Distribution
-CODE_SIGN_STYLE = Manual
-DEVELOPMENT_TEAM = XXXXXXXXXX
+CODE_SIGN_STYLE = Automatic
+DEVELOPMENT_TEAM = $(APPLE_TEAM_ID)
 CODE_SIGN_IDENTITY = Apple Distribution
 
 // App Store Distribution Provisioning Profiles
 // Replace with your actual provisioning profile names
-PROVISIONING_PROFILE_SPECIFIER = MyCodeAssistant App Store
-PROVISIONING_PROFILE_SPECIFIER_EXTENSION = MyCodeAssistant Extension App Store
+// (removed to allow Automatic)
+// PROVISIONING_PROFILE_SPECIFIER
+// PROVISIONING_PROFILE_SPECIFIER_EXTENSION
 
 // Developer ID (for notarization outside App Store)
 DEVELOPER_ID_CODE_SIGN_IDENTITY = Developer ID Application

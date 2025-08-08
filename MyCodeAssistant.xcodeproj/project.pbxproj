@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -34,6 +34,10 @@
 		2A3B4C5D6E7F8901BCDEF03A /* ResponseFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3B4C5D6E7F8901BCDEF03B /* ResponseFormatter.swift */; };
 		2A3B4C5D6E7F8901BCDEF03C /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3B4C5D6E7F8901BCDEF03D /* SettingsView.swift */; };
 		3A4B5C6D7E8F9012CDEF0150 /* GuardrailService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A4B5C6D7E8F9012CDEF0151 /* GuardrailService.swift */; };
+		4B5C6D7E8F9012CDEF0152 /* EdgeBackendClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B5C6D7E8F9012CDEF0153 /* EdgeBackendClient.swift */; };
+		4B5C6D7E8F9012CDEF0154 /* EdgeBackendClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B5C6D7E8F9012CDEF0153 /* EdgeBackendClient.swift */; };
+		5E7F8A9B0C1D2E3F4A5B6C71 /* EdgeProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E7F8A9B0C1D2E3F4A5B6C72 /* EdgeProvider.swift */; };
+		6A7B8C9D0E1F2A3B4C5D6E70 /* AuthStateStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7B8C9D0E1F2A3B4C5D6E71 /* AuthStateStore.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -43,6 +47,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 1A2B3C4D5E6F7890ABCDEF0C;
 			remoteInfo = MyCodeAssistantExtension;
+		};
+		94D026882E46ABCE009E4CD2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1A2B3C4D5E6F7890ABCDEF20 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1A2B3C4D5E6F7890ABCDEF17;
+			remoteInfo = MyCodeAssistantHost;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -61,14 +72,14 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		1A2B3C4D5E6F7890ABCDEF0E /* MyCodeAssistantHost.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MyCodeAssistantHost.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		1A2B3C4D5E6F7890ABCDEF28 /* AppStoreRelease.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = AppStoreRelease.xcconfig; sourceTree = "<group>"; };
 		1A2B3C4D5E6F7890ABCDEF02 /* MyCodeAssistantApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyCodeAssistantApp.swift; sourceTree = "<group>"; };
 		1A2B3C4D5E6F7890ABCDEF06 /* MyCodeAssistantExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = MyCodeAssistantExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
-		1A2B3C4D5E6F7890ABCDEF0F /* MyCodeAssistantExtension-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "MyCodeAssistantExtension-Info.plist"; sourceTree = "<group>"; };
 		1A2B3C4D5E6F7890ABCDEF08 /* SourceEditorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceEditorExtension.swift; sourceTree = "<group>"; };
 		1A2B3C4D5E6F7890ABCDEF0A /* SourceEditorCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceEditorCommand.swift; sourceTree = "<group>"; };
+		1A2B3C4D5E6F7890ABCDEF0E /* MyCodeAssistantHost.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MyCodeAssistantHost.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1A2B3C4D5E6F7890ABCDEF0F /* MyCodeAssistantExtension-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "MyCodeAssistantExtension-Info.plist"; sourceTree = "<group>"; };
 		1A2B3C4D5E6F7890ABCDEF10 /* MyCodeAssistantHost-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "MyCodeAssistantHost-Info.plist"; sourceTree = "<group>"; };
+		1A2B3C4D5E6F7890ABCDEF28 /* AppStoreRelease.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = AppStoreRelease.xcconfig; sourceTree = "<group>"; };
 		2A3B4C5D6E7F8901BCDEF013 /* LLMProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LLMProvider.swift; sourceTree = "<group>"; };
 		2A3B4C5D6E7F8901BCDEF015 /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
 		2A3B4C5D6E7F8901BCDEF017 /* ChatMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessage.swift; sourceTree = "<group>"; };
@@ -92,7 +103,16 @@
 		2A3B4C5D6E7F8901BCDEF03B /* ResponseFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponseFormatter.swift; sourceTree = "<group>"; };
 		2A3B4C5D6E7F8901BCDEF03D /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		3A4B5C6D7E8F9012CDEF0151 /* GuardrailService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuardrailService.swift; sourceTree = "<group>"; };
+		4B5C6D7E8F9012CDEF0153 /* EdgeBackendClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EdgeBackendClient.swift; sourceTree = "<group>"; };
+		5E7F8A9B0C1D2E3F4A5B6C72 /* EdgeProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EdgeProvider.swift; sourceTree = "<group>"; };
+		6A7B8C9D0E1F2A3B4C5D6E71 /* AuthStateStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthStateStore.swift; sourceTree = "<group>"; };
+		94D026842E46ABCE009E4CD2 /* MyCodeAssistantTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MyCodeAssistantTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		94D026982E46B061009E4CD2 /* MyCodeAssistantTests */ = {isa = PBXFileReference; lastKnownFileType = folder; path = MyCodeAssistantTests; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		94D026852E46ABCE009E4CD2 /* MyCodeAssistantTests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = MyCodeAssistantTests; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		1A2B3C4D5E6F7890ABCDEF11 /* Frameworks */ = {
@@ -109,15 +129,24 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		94D026812E46ABCE009E4CD2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		1A2B3C4D5E6F7890ABCDEF13 = {
 			isa = PBXGroup;
 			children = (
+				94D026982E46B061009E4CD2 /* MyCodeAssistantTests */,
 				1A2B3C4D5E6F7890ABCDEF28 /* AppStoreRelease.xcconfig */,
 				1A2B3C4D5E6F7890ABCDEF14 /* MyCodeAssistantHost */,
 				1A2B3C4D5E6F7890ABCDEF15 /* MyCodeAssistantExtension */,
+				94D026852E46ABCE009E4CD2 /* MyCodeAssistantTests */,
 				1A2B3C4D5E6F7890ABCDEF16 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -131,6 +160,26 @@
 				1A2B3C4D5E6F7890ABCDEF10 /* MyCodeAssistantHost-Info.plist */,
 			);
 			path = MyCodeAssistantHost;
+			sourceTree = "<group>";
+		};
+		1A2B3C4D5E6F7890ABCDEF15 /* MyCodeAssistantExtension */ = {
+			isa = PBXGroup;
+			children = (
+				1A2B3C4D5E6F7890ABCDEF08 /* SourceEditorExtension.swift */,
+				1A2B3C4D5E6F7890ABCDEF0A /* SourceEditorCommand.swift */,
+				1A2B3C4D5E6F7890ABCDEF0F /* MyCodeAssistantExtension-Info.plist */,
+			);
+			path = MyCodeAssistantExtension;
+			sourceTree = "<group>";
+		};
+		1A2B3C4D5E6F7890ABCDEF16 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1A2B3C4D5E6F7890ABCDEF0E /* MyCodeAssistantHost.app */,
+				1A2B3C4D5E6F7890ABCDEF06 /* MyCodeAssistantExtension.appex */,
+				94D026842E46ABCE009E4CD2 /* MyCodeAssistantTests.xctest */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		3A4B5C6D7E8F9012CDEF0140 /* Core */ = {
@@ -193,6 +242,7 @@
 				2A3B4C5D6E7F8901BCDEF01D /* BaseProvider.swift */,
 				2A3B4C5D6E7F8901BCDEF01F /* OpenAIProvider.swift */,
 				2A3B4C5D6E7F8901BCDEF021 /* OpenRouterProvider.swift */,
+				5E7F8A9B0C1D2E3F4A5B6C72 /* EdgeProvider.swift */,
 			);
 			path = Providers;
 			sourceTree = "<group>";
@@ -205,6 +255,8 @@
 				2A3B4C5D6E7F8901BCDEF027 /* ProviderFactory.swift */,
 				2A3B4C5D6E7F8901BCDEF029 /* SharedServices.swift */,
 				3A4B5C6D7E8F9012CDEF0151 /* GuardrailService.swift */,
+				4B5C6D7E8F9012CDEF0153 /* EdgeBackendClient.swift */,
+				6A7B8C9D0E1F2A3B4C5D6E71 /* AuthStateStore.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -218,28 +270,26 @@
 			path = Utilities;
 			sourceTree = "<group>";
 		};
-		1A2B3C4D5E6F7890ABCDEF15 /* MyCodeAssistantExtension */ = {
-			isa = PBXGroup;
-			children = (
-				1A2B3C4D5E6F7890ABCDEF08 /* SourceEditorExtension.swift */,
-				1A2B3C4D5E6F7890ABCDEF0A /* SourceEditorCommand.swift */,
-				1A2B3C4D5E6F7890ABCDEF0F /* MyCodeAssistantExtension-Info.plist */,
-			);
-			path = MyCodeAssistantExtension;
-			sourceTree = "<group>";
-		};
-		1A2B3C4D5E6F7890ABCDEF16 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				1A2B3C4D5E6F7890ABCDEF0E /* MyCodeAssistantHost.app */,
-				1A2B3C4D5E6F7890ABCDEF06 /* MyCodeAssistantExtension.appex */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		1A2B3C4D5E6F7890ABCDEF0C /* MyCodeAssistantExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1A2B3C4D5E6F7890ABCDEF1C /* Build configuration list for PBXNativeTarget "MyCodeAssistantExtension" */;
+			buildPhases = (
+				1A2B3C4D5E6F7890ABCDEF1D /* Sources */,
+				1A2B3C4D5E6F7890ABCDEF12 /* Frameworks */,
+				1A2B3C4D5E6F7890ABCDEF1E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MyCodeAssistantExtension;
+			productName = MyCodeAssistantExtension;
+			productReference = 1A2B3C4D5E6F7890ABCDEF06 /* MyCodeAssistantExtension.appex */;
+			productType = "com.apple.product-type.xcode-extension";
+		};
 		1A2B3C4D5E6F7890ABCDEF17 /* MyCodeAssistantHost */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1A2B3C4D5E6F7890ABCDEF18 /* Build configuration list for PBXNativeTarget "MyCodeAssistantHost" */;
@@ -259,22 +309,28 @@
 			productReference = 1A2B3C4D5E6F7890ABCDEF0E /* MyCodeAssistantHost.app */;
 			productType = "com.apple.product-type.application";
 		};
-		1A2B3C4D5E6F7890ABCDEF0C /* MyCodeAssistantExtension */ = {
+		94D026832E46ABCE009E4CD2 /* MyCodeAssistantTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 1A2B3C4D5E6F7890ABCDEF1C /* Build configuration list for PBXNativeTarget "MyCodeAssistantExtension" */;
+			buildConfigurationList = 94D0268D2E46ABCE009E4CD2 /* Build configuration list for PBXNativeTarget "MyCodeAssistantTests" */;
 			buildPhases = (
-				1A2B3C4D5E6F7890ABCDEF1D /* Sources */,
-				1A2B3C4D5E6F7890ABCDEF12 /* Frameworks */,
-				1A2B3C4D5E6F7890ABCDEF1E /* Resources */,
+				94D026802E46ABCE009E4CD2 /* Sources */,
+				94D026812E46ABCE009E4CD2 /* Frameworks */,
+				94D026822E46ABCE009E4CD2 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				94D026892E46ABCE009E4CD2 /* PBXTargetDependency */,
 			);
-			name = MyCodeAssistantExtension;
-			productName = MyCodeAssistantExtension;
-			productReference = 1A2B3C4D5E6F7890ABCDEF06 /* MyCodeAssistantExtension.appex */;
-			productType = "com.apple.product-type.xcode-extension";
+			fileSystemSynchronizedGroups = (
+				94D026852E46ABCE009E4CD2 /* MyCodeAssistantTests */,
+			);
+			name = MyCodeAssistantTests;
+			packageProductDependencies = (
+			);
+			productName = MyCodeAssistantTests;
+			productReference = 94D026842E46ABCE009E4CD2 /* MyCodeAssistantTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
@@ -283,14 +339,18 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1500;
+				LastSwiftUpdateCheck = 1640;
 				LastUpgradeCheck = 1500;
 				TargetAttributes = {
+					1A2B3C4D5E6F7890ABCDEF0C = {
+						CreatedOnToolsVersion = 15.0;
+					};
 					1A2B3C4D5E6F7890ABCDEF17 = {
 						CreatedOnToolsVersion = 15.0;
 					};
-					1A2B3C4D5E6F7890ABCDEF0C = {
-						CreatedOnToolsVersion = 15.0;
+					94D026832E46ABCE009E4CD2 = {
+						CreatedOnToolsVersion = 16.4;
+						TestTargetID = 1A2B3C4D5E6F7890ABCDEF17;
 					};
 				};
 			};
@@ -309,6 +369,7 @@
 			targets = (
 				1A2B3C4D5E6F7890ABCDEF17 /* MyCodeAssistantHost */,
 				1A2B3C4D5E6F7890ABCDEF0C /* MyCodeAssistantExtension */,
+				94D026832E46ABCE009E4CD2 /* MyCodeAssistantTests */,
 			);
 		};
 /* End PBXProject section */
@@ -322,6 +383,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		1A2B3C4D5E6F7890ABCDEF1E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		94D026822E46ABCE009E4CD2 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -359,6 +427,9 @@
 				2A3B4C5D6E7F8901BCDEF03A /* ResponseFormatter.swift in Sources */,
 				2A3B4C5D6E7F8901BCDEF03C /* SettingsView.swift in Sources */,
 				3A4B5C6D7E8F9012CDEF0150 /* GuardrailService.swift in Sources */,
+				4B5C6D7E8F9012CDEF0152 /* EdgeBackendClient.swift in Sources */,
+				5E7F8A9B0C1D2E3F4A5B6C71 /* EdgeProvider.swift in Sources */,
+				6A7B8C9D0E1F2A3B4C5D6E70 /* AuthStateStore.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -368,6 +439,14 @@
 			files = (
 				1A2B3C4D5E6F7890ABCDEF09 /* SourceEditorCommand.swift in Sources */,
 				1A2B3C4D5E6F7890ABCDEF07 /* SourceEditorExtension.swift in Sources */,
+				4B5C6D7E8F9012CDEF0154 /* EdgeBackendClient.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		94D026802E46ABCE009E4CD2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -379,66 +458,14 @@
 			target = 1A2B3C4D5E6F7890ABCDEF0C /* MyCodeAssistantExtension */;
 			targetProxy = 1A2B3C4D5E6F7890ABCDEF0B /* PBXContainerItemProxy */;
 		};
+		94D026892E46ABCE009E4CD2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1A2B3C4D5E6F7890ABCDEF17 /* MyCodeAssistantHost */;
+			targetProxy = 94D026882E46ABCE009E4CD2 /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		1A2B3C4D5E6F7890ABCDEF29 /* AppStore */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1A2B3C4D5E6F7890ABCDEF28 /* AppStoreRelease.xcconfig */;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_COMMA = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
-				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
-				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
-				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
-				CLANG_WARN_STRICT_PROTOTYPES = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				ENABLE_NS_ASSERTIONS = NO;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu17;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MACOSX_DEPLOYMENT_TARGET = 13.0;
-				MTL_ENABLE_DEBUG_INFO = NO;
-				MTL_FAST_MATH = YES;
-				SDKROOT = macosx;
-				SWIFT_COMPILATION_MODE = wholemodule;
-				VALIDATE_PRODUCT = YES;
-			};
-			name = AppStore;
-		};
 		1A2B3C4D5E6F7890ABCDEF22 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -577,7 +604,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.example.MyCodeAssistantHost";
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.MyCodeAssistantHost;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -604,34 +631,12 @@
 					"@executable_path/../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.example.MyCodeAssistantHost";
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.MyCodeAssistantHost;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
-		};
-		1A2B3C4D5E6F7890ABCDEF2A /* AppStore */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1A2B3C4D5E6F7890ABCDEF28 /* AppStoreRelease.xcconfig */;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = MyCodeAssistantHost/MyCodeAssistantHost.entitlements;
-				COMBINE_HIDPI_IMAGES = YES;
-				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "MyCodeAssistantHost/MyCodeAssistantHost-Info.plist";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-				);
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-			};
-			name = AppStore;
 		};
 		1A2B3C4D5E6F7890ABCDEF26 /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -650,7 +655,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.example.MyCodeAssistantHost.MyCodeAssistantExtension";
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.MyCodeAssistantHost.MyCodeAssistantExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -675,7 +680,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.example.MyCodeAssistantHost.MyCodeAssistantExtension";
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.MyCodeAssistantHost.MyCodeAssistantExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -683,11 +688,94 @@
 			};
 			name = Release;
 		};
+		1A2B3C4D5E6F7890ABCDEF29 /* AppStore */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1A2B3C4D5E6F7890ABCDEF28 /* AppStoreRelease.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = AppStore;
+		};
+		1A2B3C4D5E6F7890ABCDEF2A /* AppStore */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1A2B3C4D5E6F7890ABCDEF28 /* AppStoreRelease.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = MyCodeAssistantHost/MyCodeAssistantHost.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = "$(APPLE_TEAM_ID)";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "MyCodeAssistantHost/MyCodeAssistantHost-Info.plist";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = AppStore;
+		};
 		1A2B3C4D5E6F7890ABCDEF2B /* AppStore */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1A2B3C4D5E6F7890ABCDEF28 /* AppStoreRelease.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = "$(APPLE_TEAM_ID)";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "MyCodeAssistantExtension/MyCodeAssistantExtension-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = MyCodeAssistantExtension;
@@ -701,6 +789,60 @@
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
+			};
+			name = AppStore;
+		};
+		94D0268A2E46ABCE009E4CD2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = F4373TDFQF;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = will.MyCodeAssistantTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MyCodeAssistantHost.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/MyCodeAssistantHost";
+			};
+			name = Debug;
+		};
+		94D0268B2E46ABCE009E4CD2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = F4373TDFQF;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = will.MyCodeAssistantTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MyCodeAssistantHost.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/MyCodeAssistantHost";
+			};
+			name = Release;
+		};
+		94D0268C2E46ABCE009E4CD2 /* AppStore */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = F4373TDFQF;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = will.MyCodeAssistantTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MyCodeAssistantHost.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/MyCodeAssistantHost";
 			};
 			name = AppStore;
 		};
@@ -733,6 +875,16 @@
 				1A2B3C4D5E6F7890ABCDEF22 /* Debug */,
 				1A2B3C4D5E6F7890ABCDEF23 /* Release */,
 				1A2B3C4D5E6F7890ABCDEF29 /* AppStore */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		94D0268D2E46ABCE009E4CD2 /* Build configuration list for PBXNativeTarget "MyCodeAssistantTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				94D0268A2E46ABCE009E4CD2 /* Debug */,
+				94D0268B2E46ABCE009E4CD2 /* Release */,
+				94D0268C2E46ABCE009E4CD2 /* AppStore */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

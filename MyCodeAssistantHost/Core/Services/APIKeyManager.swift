@@ -153,6 +153,9 @@ public class APIKeyManager: APIKeyManagerProtocol, ObservableObject {
             return key.hasPrefix("sk-") && key.count > 20
         case .openRouter:
             return key.hasPrefix("sk-or-") && key.count > 20
+        case .edge:
+            // Edge provider typically doesn't require a specific key format
+            return !key.isEmpty
         }
     }
     

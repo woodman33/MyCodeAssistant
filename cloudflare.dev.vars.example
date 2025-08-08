@@ -1,0 +1,49 @@
+# ============================================================================
+# Cloudflare R2 Storage Configuration Template
+# ============================================================================
+# Instructions:
+# 1. Copy this file to 'cloudflare.dev.vars'
+# 2. Replace placeholder values with your actual Cloudflare credentials
+# 3. NEVER commit the actual cloudflare.dev.vars file to version control
+# 4. Add cloudflare.dev.vars to your .gitignore file
+# ============================================================================
+
+# --------------------------------------------------------------------------
+# Account & Authentication
+# --------------------------------------------------------------------------
+# Cloudflare Account ID
+CLOUDFLARE_ACCOUNT_ID="your-account-id-here"
+
+# R2 API Token (with appropriate permissions)
+CLOUDFLARE_API_TOKEN="your-api-token-here"
+
+# S3-Compatible Access Credentials
+CLOUDFLARE_ACCESS_KEY_ID="your-access-key-id-here"
+CLOUDFLARE_SECRET_ACCESS_KEY="your-secret-access-key-here"
+
+# --------------------------------------------------------------------------
+# R2 Storage Configuration
+# --------------------------------------------------------------------------
+# R2 Bucket Name
+CLOUDFLARE_R2_BUCKET="your-bucket-name"
+
+# Base R2 Endpoint URL (S3-compatible API)
+CLOUDFLARE_R2_ENDPOINT="https://your-account-id.r2.cloudflarestorage.com"
+
+# R2 Public URL (if bucket is configured for public access)
+CLOUDFLARE_R2_PUBLIC_URL="https://your-account-id.r2.cloudflarestorage.com/your-bucket-name"
+
+# R2 Catalog URL for analytics and monitoring
+CLOUDFLARE_R2_CATALOG_URL="https://catalog.cloudflarestorage.com/your-account-id/your-bucket-name"
+
+# --------------------------------------------------------------------------
+# Additional Configuration
+# --------------------------------------------------------------------------
+# Data Warehouse identifier (Account_Bucket format)
+CLOUDFLARE_WAREHOUSE_ID="your-account-id_your-bucket-name"
+
+# Region (R2 is globally distributed, but you may specify for compliance)
+CLOUDFLARE_R2_REGION="auto"
+
+# Enable debug logging (set to "false" in production)
+CLOUDFLARE_DEBUG_MODE="false"

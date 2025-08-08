@@ -35,7 +35,8 @@ class ChatViewModel: ObservableObject {
     // Available models per provider with expanded options
     let availableModels: [LLMProvider: [String]] = [
         .openAI: ["gpt-4o-mini", "gpt-4o-preview", "gpt-4-turbo", "gpt-3.5-turbo"],
-        .openRouter: ["🛣️ Best Route", "01-ai/yi-34b-chat", "mistralai/mistral-medium", "qwen/qwen-72b-chat"]
+        .openRouter: ["🛣️ Best Route", "01-ai/yi-34b-chat", "mistralai/mistral-medium", "qwen/qwen-72b-chat"],
+        .edge: ["@cf/meta/llama-3-8b-instruct", "@cf/mistral/mistral-7b-instruct-v0.1", "@cf/meta/llama-2-7b-chat-int8"]
     ]
     
     // MARK: - Initialization
@@ -151,11 +152,17 @@ class ChatViewModel: ObservableObject {
     
     /// Validate if a provider is properly configured
     func isProviderConfigured(_ provider: LLMProvider) -> Bool {
-        do {
-            let apiKey = try apiKeyManager.getAPIKey(for: provider)
-            return !(apiKey?.isEmpty ?? true)
-        } catch {
-            return false
+        switch provider {
+        case .edge:
+            // Edge provider doesn't require API key by default
+            return true
+        default:
+            do {
+                let apiKey = try apiKeyManager.getAPIKey(for: provider)
+                return !(apiKey?.isEmpty ?? true)
+            } catch {
+                return false
+            }
         }
     }
     
@@ -165,13 +172,19 @@ class ChatViewModel: ObservableObject {
         do {
             // Check if authentication is needed (24-hour expiry)
             if authStateStore.needsAuthentication(for: provider) {
-                // Check if we have a valid API key first
+                // Check if we have a valid API key first (Edge doesn't require one)
                 if !isProviderConfigured(provider) {
-                    setError("API key not configured for \(provider.displayName). Please configure in Settings.")
-                    return
+                    if provider == .edge {
+                        // Edge provider uses Workers-level authentication
+                        authStateStore.handleSuccessfulAuth(for: provider)
+                    } else {
+                        setError("API key not configured for \(provider.displayName). Please configure in Settings.")
+                        return
+                    }
+                } else {
+                    // Mark as authenticated after validation
+                    authStateStore.handleSuccessfulAuth(for: provider)
                 }
-                // Mark as authenticated after validation
-                authStateStore.handleSuccessfulAuth(for: provider)
             }
             
             isLoading = true
@@ -215,13 +228,11 @@ class ChatViewModel: ObservableObject {
         
         // Save conversation asynchronously
         if let conversation = currentConversation {
-            Task.detached { [weak self] in
+            Task { // inherits @MainActor, safe to use self
                 do {
-                    try await self?.conversationManager.saveConversation(conversation)
+                    try await conversationManager.saveConversation(conversation)
                 } catch {
-                    await MainActor.run {
-                        self?.setError("Failed to save conversation: \(error.localizedDescription)")
-                    }
+                    setError("Failed to save conversation: \(error.localizedDescription)")
                 }
             }
         }

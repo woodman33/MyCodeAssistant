@@ -1,0 +1,81 @@
+name = "mca-edge-worker"
+main = "src/index.js"
+compatibility_date = "2024-12-01"
+account_id = "091c9e59ca0fc3bea9f9d432fa12a3b1"
+
+# Worker configuration
+[env.production]
+name = "mca-edge-worker-production"
+
+[env.staging]
+name = "mca-edge-worker-staging"
+
+# KV Namespace bindings
+[[kv_namespaces]]
+binding = "MCA_FLAGS"
+id = "7be51dc591b84b2899e1e6cd1aa63184"
+
+# D1 Database binding
+[[d1_databases]]
+binding = "DB"
+database_name = "mca-db"
+database_id = "a663369b-acb4-4297-ba32-ddea8f428e7f"
+migrations_dir = "./migrations"
+
+# R2 Bucket binding
+[[r2_buckets]]
+binding = "ASSETS"
+bucket_name = "mca-assets"
+
+# Vectorize Index binding
+[[vectorize]]
+binding = "VECTORIZE"
+index_name = "mca-embeddings"
+
+# Environment variables (loaded from dev.vars in development)
+[vars]
+ENVIRONMENT = "development"
+
+# Compatibility flags
+[compatibility_flags]
+nodejs_compat = true
+
+# Build configuration
+[build]
+command = ""
+watch_paths = ["src/**/*.js", "src/**/*.ts"]
+
+# Development server configuration
+[dev]
+port = 8787
+local_protocol = "http"
+
+# Route configuration (if needed)
+# [routes]
+# pattern = "example.com/*"
+# zone_name = "example.com"
+
+# Durable Objects (if needed)
+# [[durable_objects.bindings]]
+# name = "MY_DURABLE_OBJECT"
+# class_name = "MyDurableObject"
+
+# Analytics Engine (if needed)
+# [[analytics_engine_datasets]]
+# binding = "ANALYTICS"
+
+# Service bindings to other Workers (if needed)
+# [[services]]
+# binding = "AUTH_SERVICE"
+# service = "auth-worker"
+# environment = "production"
+
+# Tail Workers for logging (if needed)
+# [tail_consumers]
+# urls = ["https://example.com/log"]
+
+# Secrets (managed through wrangler secret or dashboard)
+# Use `wrangler secret put SECRET_NAME` to set these
+# - API keys
+# - Database connection strings
+# - Third-party service credentials

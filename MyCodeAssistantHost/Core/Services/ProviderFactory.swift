@@ -24,11 +24,14 @@ public class ProviderFactory {
     /// Setup the provider registry with all available providers
     private func setupProviderRegistry() {
         // MVP providers (implemented)
-        registerProvider(.openAI, 
-                        status: .implemented, 
+        registerProvider(.openAI,
+                        status: .implemented,
                         priority: .high)
-        registerProvider(.openRouter, 
-                        status: .implemented, 
+        registerProvider(.openRouter,
+                        status: .implemented,
+                        priority: .high)
+        registerProvider(.edge,
+                        status: .implemented,
                         priority: .high)
     }
     
@@ -52,14 +55,19 @@ public class ProviderFactory {
     /// - Returns: A configured provider instance
     /// - Throws: ProviderError if creation fails
     public func createProvider(_ provider: LLMProvider) throws -> LLMProviderProtocol {
-        let apiKey = try apiKeyManager.getAPIKey(for: provider)
         let configuration = configurationManager.getConfiguration(for: provider)
         
         switch provider {
         case .openAI:
+            let apiKey = try apiKeyManager.getAPIKey(for: provider)
             return OpenAIProvider(apiKey: apiKey, configuration: configuration)
         case .openRouter:
+            let apiKey = try apiKeyManager.getAPIKey(for: provider)
             return OpenRouterProvider(apiKey: apiKey, configuration: configuration)
+        case .edge:
+            // Edge provider doesn't require API key by default
+            let apiKey = try? apiKeyManager.getAPIKey(for: provider)
+            return EdgeProvider(apiKey: apiKey, configuration: configuration)
         }
     }
     
@@ -77,6 +85,8 @@ public class ProviderFactory {
             return OpenAIProvider(apiKey: apiKey, configuration: configuration)
         case .openRouter:
             return OpenRouterProvider(apiKey: apiKey, configuration: configuration)
+        case .edge:
+            return EdgeProvider(apiKey: apiKey, configuration: configuration)
         }
     }
     
@@ -84,12 +94,19 @@ public class ProviderFactory {
     /// - Parameter provider: The provider to validate
     /// - Returns: True if provider can be created, false otherwise
     public func canCreateProvider(_ provider: LLMProvider) -> Bool {
-        do {
-            _ = try apiKeyManager.getAPIKey(for: provider)
-            let configuration = configurationManager.getConfiguration(for: provider)
-            return configuration.apiKeyRequired ? true : true
-        } catch {
-            return false
+        let configuration = configurationManager.getConfiguration(for: provider)
+        
+        switch provider {
+        case .edge:
+            // Edge provider doesn't require API key
+            return true
+        default:
+            do {
+                _ = try apiKeyManager.getAPIKey(for: provider)
+                return configuration.apiKeyRequired ? true : true
+            } catch {
+                return false
+            }
         }
     }
     
@@ -350,3 +367,5 @@ public struct ProviderImplementationStats {
         return "Implemented: \(implemented)/\(total) (\(String(format: "%.1f", implementationPercentage * 100))%)"
     }
 }
+
+// EdgeProvider is defined in `Core/Providers/EdgeProvider.swift`

@@ -1,0 +1,215 @@
+name: Deploy to Staging
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - 'edge-backend/**'
+      - 'wrangler.toml'
+      - '.github/workflows/staging.yml'
+
+env:
+  NODE_VERSION: '20'
+
+jobs:
+  test-and-deploy:
+    name: Test and Deploy to Staging
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+      deployments: write
+    environment:
+      name: staging
+      url: ${{ steps.deploy.outputs.deployment-url }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: edge-backend/package-lock.json
+
+      - name: Install dependencies
+        working-directory: edge-backend
+        run: npm ci
+
+      - name: Type checking
+        working-directory: edge-backend
+        run: npm run type-check
+
+      - name: Linting
+        working-directory: edge-backend
+        run: npm run lint
+
+      - name: Run tests
+        working-directory: edge-backend
+        run: npm run test
+
+      - name: Build verification
+        working-directory: edge-backend
+        run: npm run build
+
+      - name: Create deployment
+        id: deployment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const deployment = await github.rest.repos.createDeployment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: context.payload.pull_request.head.sha,
+              environment: 'staging',
+              auto_merge: false,
+              required_contexts: [],
+              payload: {
+                pr_number: context.issue.number,
+                deployed_by: context.actor
+              }
+            });
+            return deployment.data.id;
+
+      - name: Deploy to Cloudflare Workers (Staging)
+        id: deploy
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: edge-backend
+          environment: staging
+          command: deploy --env staging
+          secrets: |
+            OPENAI_API_KEY
+            ANTHROPIC_API_KEY
+            SUPABASE_URL
+            SUPABASE_ANON_KEY
+            SUPABASE_SERVICE_KEY
+            LANGFLOW_BASE_URL
+            LANGFLOW_API_KEY
+            LANGFLOW_FLOW_ID
+            WEBHOOK_SECRET
+            MCP_CONFIG
+            AIRTABLE_API_KEY
+            AIRTABLE_BASE_ID
+            AIRTABLE_TABLE_NAME
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          LANGFLOW_BASE_URL: ${{ secrets.LANGFLOW_BASE_URL }}
+          LANGFLOW_API_KEY: ${{ secrets.LANGFLOW_API_KEY }}
+          LANGFLOW_FLOW_ID: ${{ secrets.LANGFLOW_FLOW_ID }}
+          WEBHOOK_SECRET: ${{ secrets.WEBHOOK_SECRET }}
+          MCP_CONFIG: ${{ secrets.MCP_CONFIG }}
+          AIRTABLE_API_KEY: ${{ secrets.AIRTABLE_API_KEY }}
+          AIRTABLE_BASE_ID: ${{ secrets.AIRTABLE_BASE_ID }}
+          AIRTABLE_TABLE_NAME: ${{ secrets.AIRTABLE_TABLE_NAME }}
+
+      - name: Update deployment status
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.repos.createDeploymentStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              deployment_id: ${{ steps.deployment.outputs.result }},
+              state: '${{ job.status }}',
+              environment_url: '${{ steps.deploy.outputs.deployment-url }}',
+              description: 'Deployment ${{ job.status }}'
+            });
+
+      - name: Comment deployment URL on PR
+        if: success()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const deploymentUrl = '${{ steps.deploy.outputs.deployment-url }}';
+            const prNumber = context.issue.number;
+            
+            // Check for existing deployment comment
+            const comments = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: prNumber
+            });
+            
+            const botComment = comments.data.find(comment => 
+              comment.user.type === 'Bot' && 
+              comment.body.includes('🚀 Staging Deployment')
+            );
+            
+            const commentBody = `## 🚀 Staging Deployment
+            
+            **Status:** ✅ Successfully deployed
+            **Environment:** Staging
+            **URL:** ${deploymentUrl}
+            **Commit:** \`${context.payload.pull_request.head.sha.substring(0, 7)}\`
+            
+            ### Deployment Details
+            - **Branch:** ${context.payload.pull_request.head.ref}
+            - **Deployed by:** @${context.actor}
+            - **Timestamp:** ${new Date().toISOString()}
+            
+            ### Test Links
+            - [API Health Check](${deploymentUrl}/health)
+            - [API Documentation](${deploymentUrl}/docs)
+            - [Embeddings Service](${deploymentUrl}/embeddings)
+            
+            ### Next Steps
+            1. Test the deployment using the links above
+            2. Run integration tests if available
+            3. Review logs in Cloudflare dashboard
+            
+            ---
+            
+            **Note:** This is a staging deployment. Changes will be automatically deployed to production upon merge to \`main\`.`;
+            
+            if (botComment) {
+              // Update existing comment
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body: commentBody
+              });
+            } else {
+              // Create new comment
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: prNumber,
+                body: commentBody
+              });
+            }
+
+      - name: Run smoke tests
+        if: success()
+        working-directory: edge-backend
+        run: |
+          if [ -f "test/smoke.test.ts" ]; then
+            npm run test:smoke -- --url=${{ steps.deploy.outputs.deployment-url }}
+          else
+            echo "No smoke tests found, skipping..."
+          fi
+
+      - name: Add PR status check
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.repos.createCommitStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              sha: context.payload.pull_request.head.sha,
+              state: '${{ job.status }}',
+              target_url: '${{ steps.deploy.outputs.deployment-url }}',
+              description: 'Staging deployment ${{ job.status }}',
+              context: 'cloudflare/staging'
+            });

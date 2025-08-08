@@ -1,0 +1,51 @@
+name = "mca-edge-worker"
+main = "src/workers/api.ts"
+compatibility_date = "2024-12-01"
+account_id = "091c9e59ca0fc3bea9f9d432fa12a3b1"
+
+# Worker configuration
+[env.production]
+name = "mca-edge-worker-production"
+routes = [
+  { pattern = "api.mycodeassistant.ai/*", zone_name = "mycodeassistant.ai" }
+]
+
+[env.staging]
+name = "mca-edge-worker-staging"
+
+# KV Namespace bindings
+[[kv_namespaces]]
+binding = "KV"
+id = "7be51dc591b84b2899e1e6cd1aa63184"
+
+# D1 Database binding
+[[d1_databases]]
+binding = "DB"
+database_name = "mca-db"
+database_id = "a663369b-acb4-4297-ba32-ddea8f428e7f"
+migrations_dir = "./migrations"
+
+# R2 Bucket binding
+[[r2_buckets]]
+binding = "R2"
+bucket_name = "mca-assets"
+
+# Vectorize Index binding (commented out - requires special setup)
+# [[vectorize]]
+# binding = "VECTORIZE"
+# index_name = "mca-embeddings"
+
+# Environment variables (loaded from dev.vars in development)
+[vars]
+ENVIRONMENT = "development"
+
+# Compatibility flags
+compatibility_flags = ["nodejs_compat"]
+
+# Build configuration
+# No build command needed - TypeScript files are handled directly
+
+# Development server configuration
+[dev]
+port = 8787
+local_protocol = "http"

@@ -1,0 +1,58 @@
+{
+  "name": "mca-edge-backend",
+  "version": "1.0.0",
+  "description": "Edge AI Backend for MyCodeAssistant using Cloudflare Workers",
+  "main": "src/workers/api.ts",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev src/workers/api.ts",
+    "dev:embeddings": "wrangler dev src/workers/embeddings.ts",
+    "build": "tsc --noEmit && wrangler deploy --dry-run",
+    "deploy": "wrangler deploy",
+    "deploy:api": "wrangler deploy src/workers/api.ts",
+    "deploy:embeddings": "wrangler deploy src/workers/embeddings.ts",
+    "tail": "wrangler tail",
+    "tail:api": "wrangler tail aged-thunder-8631",
+    "tail:embeddings": "wrangler tail agents-starter",
+    "test": "vitest",
+    "test:e2e": "vitest run tests/e2e.test.ts",
+    "test:smoke": "vitest run tests/smoke.test.ts",
+    "test:all": "npm run test:smoke && npm run test:e2e",
+    "typecheck": "tsc --noEmit",
+    "type-check": "tsc --noEmit",
+    "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx,js,jsx,json}\"",
+    "lint": "eslint src --ext .ts,.tsx",
+    "security": "npm audit --audit-level=moderate"
+  },
+  "keywords": [
+    "cloudflare-workers",
+    "edge-ai",
+    "vectorize",
+    "d1",
+    "r2",
+    "kv",
+    "embeddings",
+    "serverless"
+  ],
+  "author": "MyCodeAssistant Team",
+  "license": "MIT",
+  "dependencies": {
+    "@cloudflare/workers-types": "^4.20241205.0",
+    "@neondatabase/serverless": "^0.10.4",
+    "typescript": "^5.7.2"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^8.18.0",
+    "@typescript-eslint/parser": "^8.18.0",
+    "eslint": "^9.17.0",
+    "prettier": "^3.4.2",
+    "vitest": "^2.1.8",
+    "vitest-environment-miniflare": "^2.14.4",
+    "wrangler": "^3.101.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "packageManager": "npm@10.0.0"
+}

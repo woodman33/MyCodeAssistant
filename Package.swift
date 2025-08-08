@@ -31,6 +31,7 @@ let package = Package(
                 "Core/Enums/LLMProvider.swift",
                 "Core/Protocols/LLMProviderProtocol.swift",
                 "Core/Providers/BaseProvider.swift",
+                "Core/Providers/EdgeProvider.swift",
                 "Core/Providers/OpenAIProvider.swift",
                 "Core/Providers/OpenRouterProvider.swift",
                 "Core/Services/APIKeyManager.swift",

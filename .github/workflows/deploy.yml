@@ -1,0 +1,213 @@
+name: Deploy to Cloudflare Workers
+
+on:
+  push:
+    branches:
+      - main
+      - production
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  NODE_VERSION: '20'
+  SWIFT_VERSION: '5.9'
+
+jobs:
+  test-edge-backend:
+    name: Test Edge Backend
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./edge-backend
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: edge-backend/package-lock.json
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Run linter
+        run: npm run lint || true
+      
+      - name: Run smoke tests
+        run: npm run test:smoke
+        timeout-minutes: 5
+        continue-on-error: false
+      
+      - name: Run E2E tests
+        run: npm run test:e2e
+        timeout-minutes: 10
+        continue-on-error: false
+      
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: edge-backend-test-results
+          path: edge-backend/test-results/
+          retention-days: 7
+
+  test-swift:
+    name: Test Swift Extension
+    runs-on: macos-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Swift
+        uses: swift-actions/setup-swift@v1
+        with:
+          swift-version: ${{ env.SWIFT_VERSION }}
+      
+      - name: Build Swift package
+        run: swift build
+      
+      - name: Run Swift tests
+        run: swift test --filter EdgeProviderTests
+      
+      - name: Run all Swift tests
+        run: swift test
+      
+      - name: Generate test coverage
+        run: |
+          swift test --enable-code-coverage
+          xcrun llvm-cov export \
+            .build/debug/MyCodeAssistantPackageTests.xctest/Contents/MacOS/MyCodeAssistantPackageTests \
+            -instr-profile .build/debug/codecov/default.profdata \
+            -format="lcov" > coverage.lcov
+        continue-on-error: true
+      
+      - name: Upload coverage
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: swift-coverage
+          path: coverage.lcov
+          retention-days: 7
+
+  deploy-workers:
+    name: Deploy to Cloudflare Workers
+    needs: [test-edge-backend, test-swift]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/production'
+    defaults:
+      run:
+        working-directory: ./edge-backend
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: edge-backend/package-lock.json
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Deploy to Staging
+        if: github.ref == 'refs/heads/main'
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: deploy --env staging
+          workingDirectory: edge-backend
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      
+      - name: Deploy to Production
+        if: github.ref == 'refs/heads/production'
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: deploy --env production
+          workingDirectory: edge-backend
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      
+      - name: Set secrets
+        if: github.ref == 'refs/heads/production'
+        run: |
+          echo "${{ secrets.OPENAI_KEY }}" | wrangler secret put OPENAI_KEY --env production
+          echo "${{ secrets.OPENROUTER_KEY }}" | wrangler secret put OPENROUTER_KEY --env production
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        continue-on-error: true
+      
+      - name: Add production route
+        if: github.ref == 'refs/heads/production'
+        run: |
+          wrangler route add "api.mycodeassistant.ai/*" agents-starter --env production
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        continue-on-error: true
+      
+      - name: Verify deployment
+        run: |
+          sleep 10
+          if [ "${{ github.ref }}" == "refs/heads/production" ]; then
+            curl -f https://api.mycodeassistant.ai/health || exit 1
+          else
+            curl -f https://agents-starter.wmeldman33.workers.dev/health || exit 1
+          fi
+      
+      - name: Run post-deployment smoke test
+        run: npm run test:smoke
+        continue-on-error: true
+
+  notify:
+    name: Notify Deployment Status
+    needs: [deploy-workers]
+    runs-on: ubuntu-latest
+    if: always()
+    
+    steps:
+      - name: Send Slack notification
+        if: ${{ secrets.SLACK_WEBHOOK_URL }}
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          text: |
+            Deployment ${{ job.status == 'success' && 'succeeded' || 'failed' }}
+            Branch: ${{ github.ref_name }}
+            Commit: ${{ github.sha }}
+            Author: ${{ github.actor }}
+          webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      
+      - name: Create deployment record
+        if: success() && github.ref == 'refs/heads/production'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.repos.createDeployment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: context.sha,
+              environment: 'production',
+              description: 'Deploy to Cloudflare Workers',
+              auto_merge: false,
+              required_contexts: [],
+              production_environment: true
+            });
